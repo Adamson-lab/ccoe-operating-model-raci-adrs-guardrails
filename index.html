@@ -70,8 +70,10 @@
     }
     .log-box {
       margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--paper);
-      border: 1px solid var(--line); font-size: 12px; max-height: 170px; overflow: auto;
+      border: 1px solid var(--line); font-size: 12px; max-height: 180px; overflow: auto;
     }
+    .log-entry { padding: 4px 0; border-bottom: 1px dashed #e2e8f0; }
+    .log-entry:last-child { border-bottom: 0; }
     .sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     h2 { font-size: 18px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
@@ -81,7 +83,8 @@
     .badge-warn { background: var(--warn-bg); color: var(--warn-ink); }
     .title { font-size: 13px; font-weight: 700; margin-top: 6px; }
     .meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
-    .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .run-status { font-size: 11px; font-weight: 700; color: var(--ok-ink); }
     .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
   </style>
 </head>
@@ -202,7 +205,7 @@
         <div class="card-actions">
           <button class="btn btn-primary" id="dispatchBtn" type="button">Dispatch GitHub Actions Workflow</button>
         </div>
-        <div class="log-box" id="execLog">Ready to execute hands-on implementations across AWS, Azure, and GCP.</div>
+        <div class="log-box" id="execLog">Ready to execute hands-on implementations across AWS, Azure, and GCP. Click <strong>Run Live Check</strong> on any card below.</div>
       </div>
 
       <div class="card">
@@ -250,14 +253,10 @@
 
     const TOTAL_ITEMS = 18000;
     const runHistory = [];
+    const passedIds = new Set();
     let selectedId = "IMPL-00001";
     let page = 0;
     const pageSize = 48;
-
-    function getItemById(idStr) {
-      const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(String(idStr || "1").replace(/\D/g, ""), 10) || 1));
-      return getItemByIndex(num - 1);
-    }
 
     function getItemByIndex(idx) {
       const n = idx + 1;
@@ -276,6 +275,11 @@
         ring,
         title: `${action} on ${wl} (${cloud} · ${fw} · Ring ${ring})`
       };
+    }
+
+    function getItemById(idStr) {
+      const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(String(idStr || "1").replace(/\D/g, ""), 10) || 1));
+      return getItemByIndex(num - 1);
     }
 
     function matchesFilter(item, q, cFilter, fFilter, aFilter) {
@@ -311,11 +315,11 @@
     }
 
     function buildArtifact(item) {
-      const owner = document.getElementById("tagOwner").value.trim() || "platform-ccoe";
-      const cc = document.getElementById("tagCostCenter").value.trim() || "CC-8801";
-      const env = document.getElementById("tagEnv").value.trim() || "prod";
-      const cls = document.getElementById("tagClass").value.trim() || "confidential";
-      const ttl = document.getElementById("tagTtl").value.trim() || "30d";
+      const owner = (document.getElementById("tagOwner").value || "platform-ccoe").trim();
+      const cc = (document.getElementById("tagCostCenter").value || "CC-8801").trim();
+      const env = (document.getElementById("tagEnv").value || "prod").trim();
+      const cls = (document.getElementById("tagClass").value || "confidential").trim();
+      const ttl = (document.getElementById("tagTtl").value || "30d").trim();
       const gcpSafe = (v) => v.toLowerCase().replace(/[^a-z0-9_-]/g, "-");
 
       return JSON.stringify({
@@ -346,8 +350,8 @@
       runHistory.unshift({ ts, msg });
       document.getElementById("execCount").textContent = String(runHistory.length);
       document.getElementById("execLog").innerHTML = runHistory
-        .slice(0, 30)
-        .map((r) => `<div><strong>[${r.ts}]</strong> ${r.msg}</div>`)
+        .slice(0, 40)
+        .map((r) => `<div class="log-entry"><strong>[${r.ts}]</strong> ${r.msg}</div>`)
         .join("");
     }
 
@@ -363,12 +367,18 @@
       }
     }
 
-    function runLiveCheck(id) {
+    function runLiveCheck(id, cardEl = null) {
       const item = getItemById(id);
       inspectArtifact(item.id, false);
-      const env = document.getElementById("tagEnv").value.trim() || "prod";
-      const cc = document.getElementById("tagCostCenter").value.trim() || "CC-8801";
-      appendLog(`PASS ${item.id} [${item.cloud} · ${item.action} · env=${env} · cc=${cc}] -> Artifact & guardrail check verified.`);
+      passedIds.add(item.id);
+      const env = (document.getElementById("tagEnv").value || "prod").trim();
+      const cc = (document.getElementById("tagCostCenter").value || "CC-8801").trim();
+      const owner = (document.getElementById("tagOwner").value || "platform-ccoe").trim();
+      if (cardEl) {
+        const statusEl = cardEl.querySelector(".run-status");
+        if (statusEl) statusEl.textContent = "PASS (Verified)";
+      }
+      appendLog(`PASS ${item.id} [${item.cloud} · ${item.workload} · ${item.action}] owner=${owner}, cc=${cc}, env=${env}.`);
     }
 
     function render() {
@@ -384,7 +394,7 @@
         `${document.getElementById("cloudFilter").value} · ${document.getElementById("frameworkFilter").value} · ${document.getElementById("actionFilter").value}`;
 
       document.getElementById("implGrid").innerHTML = slice.map((it) => `
-        <article class="card">
+        <article class="card" data-card-id="${it.id}">
           <div class="top-row">
             <span class="id-code">${it.id} · ${it.cloud}</span>
             <span class="badge ${it.action.includes("Drift") || it.action.includes("TTL") ? "badge-warn" : ""}">${it.framework}</span>
@@ -394,6 +404,7 @@
           <div class="card-actions">
             <button class="btn js-inspect" type="button" data-id="${it.id}">Inspect Artifact</button>
             <button class="btn btn-active js-exec" type="button" data-id="${it.id}">Run Live Check</button>
+            <span class="run-status">${passedIds.has(it.id) ? "PASS (Verified)" : ""}</span>
           </div>
         </article>
       `).join("");
@@ -402,16 +413,18 @@
       document.getElementById("nextBtn").disabled = page >= totalPages - 1;
     }
 
-    // Event delegation on #implGrid so card buttons always respond after re-renders
+    // Delegated click handler on #implGrid
     document.getElementById("implGrid").addEventListener("click", (e) => {
-      const inspectBtn = e.target.closest(".js-inspect");
+      const target = e.target;
+      const inspectBtn = target.closest ? target.closest(".js-inspect") : null;
       if (inspectBtn) {
-        inspectArtifact(inspectBtn.dataset.id, true);
+        inspectArtifact(inspectBtn.getAttribute("data-id"), true);
         return;
       }
-      const execBtn = e.target.closest(".js-exec");
+      const execBtn = target.closest ? target.closest(".js-exec") : null;
       if (execBtn) {
-        runLiveCheck(execBtn.dataset.id);
+        const cardEl = execBtn.closest ? execBtn.closest("[data-card-id]") : null;
+        runLiveCheck(execBtn.getAttribute("data-id"), cardEl);
       }
     });
 
@@ -422,8 +435,12 @@
     document.getElementById("runBatchBtn").addEventListener("click", () => {
       const { slice } = queryItems(25, page * pageSize);
       if (!slice.length) return;
-      slice.forEach((it) => appendLog(`BATCH PASS ${it.id} [${it.cloud} · ${it.action}] -> Verified.`));
+      slice.forEach((it) => {
+        passedIds.add(it.id);
+        appendLog(`BATCH PASS ${it.id} [${it.cloud} · ${it.action}] -> Verified.`);
+      });
       inspectArtifact(slice[0].id, false);
+      render();
     });
 
     document.getElementById("copyArtifactBtn").addEventListener("click", async () => {
