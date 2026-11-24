@@ -267,7 +267,7 @@
         <button class="btn" type="button" onclick="appResetState()">Reset Saved State</button>
       </div>
       <div class="wrap filters">
-        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, S01..S30, ADR-001..008..." oninput="appFilterChange()" />
+        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..48, S01..S30, ADR-001..008..." oninput="appFilterChange()" />
         <select class="input" id="cloudFilter" onchange="appFilterChange()">
           <option value="All">All Clouds (AWS · Azure · GCP)</option>
           <option value="AWS">AWS</option>
@@ -314,12 +314,12 @@
       </div>
       <div class="card">
         <div class="kpi-label">Tier-0 Rev-at-Risk &amp; ESG</div>
-        <div class="kpi-val" id="kpi3Val">$18,400/mo · $920/min</div>
+        <div class="kpi-val" id="kpi3Val">$18,400/mo · $920Model rate estimate</div>
         <p class="sub" id="kpi3Sub">Unit cost delta · gCO2eq/kWh grid aware</p>
       </div>
       <div class="card">
         <div class="kpi-label">eBPF, PQC &amp; Conway Load</div>
-        <div class="kpi-val" id="kpi4Val">ML-KEM/DSA · S01–S30</div>
+        <div class="kpi-val" id="kpi4Val">30 Subsystems (S01–S30) S01–S30</div>
         <p class="sub" id="kpi4Sub">Tetragon eBPF · &lt;30s Temporal quarantine</p>
       </div>
       <div class="card">
@@ -986,7 +986,7 @@
         '    <text x="319" y="252" text-anchor="middle" fill="#6ee7b7" font-size="8.5" font-weight="700">S12/S14/S20/S23/S25</text>',
         '    <text x="248" y="272" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.vault + '</text>',
         '    <text x="248" y="288" fill="#cbd5e1" font-size="9.5">Cross-Cloud WORM Vault + Sunday Restore · Vector Radar</text>',
-        '    <text x="248" y="308" fill="#cbd5e1" font-size="9.5">Spend: $' + item.monthlyUsd.toLocaleString() + '/mo (Save $' + item.savingsUsd.toLocaleString() + '/mo) · ESG: ' + item.co2Tons + 't CO2e/mo</text>',
+        '    <text x="248" y="308" fill="#cbd5e1" font-size="9.5">Spend: $' + item.monthlyUsd.toLocaleString() + '/mo (Save $' + item.savingsUsd.toLocaleString() + '/mo) · ESG: ' + item.co2Tons + 't Model carbon estimate</text>',
         '    <text x="248" y="328" fill="#cbd5e1" font-size="9.5">Grid-Carbon Scheduler + Zombie Disk/NAT Reclaimer</text>',
         '    <text x="248" y="376" fill="#86efac" font-size="9.5" font-weight="700">Sovereign Geofence &amp; Clean-Room Restore: VERIFIED</text>',
         '  </g>',
@@ -1000,7 +1000,7 @@
         '    <text x="772" y="94" text-anchor="middle" fill="#fde047" font-size="8.5" font-weight="700">S15/S18/S21–22/S24/S30</text>',
         '    <text x="724" y="116" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.tier0 + '</text>',
         '    <text x="724" y="132" fill="#cbd5e1" font-size="9.5">SHA-256 Merkle + Sigstore</text>',
-        '    <text x="724" y="154" fill="#fca5a5" font-size="10.5" font-weight="700">Rev Risk: $' + item.revAtRiskMin + '/min</text>',
+        '    <text x="724" y="154" fill="#fca5a5" font-size="10.5" font-weight="700">Rev Risk: $' + item.revAtRiskMin + 'Model rate estimate</text>',
         '    <text x="724" y="176" fill="#cbd5e1" font-size="9.5">Unit Cost PR Guard (&gt;3%)</text>',
         '    <text x="724" y="192" fill="#cbd5e1" font-size="9.5">15m M&amp;A Haircut &amp; TSA</text>',
         '    <text x="724" y="216" fill="#94a3b8" font-size="9" font-weight="700">Controls:</text>',
@@ -1034,7 +1034,7 @@
         network: "<strong>[S01/S07/S11/S26 Firehose, Cable/BGP &amp; CVE]</strong> NATS &lt;1.5s ingestion, WACS/MainOne/2Africa/Equiano/Seacom/PEACE telemetry, Temporal &lt;30s quarantine, and &lt;200ms CVE kill-switch.",
         workload: "<strong>[S03/S13/S16–17 eBPF, Exit, PII &amp; GPU]</strong> Tetragon eBPF -&gt; HCL/Git attribution, &lt;15ms Envoy/Wasm PII/PAN redaction, DCGM GPU &ge;12% preemption, and Exit Score <strong>" + item.exitScore + "/100</strong>.",
         vault: "<strong>[S12/S14/S20/S23/S25 HYOK, WORM &amp; FinOps]</strong> Customer HSM geofence (" + m.dataClassification + "), cross-cloud WORM cyber-vault, vector-DB radar, grid-carbon scheduling, and zombie cleanup.",
-        ledger: "<strong>[S15/S18/S21–22/S24/S30 Merkle, Unit Cost &amp; M&amp;A]</strong> SHA-256 Merkle evidence, Sigstore model lineage, &gt;3% unit-cost PR guard, RI/CUD solver, and 15m M&amp;A/TSA carve-out ($" + item.revAtRiskMin + "/min risk)."
+        ledger: "<strong>[S15/S18/S21–22/S24/S30 Merkle, Unit Cost &amp; M&amp;A]</strong> SHA-256 Merkle evidence, Sigstore model lineage, &gt;3% unit-cost PR guard, RI/CUD solver, and 15m M&amp;A/TSA carve-out ($" + item.revAtRiskMin + "Model rate estimate risk)."
       };
       document.getElementById("nodeInspectorBox").innerHTML = "<div>" + (info[nodeKey] || info.workload) + "</div>";
     }
@@ -1045,8 +1045,8 @@
       var haircutUsd = Math.round(item.monthlyUsd * 12 * 1.45);
       document.getElementById("kpi2Val").textContent = item.exitScore + " / 100";
       document.getElementById("kpi2Sub").textContent = "Exit: " + item.exitHours + "h · M&A haircut $" + haircutUsd.toLocaleString();
-      document.getElementById("kpi3Val").textContent = "$" + item.monthlyUsd.toLocaleString() + "/mo · $" + item.revAtRiskMin + "/min";
-      document.getElementById("kpi3Sub").textContent = "Save $" + item.savingsUsd.toLocaleString() + "/mo · " + item.co2Tons + "t CO2e/mo";
+      document.getElementById("kpi3Val").textContent = "$" + item.monthlyUsd.toLocaleString() + "/mo · $" + item.revAtRiskMin + "Model rate estimate";
+      document.getElementById("kpi3Sub").textContent = "Save $" + item.savingsUsd.toLocaleString() + "/mo · " + item.co2Tons + "t Model carbon estimate";
       document.getElementById("raciGateBox").innerHTML =
         "<div><strong>Subsystem:</strong> " + sub.code + " (" + sub.tier + ") — " + sub.name + "</div>" +
         "<div><strong>Accountable (A):</strong> " + r.a + " · <strong>Responsible (R):</strong> " + r.r + " · <strong>SLA:</strong> " + r.sla + " · <strong>GRC:</strong> " + r.grc + "</div>" +
@@ -1090,9 +1090,9 @@
           "Subsystem               : " + sub.code + " (" + sub.tier + ") · " + sub.name,
           "Scenario                : " + getScenarioLabel(),
           "Cloud Exit Portability  : " + item.exitScore + "/100 (" + item.exitHours + "h cutover)",
-          "Tier-0 Revenue-at-Risk  : $" + item.revAtRiskMin + "/min",
+          "Tier-0 Revenue-at-Risk  : $" + item.revAtRiskMin + "Model rate estimate",
           "15m M&A Haircut         : $" + haircutUsd.toLocaleString(),
-          "FinOps & Grid-Carbon    : $" + item.monthlyUsd.toLocaleString() + "/mo (Save $" + item.savingsUsd.toLocaleString() + "/mo) · " + item.co2Tons + "t CO2e/mo",
+          "FinOps & Grid-Carbon    : $" + item.monthlyUsd.toLocaleString() + "/mo (Save $" + item.savingsUsd.toLocaleString() + "/mo) · " + item.co2Tons + "t Model carbon estimate",
           "Regulatory Crosswalk    : " + r.grc
         ].join("\n");
       }
@@ -1492,7 +1492,7 @@
         "- **Spotlight:** " + item.id + " · " + sub.code + " (" + sub.tier + ") — " + sub.name,
         "- **Scenario:** " + getScenarioLabel(),
         "- **Exit Portability:** " + item.exitScore + "/100 (" + item.exitHours + "h) · **GRC:** " + r.grc,
-        "- **Tier-0 Risk:** $" + item.revAtRiskMin + "/min · **Spend:** $" + item.monthlyUsd.toLocaleString() + "/mo · **ESG:** " + item.co2Tons + "t CO2e/mo"
+        "- **Tier-0 Risk:** $" + item.revAtRiskMin + "Model rate estimate · **Spend:** $" + item.monthlyUsd.toLocaleString() + "/mo · **ESG:** " + item.co2Tons + "t Model carbon estimate"
       ].join("\n");
       triggerDownload("ccoe-30-subsystem-board-dossier.md", brief, "text/markdown");
       appendLog("Exported ccoe-30-subsystem-board-dossier.md.", "PASS");
@@ -1534,7 +1534,7 @@
       var totalPages = Math.max(1, Math.ceil(total / pageSize));
       if (page >= totalPages) page = totalPages - 1;
 
-      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " ITEMS · CATALOG";
+      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " SAMPLE ROWS";
       document.getElementById("kpi1Sub").textContent = "Showing " + slice.length + " of " + total.toLocaleString() + " (Page " + (page + 1) + "/" + totalPages + ")";
       document.getElementById("pageInfo").textContent = "Page " + (page + 1) + " of " + totalPages;
       document.getElementById("filterSummary").textContent =
@@ -1556,7 +1556,7 @@
               '<span class="badge' + warnCls + '">' + it.framework + '</span>' +
             '</div>' +
             '<h3 class="title">' + it.title + '</h3>' +
-            '<div class="meta">Exit: ' + it.exitScore + '/100 · $' + it.monthlyUsd.toLocaleString() + '/mo · Risk $' + it.revAtRiskMin + '/min</div>' +
+            '<div class="meta">Exit: ' + it.exitScore + '/100 · $' + it.monthlyUsd.toLocaleString() + '/mo · Risk $' + it.revAtRiskMin + 'Model rate estimate</div>' +
             '<div class="card-actions">' +
               '<button class="btn" type="button" onclick="appInspect(\'' + it.id + '\', true)">Inspect Diagram</button>' +
               '<button class="btn btn-active" type="button" onclick="appRunCheck(\'' + it.id + '\')">Verify &amp; Run</button>' +
