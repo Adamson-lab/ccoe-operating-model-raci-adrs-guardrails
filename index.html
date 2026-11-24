@@ -1408,8 +1408,24 @@
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       var authMode = document.getElementById("authMode").value;
       var mode = document.getElementById("execMode").value;
-      var shortJwt = "spiffe-oidc-" + Math.random().toString(36).slice(2, 10);
-      appendLog("S09 " + authMode.toUpperCase() + " [" + shortJwt + "] dispatched " + item.id + " (" + item.subsystem + ", mode=" + mode + ").", "PASS");
+      var reqBody = {
+        implementation_id: item.id,
+        subsystem: item.subsystem,
+        auth_mode: authMode,
+        execution_mode: mode,
+        scenario: document.getElementById("scenarioMode").value
+      };
+      postBackend(
+        "/api/v1/dispatch",
+        reqBody,
+        function (data) {
+          appendLog("GO BACKEND (:8080) DISPATCH [" + data.run_id + "]: " + item.id + " (" + item.subsystem + ", mode=" + mode + ").", "PASS");
+        },
+        function () {
+          var shortJwt = "spiffe-oidc-" + Math.random().toString(36).slice(2, 10);
+          appendLog("TWIN FALLBACK " + authMode.toUpperCase() + " [" + shortJwt + "] dispatched " + item.id + " (" + item.subsystem + ", mode=" + mode + ").", "PASS");
+        }
+      );
     }
 
     function appExecCommand() {
@@ -1558,22 +1574,56 @@
       if (!d) return;
       d.style.display = (d.style.display === "none") ? "block" : "none";
     }
+    var BACKEND_URL = "http://localhost:8080";
+
+    function postBackend(endpoint, bodyObj, onSuccess, onFallback) {
+      fetch(BACKEND_URL + endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyObj)
+      })
+        .then(function (resp) {
+          if (!resp.ok) throw new Error("HTTP " + resp.status);
+          return resp.json();
+        })
+        .then(onSuccess)
+        .catch(onFallback);
+    }
+
     function appSaveLiveBindings() {
       appSaveState();
       var aws = document.getElementById("liveAwsRole").value.trim();
       var az = document.getElementById("liveAzureId").value.trim();
       var gcp = document.getElementById("liveGcpWif").value.trim();
       var gh = document.getElementById("liveGhAppId").value.trim();
+      var payload = {
+        aws_role_arn: aws,
+        azure_tenant_client: az,
+        gcp_wif_provider: gcp,
+        github_app_installation_id: gh
+      };
       var bound = [];
-      if (aws) bound.push("AWS OIDC");
-      if (az) bound.push("Azure WIF");
-      if (gcp) bound.push("GCP WIF");
-      if (gh) bound.push("GitHub App #" + gh);
-      var msg = bound.length
-        ? "Saved federation targets (" + bound.join(", ") + ") — still running Deterministic Digital Twin locally until backend worker is attached."
-        : "Status: Deterministic Digital Twin active (no live credentials bound).";
-      document.getElementById("liveBindingStatus").textContent = msg;
-      appendLog(msg, "PASS");
+      if (aws) bound.push("AWS-OIDC");
+      if (az) bound.push("Azure-WIF");
+      if (gcp) bound.push("GCP-WIF");
+      if (gh) bound.push("GitHub-App:" + gh);
+
+      postBackend(
+        "/api/v1/federate",
+        payload,
+        function (data) {
+          var msg = "GO BACKEND (:8080) FEDERATED: " + (data.providers || bound).join(", ");
+          document.getElementById("liveBindingStatus").textContent = msg;
+          appendLog(msg, "PASS");
+        },
+        function () {
+          var msg = bound.length
+            ? "TWIN FALLBACK (backend offline): Saved bindings (" + bound.join(", ") + ")."
+            : "Status: Deterministic Digital Twin active (no live credentials bound).";
+          document.getElementById("liveBindingStatus").textContent = msg;
+          appendLog(msg, "PASS");
+        }
+      );
     }
     appLoadState();
     updateCounters();
