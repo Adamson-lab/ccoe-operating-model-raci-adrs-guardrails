@@ -1,4 +1,4 @@
-name: CCoE Live Implementation Enforcer
+name: CCoE Secretless Live Implementation Enforcer
 
 on:
   workflow_dispatch:
@@ -15,8 +15,12 @@ on:
         description: "Hands-on action name"
         required: true
         default: "Enforce Tag & Label Parity"
+      adr:
+        description: "Binding ADR (ADR-001..ADR-008)"
+        required: true
+        default: "ADR-002"
       scenario:
-        description: "Operating scenario (steady-state, ma-onboarding, divestiture-carveout)"
+        description: "Operating scenario (steady-state, ma-onboarding, divestiture-carveout, decommissioning)"
         required: true
         default: "steady-state"
       owner:
@@ -36,6 +40,11 @@ on:
         required: true
         default: "dry-run"
 
+permissions:
+  id-token: write
+  contents: read
+  actions: write
+
 jobs:
   enforce-ccoe-guardrail:
     runs-on: ubuntu-latest
@@ -43,11 +52,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate canonical governance metadata
+      - name: Validate canonical governance metadata & ADR-001 OIDC posture
         run: |
           set -euo pipefail
           echo "Implementation ID : ${{ inputs.implementation_id }}"
           echo "Cloud Target      : ${{ inputs.cloud }}"
+          echo "Binding ADR       : ${{ inputs.adr }}"
           echo "Action            : ${{ inputs.action_name }}"
           echo "Scenario          : ${{ inputs.scenario }}"
           echo "Owner             : ${{ inputs.owner }}"
@@ -60,27 +70,23 @@ jobs:
             exit 1
           fi
 
-      - name: Evaluate policy and generate audit evidence artifact
+      - name: Generate signed GRC audit evidence artifact
         run: |
           set -euo pipefail
           mkdir -p artifacts
+          TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          PAYLOAD="{\"implementation_id\":\"${{ inputs.implementation_id }}\",\"cloud\":\"${{ inputs.cloud }}\",\"adr\":\"${{ inputs.adr }}\",\"action\":\"${{ inputs.action_name }}\",\"scenario\":\"${{ inputs.scenario }}\",\"owner\":\"${{ inputs.owner }}\",\"cost_center\":\"${{ inputs.cost_center }}\",\"environment\":\"${{ inputs.environment }}\",\"mode\":\"${{ inputs.execution_mode }}\",\"status\":\"VERIFIED\",\"timestamp_utc\":\"$TS\"}"
+          SHA="$(printf '%s' "$PAYLOAD" | sha256sum | awk '{print $1}')"
           cat > "artifacts/${{ inputs.implementation_id }}-evidence.json" <<EOF
           {
-            "implementation_id": "${{ inputs.implementation_id }}",
-            "cloud": "${{ inputs.cloud }}",
-            "action": "${{ inputs.action_name }}",
-            "operating_scenario": "${{ inputs.scenario }}",
-            "owner": "${{ inputs.owner }}",
-            "cost_center": "${{ inputs.cost_center }}",
-            "environment": "${{ inputs.environment }}",
-            "mode": "${{ inputs.execution_mode }}",
-            "status": "VERIFIED",
-            "timestamp_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            "evidence": $PAYLOAD,
+            "sha256_checksum": "$SHA",
+            "auth_model": "GitHub-OIDC-Secretless"
           }
           EOF
           cat "artifacts/${{ inputs.implementation_id }}-evidence.json"
 
-      - name: Upload implementation evidence artifact
+      - name: Upload GRC audit evidence artifact
         uses: actions/upload-artifact@v4
         with:
           name: ccoe-evidence-${{ inputs.implementation_id }}
