@@ -1,0 +1,290 @@
+$dir = "C:\Users\User\Downloads\ccoe-operating-model-raci-adrs-guardrails"
+$u = New-Object System.Text.UTF8Encoding($false)
+New-Item -ItemType Directory -Force -Path $dir | Out-Null
+
+$html = @'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ccoe-operating-model-raci-adrs-guardrails</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --paper: #faf8f5;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #e2e8f0;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --ok-bg: #dcfce7;
+      --ok-ink: #166534;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    header { background: var(--card); border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 0; }
+    .pill {
+      display: inline-block; font-size: 12px; font-weight: 700; color: var(--accent);
+      background: var(--accent-soft); border: 1px solid #c7d2fe; padding: 3px 10px;
+      border-radius: 999px; margin-bottom: 6px;
+    }
+    h1 { font-size: 28px; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    button, input { font: inherit; }
+    .btn {
+      border: 1px solid #cbd5e1; background: var(--card); color: var(--ink);
+      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .btn:hover { background: #f1f5f9; }
+    .btn-primary { background: var(--ink); color: #ffffff; border-color: var(--ink); }
+    .btn-active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+    .sub-bar { background: var(--paper); border-top: 1px solid var(--line); padding: 12px 0; }
+    .sub-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .search { padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: var(--card); font-size: 12px; min-width: 240px; }
+    main { padding: 32px 0 56px; display: grid; gap: 36px; }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 20px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .kpi-val { font-size: 24px; font-weight: 800; margin-top: 6px; }
+    h2 { font-size: 18px; margin-bottom: 4px; }
+    .sec-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    .table-wrap { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; }
+    th { background: var(--paper); font-weight: 700; color: #334155; }
+    .center { text-align: center; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 11px; }
+    .r-A { background: var(--accent); color: #fff; }
+    .r-R { background: #059669; color: #fff; }
+    .r-C { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+    .r-I { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+    .adr-grid { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(320px, 2fr); gap: 20px; }
+    @media (max-width: 820px) { .adr-grid { grid-template-columns: 1fr; } }
+    .adr-list { display: grid; gap: 10px; align-content: start; }
+    .adr-item { text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; }
+    .adr-item.active { border-color: var(--accent); background: var(--accent-soft); }
+    .adr-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
+    .status-pill { background: var(--ok-bg); color: var(--ok-ink); padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .adr-title { font-size: 14px; font-weight: 700; margin-top: 6px; }
+    .adr-block { margin-top: 14px; }
+    .adr-block h4 { font-size: 11px; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em; }
+    .adr-block p { font-size: 14px; color: #1e293b; margin-top: 4px; }
+    .guard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .guard-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; }
+    .guard-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11px; color: #64748b; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap top-bar">
+      <div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails</div>
+        <h1>Cloud Center of Excellence Operating Model</h1>
+        <p class="sub">Standalone single-file operating model for RACI ownership, ADRs, and multi-cloud guardrails.</p>
+      </div>
+      <div class="actions">
+        <button class="btn" id="copyBtn" type="button">Copy Charter JSON</button>
+        <button class="btn btn-primary" id="dlBtn" type="button">Download Charter JSON</button>
+      </div>
+    </div>
+    <div class="sub-bar">
+      <div class="wrap sub-inner">
+        <div class="tabs" id="sectionTabs">
+          <button class="btn btn-active" data-sec="all" type="button">All</button>
+          <button class="btn" data-sec="raci" type="button">RACI Matrix</button>
+          <button class="btn" data-sec="adrs" type="button">ADRs</button>
+          <button class="btn" data-sec="guardrails" type="button">Guardrails</button>
+        </div>
+        <input class="search" id="qInput" type="search" placeholder="Filter RACI, ADRs, or guardrails..." />
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="kpis">
+      <div class="card">
+        <div class="kpi-label">RACI Workstreams</div>
+        <div class="kpi-val">6 Tracks</div>
+        <p class="sub">Accountable (A), Responsible (R), Consulted (C), Informed (I)</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Architecture Decision Records</div>
+        <div class="kpi-val">4 ADRs</div>
+        <p class="sub">Binding multi-cloud operating &amp; identity decisions</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Operating Guardrails</div>
+        <div class="kpi-val">4 Guardrails</div>
+        <p class="sub">Preventive, detective, and responsive controls</p>
+      </div>
+    </section>
+
+    <section id="sec-raci">
+      <h2>RACI Governance Matrix</h2>
+      <p class="sec-sub">Clear ownership across CCoE Lead, Platform Engineering, Product Teams, InfoSec/GRC, and FinOps.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Workstream</th>
+              <th>Domain</th>
+              <th class="center">CCoE Lead</th>
+              <th class="center">Platform Eng</th>
+              <th class="center">Product Teams</th>
+              <th class="center">InfoSec / GRC</th>
+              <th class="center">FinOps</th>
+              <th>Cadence</th>
+            </tr>
+          </thead>
+          <tbody id="raciBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-adrs">
+      <h2>Architecture Decision Records (ADRs)</h2>
+      <p class="sec-sub">Select an ADR to inspect context, decision, and trade-offs.</p>
+      <div class="adr-grid">
+        <div class="adr-list" id="adrList"></div>
+        <div class="card" id="adrDetail"></div>
+      </div>
+    </section>
+
+    <section id="sec-guardrails">
+      <h2>Multi-Cloud Operating Guardrails</h2>
+      <p class="sec-sub">Core controls enforced across AWS, Azure, and GCP.</p>
+      <div class="guard-grid" id="guardGrid"></div>
+    </section>
+  </main>
+
+  <script>
+    const CHARTER = {
+      project: "ccoe-operating-model-raci-adrs-guardrails",
+      raci: [
+        { workstream: "CCoE Operating Charter, RACI & Exception Governance", domain: "Governance", ccoe: "A", plat: "R", prod: "C", sec: "C", fin: "C", cadence: "Quarterly" },
+        { workstream: "Multi-Cloud Landing Zone, OIDC & Vending", domain: "Landing Zone & IAM", ccoe: "C", plat: "A", prod: "I", sec: "C", fin: "I", cadence: "Bi-Weekly" },
+        { workstream: "Mandatory Tagging, Cost Allocation & Budget Caps", domain: "FinOps", ccoe: "C", plat: "R", prod: "R", sec: "I", fin: "A", cadence: "Monthly + Daily" },
+        { workstream: "Preventive SCPs, Azure Policy & GCP Org Policies", domain: "Security & GRC", ccoe: "C", plat: "R", prod: "I", sec: "A", fin: "I", cadence: "Continuous" },
+        { workstream: "Golden Path Templates, Drift & Sandbox TTL", domain: "Governance", ccoe: "C", plat: "A", prod: "R", sec: "I", fin: "C", cadence: "Weekly" },
+        { workstream: "Audit Evidence Packs & Break-Glass Reviews", domain: "Security & GRC", ccoe: "R", plat: "C", prod: "I", sec: "A", fin: "I", cadence: "Per Event / Monthly" }
+      ],
+      adrs: [
+        { id: "ADR-001", date: "2026-06-15", status: "Accepted", title: "Federated OIDC Over Static Cloud Keys", context: "Pipelines across clouds need short-lived credentials without static secret rotation risk.", decision: "Mandate OIDC / Workload Identity Federation with scoped trust conditions.", consequences: "Eliminates static cloud keys in CI/CD; requires trust setup per target scope." },
+        { id: "ADR-002", date: "2026-07-10", status: "Accepted", title: "Canonical Five-Key Tagging Baseline", context: "Inconsistent tags cause unallocated spend and slow incident ownership lookup.", decision: "Standardize owner, cost-center, environment, data-classification, and ttl.", consequences: "Improves FinOps attribution; requires case/character normalization per cloud." },
+        { id: "ADR-003", date: "2026-08-22", status: "Accepted", title: "Time-Bound Waivers & Break-Glass Controls", context: "Strict blocks alone can slow urgent incident response or valid exceptions.", decision: "Pair preventive guardrails with expiring waivers and short-TTL break-glass.", consequences: "Preserves velocity while keeping exceptions time-bounded and auditable." },
+        { id: "ADR-004", date: "2026-10-05", status: "Proposed", title: "Separate Repositories per Platform Capability", context: "Mixing unrelated domains in one repo increases release coupling.", decision: "Keep dedicated repositories and static deployments per capability.", consequences: "Cleaner isolation and ownership; requires consistent naming across repos." }
+      ],
+      guardrails: [
+        { code: "GR-PREV-01", tier: "Preventive", name: "No Static Cloud Keys in Pipelines or Client Bundles", owner: "InfoSec & Platform", clouds: "AWS · Azure · GCP", summary: "Use short-lived OIDC / Workload Identity tokens with scoped claims." },
+        { code: "GR-PREV-02", tier: "Preventive", name: "Mandatory Owner, Cost Center & Environment Metadata", owner: "FinOps & CCoE", clouds: "AWS · Azure · GCP", summary: "Require ownership and cost attribution tags on vended and governed resources." },
+        { code: "GR-DET-01", tier: "Detective", name: "Continuous Drift & Untaggable Asset Detection", owner: "Platform Eng", clouds: "AWS · Azure · GCP", summary: "Detect deviations from baseline tags and policy state continuously." },
+        { code: "GR-RESP-01", tier: "Responsive", name: "Expiring Waivers & Break-Glass Post-Review", owner: "CCoE & InfoSec", clouds: "AWS · Azure · GCP", summary: "Enforce expiration dates on exceptions and review break-glass grants." }
+      ]
+    };
+
+    let activeSec = "all";
+    let activeAdrId = CHARTER.adrs[0].id;
+    let query = "";
+    const badge = (v) => `<span class="badge r-${v}">${v}</span>`;
+
+    function render() {
+      const q = query.trim().toLowerCase();
+      document.getElementById("sec-raci").classList.toggle("hidden", activeSec !== "all" && activeSec !== "raci");
+      document.getElementById("sec-adrs").classList.toggle("hidden", activeSec !== "all" && activeSec !== "adrs");
+      document.getElementById("sec-guardrails").classList.toggle("hidden", activeSec !== "all" && activeSec !== "guardrails");
+
+      const raciRows = CHARTER.raci.filter(r => !q || `${r.workstream} ${r.domain} ${r.cadence}`.toLowerCase().includes(q));
+      document.getElementById("raciBody").innerHTML = raciRows.map(r => `
+        <tr>
+          <td><strong>${r.workstream}</strong></td>
+          <td>${r.domain}</td>
+          <td class="center">${badge(r.ccoe)}</td>
+          <td class="center">${badge(r.plat)}</td>
+          <td class="center">${badge(r.prod)}</td>
+          <td class="center">${badge(r.sec)}</td>
+          <td class="center">${badge(r.fin)}</td>
+          <td>${r.cadence}</td>
+        </tr>
+      `).join("");
+
+      const adrs = CHARTER.adrs.filter(a => !q || `${a.id} ${a.title} ${a.context} ${a.decision}`.toLowerCase().includes(q));
+      if (adrs.length && !adrs.some(a => a.id === activeAdrId)) activeAdrId = adrs[0].id;
+      document.getElementById("adrList").innerHTML = adrs.map(a => `
+        <button class="adr-item ${a.id === activeAdrId ? "active" : ""}" data-adr="${a.id}" type="button">
+          <div class="adr-meta"><span>${a.id}</span><span class="status-pill">${a.status}</span></div>
+          <div class="adr-title">${a.title}</div>
+          <div class="sub">${a.date}</div>
+        </button>
+      `).join("");
+
+      const cur = adrs.find(a => a.id === activeAdrId) || adrs[0];
+      document.getElementById("adrDetail").innerHTML = cur ? `
+        <div class="adr-meta"><span>${cur.id} · ${cur.date}</span><span class="status-pill">${cur.status}</span></div>
+        <h3 style="font-size:20px;margin-top:6px;">${cur.title}</h3>
+        <div class="adr-block"><h4>Context</h4><p>${cur.context}</p></div>
+        <div class="adr-block"><h4>Decision</h4><p>${cur.decision}</p></div>
+        <div class="adr-block"><h4>Consequences</h4><p>${cur.consequences}</p></div>
+      ` : `<p class="sub">No matching ADR.</p>`;
+
+      const guards = CHARTER.guardrails.filter(g => !q || `${g.code} ${g.tier} ${g.name} ${g.summary} ${g.owner}`.toLowerCase().includes(q));
+      document.getElementById("guardGrid").innerHTML = guards.map(g => `
+        <div class="card">
+          <div class="guard-top"><span>${g.code}</span><span class="pill" style="margin:0;">${g.tier}</span></div>
+          <h3 style="font-size:15px;margin-top:8px;">${g.name}</h3>
+          <p class="sub" style="margin-top:6px;">${g.summary}</p>
+          <div class="guard-foot"><span>Owner: ${g.owner}</span><span>${g.clouds}</span></div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll("#adrList .adr-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeAdrId = btn.getAttribute("data-adr");
+          render();
+        });
+      });
+    }
+
+    document.querySelectorAll("#sectionTabs button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeSec = btn.getAttribute("data-sec");
+        document.querySelectorAll("#sectionTabs button").forEach(b => b.classList.toggle("btn-active", b === btn));
+        render();
+      });
+    });
+
+    document.getElementById("qInput").addEventListener("input", e => { query = e.target.value; render(); });
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(JSON.stringify(CHARTER, null, 2));
+      const b = document.getElementById("copyBtn");
+      b.textContent = "Copied!";
+      setTimeout(() => (b.textContent = "Copy Charter JSON"), 1500);
+    });
+    document.getElementById("dlBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(CHARTER, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ccoe-operating-model-raci-adrs-guardrails-charter.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    render();
+  </script>
+</body>
+</html>
