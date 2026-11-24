@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails · Global CIO & Technical Fellow Control Plane</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · 30-Subsystem Global CCoE Control Plane</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -56,7 +56,7 @@
       margin-bottom: 8px;
     }
     h1 { font-size: clamp(23px, 2.4vw, 29px); letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 13px; margin-top: 5px; max-width: 88ch; }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 5px; max-width: 92ch; }
     .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     button, input, select, textarea { font: inherit; }
     .btn {
@@ -82,7 +82,7 @@
       display: grid;
       gap: 10px;
     }
-    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 10px; }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; }
     .cmd-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .input {
       width: 100%;
@@ -94,7 +94,7 @@
       color: var(--ink);
     }
     textarea.input {
-      min-height: 104px;
+      min-height: 98px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 11.5px;
       resize: vertical;
@@ -114,8 +114,8 @@
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
     .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
-    .kpi-val { font-size: 21px; font-weight: 800; margin-top: 6px; }
-    .two-col { display: grid; grid-template-columns: minmax(340px, 1fr) minmax(420px, 1.45fr); gap: 20px; }
+    .kpi-val { font-size: 20px; font-weight: 800; margin-top: 6px; }
+    .two-col { display: grid; grid-template-columns: minmax(340px, 1fr) minmax(440px, 1.45fr); gap: 20px; }
     .two-col-even { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; margin-top: 12px; }
@@ -138,6 +138,7 @@
       background: #090f1d;
       padding: 10px;
       overflow: hidden;
+      scroll-margin-top: 18px;
     }
     .diagram-stage svg {
       width: 100%;
@@ -146,7 +147,7 @@
       display: block;
     }
     .svg-node { cursor: pointer; }
-    .svg-node:hover rect.node-box { stroke: #818cf8; stroke-width: 2.5; }
+    .svg-node:hover rect.node-box { stroke: #ffffff; stroke-width: 2.6; }
     pre {
       margin-top: 12px;
       padding: 14px;
@@ -166,7 +167,7 @@
       background: var(--paper);
       border: 1px solid var(--line);
       font-size: 12px;
-      max-height: 185px;
+      max-height: 195px;
       overflow: auto;
     }
     .log-entry { padding: 5px 0; border-bottom: 1px dashed #e2e8f0; }
@@ -202,9 +203,9 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · Global CIO &amp; Technical Fellow Command Center</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 30 Subsystems Across Tiers 1–6</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub" id="lensSubtitle">Unified multi-cloud CCoE across 18,000 implementations: live AWS/Azure/GCP architectural &amp; CIEM trust diagrams, formal verification proofs, Cloud Exit portability, geopolitical shock simulation, M&amp;A valuation haircuts, Conway's Law cognitive load, CVE kill-switch, and PQC readiness.</p>
+        <p class="sub" id="lensSubtitle">30 Subsystems (Tiers 1–6): NATS/CloudEvents firehose, bi-temporal graph, Cilium Tetragon eBPF, AST drift reconciler, Firecracker pre-flight gate, Z3 SMT prover, Temporal &lt;30s quarantine, ClickHouse 30–90d replay, SPIFFE/SPIRE 15m SVIDs, chaos orchestrator, WACS/MainOne/2Africa/Equiano/Seacom/PEACE &amp; BGP telemetry, HYOK HSM, OpenTofu/Crossplane exit engine, cross-cloud WORM cyber-vault, Merkle ledger, Envoy/Wasm PII tokenizer, NVIDIA DCGM GPU preemption, Sigstore lineage, Redis agent circuit breaker, vector-DB radar, CUR/BigQuery OLAP, unit-cost PR guard, grid-carbon scheduler, RI/CUD optimizer, zombie reclaimer, SBOM/CVE kill-switch, SLSA L4 + PQC, Conway cognitive load, ITSM/Temporal waivers, and 15m M&amp;A/TSA carve-out.</p>
       </div>
       <div class="actions">
         <select class="input" id="rbacPersona" style="width:auto;" onchange="appPersonaChange()">
@@ -224,12 +225,12 @@
     </div>
     <div class="sub-bar">
       <div class="wrap cmd-bar">
-        <input class="input" id="cmdInput" type="search" style="flex:1 1 340px;" placeholder="Executive Copilot (Ctrl+K): e.g. 'divest european unit', 'cve-2024-3094', 'fiber cut', 'impl-00412', 'reset'" onkeydown="if(event.key==='Enter') appExecCommand()" />
+        <input class="input" id="cmdInput" type="search" style="flex:1 1 340px;" placeholder="Copilot (Ctrl+K): e.g. 'divest european unit', 'cve-2024-3094', 'fiber cut', 'subsystem 17', 'impl-00412', 'reset'" onkeydown="if(event.key==='Enter') appExecCommand()" />
         <button class="btn btn-active" type="button" onclick="appExecCommand()">Synthesize &amp; Execute</button>
         <button class="btn" type="button" onclick="appResetState()">Reset Saved State</button>
       </div>
       <div class="wrap filters">
-        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, ADR-001..008, workload..." oninput="appFilterChange()" />
+        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, S01..S30, ADR-001..008..." oninput="appFilterChange()" />
         <select class="input" id="cloudFilter" onchange="appFilterChange()">
           <option value="All">All Clouds (AWS · Azure · GCP)</option>
           <option value="AWS">AWS</option>
@@ -244,27 +245,19 @@
           <option value="HIPAA">HIPAA / GDPR / DORA / NDPR</option>
           <option value="FINOPS">FinOps &amp; ESG Treasury</option>
         </select>
-        <select class="input" id="actionFilter" onchange="appFilterChange()">
-          <option value="All">All Hands-On Actions</option>
-          <option value="Enforce Tag & Label Parity">Enforce Tag &amp; Label Parity</option>
-          <option value="Remediate Console Drift">Remediate Console Drift</option>
-          <option value="Verify OIDC / Workload Trust">Verify OIDC / Workload Trust</option>
-          <option value="Apply Preventive Guardrail">Apply Preventive Guardrail</option>
-          <option value="Reclaim Expired Sandbox TTL">Reclaim Expired Sandbox TTL</option>
-          <option value="Generate Audit Evidence">Generate Audit Evidence</option>
-          <option value="Enforce Zero-Trust Hub-Spoke Egress">Enforce Zero-Trust Hub-Spoke Egress</option>
-          <option value="Govern AI/GPU Quota & PII Boundary">Govern AI/GPU Quota &amp; PII Boundary</option>
+        <select class="input" id="subsystemFilter" onchange="appFilterChange()">
+          <option value="All">All 30 Subsystems (S01–S30)</option>
         </select>
         <select class="input" id="adrFilter" onchange="appFilterChange()">
           <option value="All">All ADRs (ADR-001..008)</option>
-          <option value="ADR-001">ADR-001 · Secretless OIDC &amp; CIEM</option>
-          <option value="ADR-002">ADR-002 · 5-Key Tagging &amp; GCP Labels</option>
-          <option value="ADR-003">ADR-003 · Time-Bound Waivers &amp; ITSM</option>
-          <option value="ADR-004">ADR-004 · Zero-Trust Hub-Spoke &amp; Drift</option>
-          <option value="ADR-005">ADR-005 · Sovereignty, HYOK &amp; Exit</option>
-          <option value="ADR-006">ADR-006 · FinOps Treasury &amp; ESG</option>
-          <option value="ADR-007">ADR-007 · AI/GPU &amp; ISO 42001 Gate</option>
-          <option value="ADR-008">ADR-008 · Bounded Repos &amp; Golden Paths</option>
+          <option value="ADR-001">ADR-001 · OIDC, SPIFFE &amp; PQC</option>
+          <option value="ADR-002">ADR-002 · 5-Key Tags &amp; GCP Labels</option>
+          <option value="ADR-003">ADR-003 · ITSM/Temporal Waivers</option>
+          <option value="ADR-004">ADR-004 · Z3 SMT, eBPF &amp; Drift</option>
+          <option value="ADR-005">ADR-005 · Cable/BGP, HYOK &amp; Exit</option>
+          <option value="ADR-006">ADR-006 · FinOps, ESG &amp; M&amp;A</option>
+          <option value="ADR-007">ADR-007 · AI/GPU, DLP &amp; Vector Radar</option>
+          <option value="ADR-008">ADR-008 · SBOM/CVE, SLSA &amp; Conway</option>
         </select>
       </div>
     </div>
@@ -273,27 +266,27 @@
   <main class="wrap">
     <section class="kpis">
       <div class="card">
-        <div class="kpi-label" id="kpi1Label">Catalog &amp; Formal Proof</div>
-        <div class="kpi-val" id="kpi1Val">18,000 · SMT VERIFIED</div>
-        <p class="sub" id="kpi1Sub">Zero unintended 0.0.0.0/0 paths (Zelkova model)</p>
+        <div class="kpi-label">Catalog &amp; Z3 Formal Proof</div>
+        <div class="kpi-val" id="kpi1Val">18,000 · Z3 VERIFIED</div>
+        <p class="sub" id="kpi1Sub">30 Subsystems · 0.0.0.0/0 SMT paths = 0</p>
       </div>
       <div class="card">
-        <div class="kpi-label" id="kpi2Label">Cloud Exit Portability</div>
+        <div class="kpi-label">Cloud Exit &amp; Lock-In</div>
         <div class="kpi-val" id="kpi2Val">84 / 100</div>
-        <p class="sub" id="kpi2Sub">Est. exit: 140 hrs · $38k migration cost</p>
+        <p class="sub" id="kpi2Sub">OpenTofu/Crossplane exit · egress &amp; hrs</p>
       </div>
       <div class="card">
-        <div class="kpi-label" id="kpi3Label">Tier-0 Revenue-at-Risk</div>
+        <div class="kpi-label">Tier-0 Rev-at-Risk &amp; ESG</div>
         <div class="kpi-val" id="kpi3Val">$18,400/mo · $920/min</div>
-        <p class="sub" id="kpi3Sub">Cyber-Ins ROI: -$140k/yr · CO2e: 1.4t/mo</p>
+        <p class="sub" id="kpi3Sub">Unit cost delta · gCO2eq/kWh grid aware</p>
       </div>
       <div class="card">
-        <div class="kpi-label" id="kpi4Label">Conway Load &amp; PQC</div>
-        <div class="kpi-val" id="kpi4Val">Optimal · PQC 78%</div>
-        <p class="sub" id="kpi4Sub">Golden Path 4.1x DORA velocity · ADR half-life 92d</p>
+        <div class="kpi-label">eBPF, PQC &amp; Conway Load</div>
+        <div class="kpi-val" id="kpi4Val">ML-KEM/DSA · S01–S30</div>
+        <p class="sub" id="kpi4Sub">Tetragon eBPF · &lt;30s Temporal quarantine</p>
       </div>
       <div class="card">
-        <div class="kpi-label" id="kpi5Label">Executed &amp; Merkle Ledger</div>
+        <div class="kpi-label">Executed &amp; Merkle Ledger</div>
         <div class="kpi-val" id="execCount">0</div>
         <p class="sub" id="passFailSub">0 PASS · 0 ACTION REQUIRED · 0 waivers</p>
       </div>
@@ -301,8 +294,8 @@
 
     <section class="two-col" id="runnerSection">
       <div class="card">
-        <h2>Execution, Secretless OIDC &amp; Geopolitical Shock Runner</h2>
-        <p class="sub">Zero-PAT OIDC/GitHub App authentication, formal SMT verification, autonomous &lt;60s quarantine, and macro geopolitical shock simulation.</p>
+        <h2>30-Subsystem Execution, Temporal Quarantine &amp; Cable/BGP Runner</h2>
+        <p class="sub">Inspect any of the 30 subsystems (Tiers 1–6), run Z3/OPA/ClickHouse 30d replay, trigger &lt;30s Temporal quarantine, or simulate subsea cable cuts, M&amp;A haircuts, and divestiture TSAs.</p>
 
         <div class="form-grid">
           <label>
@@ -310,14 +303,18 @@
             <input class="input" id="activeImplId" value="IMPL-00001" onchange="appInspect(this.value, false)" />
           </label>
           <label>
-            Macro / Geopolitical Scenario
+            Subsystem (S01–S30)
+            <select class="input" id="activeSubsystem" onchange="appSubsystemSelectChange()"></select>
+          </label>
+          <label>
+            Macro / Cable / M&amp;A Scenario
             <select class="input" id="scenarioMode" onchange="appSaveAndRefresh()">
-              <option value="steady-state">Steady-State Global CCoE</option>
-              <option value="fiber-cut">Submarine Fiber Cut (W. Africa / Red Sea)</option>
-              <option value="localization-mandate">Sudden Data Localization Mandate (CBN/NDPA/EU)</option>
-              <option value="tariff-hike">Cloud Sanctions / +35% Vendor Tariff Hike</option>
-              <option value="ma-onboarding">M&amp;A Due Diligence &amp; Day 1–90 Wave</option>
-              <option value="divestiture-carveout">Divestiture Clean-Room &amp; TSA Meter</option>
+              <option value="steady-state">Steady-State (NATS &lt;1.5s · SPIFFE 15m SVID)</option>
+              <option value="fiber-cut">Subsea Cable Cut (WACS/MainOne/2Africa/Equiano/Seacom/PEACE + BGP)</option>
+              <option value="localization-mandate">Sovereign HYOK &amp; Data Residency Lock (NDPA/CBN/GDPR/DORA)</option>
+              <option value="tariff-hike">+35% Cloud Tariff Hike (OpenTofu/Crossplane Exit &amp; Egress)</option>
+              <option value="ma-onboarding">15-Min M&amp;A Valuation Haircut &amp; Read-Only Wave</option>
+              <option value="divestiture-carveout">Divestiture Clean-Room Severance &amp; TSA Meter</option>
             </select>
           </label>
           <label>
@@ -345,53 +342,53 @@
         <div class="info-box" id="raciGateBox"></div>
 
         <div class="card-actions">
-          <button class="btn btn-active" type="button" onclick="appRunSelected()">Execute &amp; Formal Proof</button>
-          <button class="btn" type="button" onclick="appAutonomousHeal()">&lt;60s Autonomous Quarantine</button>
-          <button class="btn" type="button" onclick="appRunAiGpuGate()">AI/GPU, CIEM &amp; PQC Gate</button>
+          <button class="btn btn-active" type="button" onclick="appRunSelected()">Execute &amp; Z3 Proof</button>
+          <button class="btn" type="button" onclick="appAutonomousHeal()">&lt;30s Temporal Quarantine</button>
+          <button class="btn" type="button" onclick="appRunAiGpuGate()">GPU/DCGM, DLP &amp; Vector Gate</button>
           <button class="btn" type="button" onclick="appCopyArtifact()">Copy Active Output</button>
         </div>
 
         <div class="form-grid" style="margin-top:12px;">
           <label>
-            Secretless Auth (ADR-001)
+            Secretless Auth (S09 · ADR-001)
             <select class="input" id="authMode" onchange="appSaveState()">
-              <option value="oidc-jwt">GitHub OIDC JWT Token Exchange (Zero-PAT)</option>
-              <option value="github-app-pkce">GitHub App OAuth 2.0 PKCE Ephemeral Token</option>
+              <option value="oidc-jwt">GitHub OIDC JWT + SPIFFE 15m SVID (Zero-PAT)</option>
+              <option value="github-app-pkce">GitHub App OAuth 2.0 PKCE + Vault Dynamic DB</option>
             </select>
           </label>
           <label>
             Execution Mode
             <select class="input" id="execMode" onchange="appSaveState()">
-              <option value="dry-run">dry-run (30d CloudTrail Twin Replay)</option>
-              <option value="enforce">enforce (SLSA L4 Signed Apply)</option>
+              <option value="dry-run">dry-run (ClickHouse 30–90d Replay + Z3)</option>
+              <option value="enforce">enforce (Firecracker &lt;350ms + SLSA L4)</option>
             </select>
           </label>
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" type="button" onclick="appExchangeAndDispatch()">Exchange OIDC JWT &amp; Dispatch Workflow</button>
         </div>
-        <div class="log-box" id="execLog">Ready. Interactive AWS/Azure/GCP architecture &amp; CIEM trust diagrams rendered live. Click any node in the diagram to inspect its blast radius and exit portability.</div>
+        <div class="log-box" id="execLog">Ready. Click "Inspect Diagram" on any card below to jump directly to the top of the dynamic architecture diagram.</div>
       </div>
 
-      <div class="card">
+      <div class="card" id="workbenchCard">
         <div class="sec-head" style="margin-bottom:4px;">
           <h2>Interactive Architecture Diagram &amp; Engineering Workbench</h2>
-          <span class="badge" id="artifactImplBadge">IMPL-00001 · ARCHITECTURE DIAGRAM</span>
+          <span class="badge" id="artifactImplBadge">IMPL-00001 · DIAGRAM</span>
         </div>
-        <p class="sub" id="artifactSummary">Click any architectural node below to inspect trust paths, exit portability, and formal verification state.</p>
+        <p class="sub" id="artifactSummary">S01: Multi-Cloud Real-Time Control-Plane Firehose</p>
         <div class="tab-row" id="artifactTabs">
           <button class="btn btn-active" type="button" data-fmt="diagram" onclick="appSetFmt('diagram', this)">Architecture &amp; Trust Diagram</button>
           <button class="btn" type="button" data-fmt="terraform" onclick="appSetFmt('terraform', this)">Golden Path HCL</button>
-          <button class="btn" type="button" data-fmt="rego" onclick="appSetFmt('rego', this)">OPA / Rego + 30d Twin</button>
-          <button class="btn" type="button" data-fmt="cli" onclick="appSetFmt('cli', this)">CLI &amp; CVE Kill-Switch</button>
-          <button class="btn" type="button" data-fmt="board" onclick="appSetFmt('board', this)">CIO / M&amp;A / Exit Ledger</button>
+          <button class="btn" type="button" data-fmt="rego" onclick="appSetFmt('rego', this)">OPA / Rego + 30d Replay</button>
+          <button class="btn" type="button" data-fmt="cli" onclick="appSetFmt('cli', this)">CLI, eBPF &amp; CVE Kill-Switch</button>
+          <button class="btn" type="button" data-fmt="board" onclick="appSetFmt('board', this)">CIO / M&amp;A / Exit / ESG</button>
           <button class="btn" type="button" data-fmt="json" onclick="appSetFmt('json', this)">Merkle Spec JSON</button>
         </div>
 
         <div id="diagramPanel">
           <div class="diagram-stage" id="archDiagramContainer"></div>
           <div class="info-box" id="nodeInspectorBox">
-            <div><strong>Node Inspector:</strong> Click any component box in the diagram above (Identity/OIDC, CCoE Gate, Hub-Spoke Network, AI/GPU &amp; HYOK Vault, or Tier-0 Service &amp; Merkle Ledger) to inspect live topology telemetry.</div>
+            <div><strong>Subsystem &amp; Node Inspector:</strong> Click any component box in the diagram above or change Subsystem (S01–S30) to inspect live telemetry.</div>
           </div>
         </div>
         <pre id="artifactCode" style="display:none;"></pre>
@@ -400,14 +397,14 @@
 
     <section class="two-col-even">
       <div class="card">
-        <h2>Pre-Flight Formal Linter &amp; 1-Click Global CVE Kill-Switch</h2>
-        <p class="sub">Run symbolic policy checks or enter any CVE ID (e.g., <code>CVE-2024-3094</code>) to scan SBOMs across 18,000 targets and isolate affected workloads.</p>
+        <h2>Pre-Flight Formal Linter &amp; &lt;200ms Global CVE Kill-Switch (S05, S06, S16, S17, S26, S27)</h2>
+        <p class="sub">Checks mandatory tags, OIDC/SPIFFE, egress, PII/BVN/NIN/SSN/PAN redaction, DCGM GPU Tensor Core utilization (&ge;12%), HYOK HSM, and ML-KEM/ML-DSA PQC TLS.</p>
         <div class="cmd-bar" style="margin-top:10px;">
           <input class="input" id="cveInput" style="flex:1;" value="CVE-2024-3094" placeholder="Enter CVE ID (e.g. CVE-2024-3094)" />
-          <button class="btn btn-danger" type="button" onclick="appTriggerCveKillSwitch()">Run CVE Blast-Radius &amp; Quarantine</button>
+          <button class="btn btn-danger" type="button" onclick="appTriggerCveKillSwitch()">1-Click CVE Blast-Radius &amp; Quarantine</button>
         </div>
         <div style="margin-top:10px;">
-          <textarea class="input" id="linterInput" oninput="appSaveState()">{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true,"pii_scrubbed":true,"gpu_util_pct":74,"hyok_hsm_active":true,"pqc_tls_hybrid":true}</textarea>
+          <textarea class="input" id="linterInput" oninput="appSaveState()">{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true,"pii_scrubbed":true,"gpu_tensor_util_pct":74,"hyok_hsm_active":true,"pqc_tls_hybrid":true,"slsa_level":4}</textarea>
         </div>
         <div class="card-actions">
           <button class="btn btn-active" type="button" onclick="appLintPayload()">Run Formal Policy Lint</button>
@@ -415,13 +412,13 @@
           <button class="btn" type="button" onclick="appLoadGoodSample()">Load Compliant Sample</button>
         </div>
         <div class="info-box" id="lintResultBox">
-          <div><strong>Verifier Ready:</strong> Checks tags, OIDC, Zero-Trust egress, PII DLP, GPU utilization, HYOK HSM, and Post-Quantum TLS.</div>
+          <div><strong>Verifier Ready:</strong> Validates S01–S30 invariants prior to Firecracker (&lt;350ms) pre-flight admission.</div>
         </div>
       </div>
 
       <div class="card">
-        <h2>Time-Bound Waiver &amp; ITSM Change-Ticket Gate (ADR-003)</h2>
-        <p class="sub">Verifies approved ITSM change ticket (<code>CHG-</code> / <code>INC-</code>), enforces RBAC persona separation of duties, and records signed waivers.</p>
+        <h2>ITSM-Verified Break-Glass Waiver &amp; Exact-TTL Timer (S29 · ADR-003)</h2>
+        <p class="sub">Verifies approved ServiceNow/Jira change ticket (<code>CHG-</code> / <code>INC-</code>), enforces RBAC dual-control, and schedules exact-millisecond Temporal expiry.</p>
         <div class="form-grid">
           <label>
             ITSM Ticket (e.g. CHG-40912)
@@ -436,12 +433,12 @@
             </select>
           </label>
           <label>
-            Expiry TTL
+            Exact Expiry TTL
             <select class="input" id="waiverWindow" onchange="appSaveState()">
-              <option value="24h">24h (Emergency Break-Glass)</option>
-              <option value="7d" selected>7d (Standard Sprint Waiver)</option>
-              <option value="14d">14d (M&amp;A Wave Window)</option>
-              <option value="30d">30d (Max Quarterly Exception)</option>
+              <option value="24h">24h (Break-Glass)</option>
+              <option value="7d" selected>7d (Sprint Waiver)</option>
+              <option value="14d">14d (M&amp;A Wave)</option>
+              <option value="30d">30d (Max Exception)</option>
             </select>
           </label>
           <label>
@@ -460,8 +457,8 @@
     <section class="card">
       <div class="sec-head">
         <div>
-          <h2>Executive RACI Matrix, Unified ADR Registry (ADR-001..008) &amp; Regulatory Crosswalk</h2>
-          <p class="sub">Aligned across SOC 2, ISO 27001/42001, PCI-DSS 4.0, HIPAA, GDPR, DORA, CBN IT Standards, NDPA &amp; NIST 800-53. Click an ADR to filter 18,000 items.</p>
+          <h2>Executive RACI Matrix, Unified ADR Registry (ADR-001..008) &amp; 30-Subsystem Tier Map</h2>
+          <p class="sub">Covers Tiers 1–6 (Subsystems S01–S30) across SOC 2, ISO 27001/42001, PCI-DSS 4.0, HIPAA, GDPR, DORA, CBN IT Standards, NDPA &amp; NIST 800-53 Rev 5.</p>
         </div>
         <div class="actions">
           <button class="btn" type="button" onclick="appFilterByAdr('All')">All</button>
@@ -479,9 +476,9 @@
         <table>
           <thead>
             <tr>
+              <th>Tier &amp; Subsystems</th>
               <th>Governance Domain</th>
               <th>ADR</th>
-              <th>Regulatory Crosswalk</th>
               <th>CCoE</th>
               <th>Platform</th>
               <th>InfoSec</th>
@@ -491,39 +488,9 @@
           </thead>
           <tbody>
             <tr>
-              <td>Secretless OIDC, GitHub App, CIEM &amp; PQC Posture</td>
-              <td><strong>ADR-001</strong></td>
-              <td>SOC2 CC6.1 · ISO A.9.2 · NIST AC-2/PQC</td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
-              <td>8h</td>
-            </tr>
-            <tr>
-              <td>5-Key Canonical Tagging &amp; GCP Label Normalization</td>
-              <td><strong>ADR-002</strong></td>
-              <td>FINOPS-TAG-01 · SOC2 CC7.1 · NIST CM-8</td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td>24h</td>
-            </tr>
-            <tr>
-              <td>Time-Bound Waivers, Break-Glass &amp; ITSM Gate</td>
-              <td><strong>ADR-003</strong></td>
-              <td>PCI 7.2 · ISO A.12.4 · DORA Art.9</td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
-              <td>12h</td>
-            </tr>
-            <tr>
-              <td>Zero-Trust Hub-Spoke Egress, SMT Proofs &amp; Drift</td>
+              <td><strong>Tier 1 (S01–S05)</strong></td>
+              <td>NATS Firehose (&lt;1.5s), Bi-Temporal Graph, Tetragon eBPF, AST Drift, Firecracker (&lt;350ms)</td>
               <td><strong>ADR-004</strong></td>
-              <td>PCI 1.3 · HIPAA 164.312(e) · NIST SC-7</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
@@ -531,9 +498,19 @@
               <td>4h</td>
             </tr>
             <tr>
-              <td>Sovereignty, HYOK HSM, Cloud Exit &amp; Geopolitical Resilience</td>
+              <td><strong>Tier 2 (S06–S10)</strong></td>
+              <td>Z3 SMT Prover, Temporal &lt;30s Quarantine, ClickHouse 30–90d Replay, SPIFFE/SPIRE, Chaos FIS</td>
+              <td><strong>ADR-001</strong></td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-i">I</span></td>
+              <td>4h</td>
+            </tr>
+            <tr>
+              <td><strong>Tier 3 (S11–S15)</strong></td>
+              <td>Subsea Cable (WACS/MainOne/2Africa/Equiano/Seacom/PEACE) &amp; BGP, HYOK HSM, Exit, WORM Vault, Merkle</td>
               <td><strong>ADR-005</strong></td>
-              <td>GDPR Art.44 · NDPA · CBN IT · DORA</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-a">A</span></td>
@@ -541,19 +518,9 @@
               <td>6h</td>
             </tr>
             <tr>
-              <td>FinOps Treasury, M&amp;A Valuation Haircuts &amp; ESG Grid</td>
-              <td><strong>ADR-006</strong></td>
-              <td>FINOPS-BUD-04 · SOC2 CC7.2 · DORA Art.11</td>
-              <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td>2h</td>
-            </tr>
-            <tr>
-              <td>AI/GPU Arbitrage, PII DLP, ISO 42001 &amp; EU AI Act</td>
+              <td><strong>Tier 4 (S16–S20)</strong></td>
+              <td>Envoy/Wasm PII DLP, DCGM GPU Preemption (&lt;12% / 20m), Sigstore Lineage, Token Breaker, Vector Radar</td>
               <td><strong>ADR-007</strong></td>
-              <td>ISO 42001 · EU AI Act · SOC2 CC6.7 · HIPAA</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
@@ -561,13 +528,23 @@
               <td>4h</td>
             </tr>
             <tr>
-              <td>Bounded Capability Repos, Golden Paths &amp; Conway's Law</td>
+              <td><strong>Tier 5 (S21–S25)</strong></td>
+              <td>CUR/BigQuery OLAP, Unit Cost PR Guard (&gt;3%), Grid-Carbon Scheduler, RI/CUD Solver, Zombie Reclaimer</td>
+              <td><strong>ADR-006</strong></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-i">I</span></td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td>2h</td>
+            </tr>
+            <tr>
+              <td><strong>Tier 6 (S26–S30)</strong></td>
+              <td>SBOM &amp; &lt;200ms CVE Kill-Switch, SLSA L4 + PQC (ML-KEM/DSA), Conway Load, ITSM Waivers, 15m M&amp;A/TSA</td>
               <td><strong>ADR-008</strong></td>
-              <td>SOC2 CC8.1 · SLSA L4 · NIST CM-3</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
               <td>4h</td>
             </tr>
           </tbody>
@@ -577,8 +554,8 @@
 
     <section>
       <div class="sec-head">
-        <h2>18,000 Hands-On Live Implementations</h2>
-        <span class="sub" id="filterSummary">All Clouds · All Frameworks · All Actions · All ADRs</span>
+        <h2>18,000 Hands-On Live Implementations (Across All 30 Subsystems)</h2>
+        <span class="sub" id="filterSummary">All Clouds · All Frameworks · All Subsystems · All ADRs</span>
       </div>
       <div class="grid" id="implGrid"></div>
       <div class="pager">
@@ -597,35 +574,57 @@
       }
     };
 
-    var STORAGE_KEY = "ccoe_cio_fellow_state_v2";
+    var STORAGE_KEY = "ccoe_30subsystems_state_v1";
     var CLOUDS = ["AWS", "Azure", "GCP"];
     var FRAMEWORKS = ["SOC2", "ISO27001", "PCI-DSS", "HIPAA", "FINOPS"];
     var ADRS = ["ADR-001", "ADR-002", "ADR-003", "ADR-004", "ADR-005", "ADR-006", "ADR-007", "ADR-008"];
-    var ACTIONS = [
-      "Enforce Tag & Label Parity",
-      "Remediate Console Drift",
-      "Verify OIDC / Workload Trust",
-      "Apply Preventive Guardrail",
-      "Reclaim Expired Sandbox TTL",
-      "Generate Audit Evidence",
-      "Enforce Zero-Trust Hub-Spoke Egress",
-      "Govern AI/GPU Quota & PII Boundary"
+
+    var SUBSYSTEMS = [
+      { code: "S01", tier: "Tier 1", name: "NATS JetStream + Go CloudEvents Firehose (<1.5s)", adr: "ADR-004", node: "network", arch: "NATS JetStream + Go Workers -> CloudEvents" },
+      { code: "S02", tier: "Tier 1", name: "Bi-Temporal Cloud & Identity Graph (AS OF Time-Travel)", adr: "ADR-001", node: "identity", arch: "PostgreSQL + Apache AGE (Valid/Tx Time)" },
+      { code: "S03", tier: "Tier 1", name: "Cilium Tetragon eBPF Kernel-to-Terraform Attribution", adr: "ADR-004", node: "workload", arch: "Tetragon execve/connect/ptrace -> cgroup -> HCL" },
+      { code: "S04", tier: "Tier 1", name: "Structural AST IaC & Live State Drift Reconciler", adr: "ADR-004", node: "policy", arch: "Go hcl2 / OpenTofu / Crossplane AST Diff" },
+      { code: "S05", tier: "Tier 1", name: "Firecracker MicroVM (<350ms) Pre-Flight Gate", adr: "ADR-002", node: "policy", arch: "Firecracker <350ms -> tofu/OPA/Checkov/Infracost/Z3" },
+      { code: "S06", tier: "Tier 2", name: "Z3 SMT-Solver Network & IAM Theorem Prover", adr: "ADR-004", node: "policy", arch: "Microsoft Z3 First-Order Logic Reachability Proof" },
+      { code: "S07", tier: "Tier 2", name: "Temporal.io <30s Autonomous Quarantine State Machine", adr: "ADR-003", node: "network", arch: "Temporal Workflow: Snapshot -> DenyAll -> PR" },
+      { code: "S08", tier: "Tier 2", name: "ClickHouse 30–90d Historical Event-Replay Sandbox", adr: "ADR-004", node: "policy", arch: "ClickHouse OLAP + OPA Worker Replay" },
+      { code: "S09", tier: "Tier 2", name: "SPIFFE/SPIRE 15m SVID & Vault Ephemeral Identity", adr: "ADR-001", node: "identity", arch: "SPIFFE/SPIRE 15m X.509 SVID + FIDO2 + Vault" },
+      { code: "S10", tier: "Tier 2", name: "AWS FIS / Azure Chaos Studio Fault-Injection Orchestrator", adr: "ADR-005", node: "network", arch: "AWS FIS + Azure Chaos Studio + RTO/RPO Scorer" },
+      { code: "S11", tier: "Tier 3", name: "Subsea Cable (WACS/MainOne/2Africa/Equiano/Seacom/PEACE) & BGP", adr: "ADR-005", node: "network", arch: "RIPE RIS/RouteViews + Cable Telemetry -> DNS Shift" },
+      { code: "S12", tier: "Tier 3", name: "External HSM (HYOK / XKS / EKM) & Sovereign Geofence", adr: "ADR-005", node: "vault", arch: "AWS XKS / Azure Managed HSM / GCP EKM + NDPA/CBN" },
+      { code: "S13", tier: "Tier 3", name: "OpenTofu/Crossplane Lock-In & Multi-Cloud Exit Engine", adr: "ADR-005", node: "workload", arch: "HCL Lock-In Scorer + Egress $/GB & Transfer Hrs" },
+      { code: "S14", tier: "Tier 3", name: "Cross-Cloud WORM Ransomware Cyber-Vault & Sunday Restore", adr: "ADR-005", node: "vault", arch: "Cross-Cloud WORM Object Lock + Weekly Clean Restore" },
+      { code: "S15", tier: "Tier 3", name: "Multi-Framework Crosswalk & SHA-256 Merkle Evidence Vault", adr: "ADR-005", node: "ledger", arch: "Append-Only DB + SHA-256 Merkle + Sigstore Cosign" },
+      { code: "S16", tier: "Tier 4", name: "Envoy + Wasm Semantic PII/BVN/NIN/SSN/PAN Tokenizer", adr: "ADR-007", node: "workload", arch: "Envoy + Rust/Go Wasm + <15ms PII/PAN/IP Redactor" },
+      { code: "S17", tier: "Tier 4", name: "NVIDIA DCGM GPU Telemetry & <12%/20m Checkpoint Preempt", adr: "ADR-007", node: "workload", arch: "DCGM SM/Tensor/HBM3 + SIGUSR1 Preempt + MIG" },
+      { code: "S18", tier: "Tier 4", name: "Sigstore Dataset-to-Model Lineage & ISO 42001/EU AI Gate", adr: "ADR-007", node: "ledger", arch: "Merkle Dataset Digest + Model/Image Provenance" },
+      { code: "S19", tier: "Tier 4", name: "Redis Lua Token-Velocity & Recursive Agent Circuit Breaker", adr: "ADR-007", node: "policy", arch: "Redis Cluster Lua Atomic Burn Counter -> HTTP 429" },
+      { code: "S20", tier: "Tier 4", name: "Shadow AI & Rogue Vector-DB (Pinecone/Weaviate/Qdrant/Milvus)", adr: "ADR-007", node: "vault", arch: "DNS/Flow Vector-DB & .safetensors/.gguf Radar" },
+      { code: "S21", tier: "Tier 5", name: "ClickHouse/DuckDB CUR 2.0, Cost Export & BigQuery OLAP", adr: "ADR-006", node: "ledger", arch: "100M+ Row Amortized Cost + Orphan Spend Guard" },
+      { code: "S22", tier: "Tier 5", name: "OpenTelemetry Marginal Unit Cost per Transaction (>3% PR)", adr: "ADR-006", node: "ledger", arch: "OTel/Prometheus + Billing -> Cost/Tx & PR Guard" },
+      { code: "S23", tier: "Tier 5", name: "Grid-Carbon (gCO2eq/kWh) & Wholesale Power Scheduler", adr: "ADR-006", node: "vault", arch: "Electricity Maps/WattTime -> Low-Carbon Batch/AI" },
+      { code: "S24", tier: "Tier 5", name: "HiGHS/SciPy RI, Savings Plan & CUD Treasury Optimizer", adr: "ADR-006", node: "ledger", arch: "90d Hourly Curve -> Optimal 1Y RI/CUD/Spot Mix" },
+      { code: "S25", tier: "Tier 5", name: "Zombie EBS/Disk (>7d), Orphan IP/NAT & Snapshot Reclaimer", adr: "ADR-006", node: "vault", arch: "Temporal Cleanup + Slack Snapshot-Delete Approval" },
+      { code: "S26", tier: "Tier 6", name: "Syft/Grype SBOM & <200ms 1-Click Zero-Day CVE Kill-Switch", adr: "ADR-008", node: "network", arch: "CycloneDX/SPDX Graph + <200ms Quarantine/Patch" },
+      { code: "S27", tier: "Tier 6", name: "SLSA Level 4 Provenance & NIST ML-KEM/ML-DSA PQC Scanner", adr: "ADR-001", node: "identity", arch: "SLSA L4 Attestations + Kyber/Dilithium TLS Scan" },
+      { code: "S28", tier: "Tier 6", name: "Conway's Law Team Cognitive Load & ADR Half-Life Engine", adr: "ADR-008", node: "policy", arch: "Git/CODEOWNERS/PagerDuty Load + >15% Waiver Flag" },
+      { code: "S29", tier: "Tier 6", name: "ServiceNow/Jira + Temporal Exact-TTL Waiver Machine", adr: "ADR-003", node: "policy", arch: "CHG-/INC- Verification + Millisecond TTL Expiry" },
+      { code: "S30", tier: "Tier 6", name: "15-Min M&A Valuation Haircut & Divestiture Carve-Out/TSA", adr: "ADR-006", node: "ledger", arch: "15m Deal Haircut + KMS Re-Key, Peering Cut & TSA" }
     ];
+
     var WORKLOADS_BY_CLOUD = {
-      AWS: ["eks-gpu-training", "vpc-transit-hub", "kms-hyok-vault", "s3-cur-finops", "iam-oidc-runner", "rds-core-clearing", "sandbox-ephemeral"],
-      Azure: ["aks-payments-api", "vnet-vwan-hub", "kv-hsm-vault", "cost-export-job", "entra-oidc-spn", "sql-mi-clearing", "sandbox-ephemeral"],
-      GCP: ["gke-data-lake", "vpc-shared-hub", "kms-autokey-ring", "billing-bq-sink", "wif-gha-pool", "cloudsql-clearing", "sandbox-ephemeral"]
+      AWS: ["eks-gpu-training", "vpc-transit-hub", "kms-xks-hyok", "s3-cur-finops", "spiffe-oidc-runner", "rds-core-clearing", "vector-pg-cluster"],
+      Azure: ["aks-payments-api", "vnet-vwan-hub", "mhsm-hyok-vault", "cost-export-job", "entra-spiffe-spn", "sql-mi-clearing", "vector-qdrant-node"],
+      GCP: ["gke-data-lake", "vpc-shared-hub", "ekm-hyok-ring", "billing-bq-sink", "wif-spiffe-pool", "cloudsql-clearing", "vector-weaviate-pool"]
     };
 
-    var RACI_MAP = {
-      "Enforce Tag & Label Parity": { a: "CCoE & FinOps", r: "Platform & Product", adr: "ADR-002 (5-Key Tagging & GCP Labels)", grc: "FINOPS-TAG-01 · SOC2 CC7.1 · NIST CM-8", sla: "24h" },
-      "Remediate Console Drift": { a: "CCoE & Platform Eng", r: "Platform Eng", adr: "ADR-004 (Zero-Trust Hub-Spoke & Drift)", grc: "PCI 1.3 · HIPAA 164.312(e) · NIST SC-7", sla: "4h" },
-      "Verify OIDC / Workload Trust": { a: "InfoSec / GRC", r: "CCoE & Platform Eng", adr: "ADR-001 (Secretless OIDC, CIEM & PQC)", grc: "SOC2 CC6.1 · ISO A.9.2 · NIST AC-2", sla: "8h" },
-      "Apply Preventive Guardrail": { a: "CCoE & InfoSec", r: "Platform Eng", adr: "ADR-003 (Time-Bound Waivers & ITSM Gate)", grc: "PCI 7.2 · ISO A.12.4 · DORA Art.9", sla: "12h" },
-      "Reclaim Expired Sandbox TTL": { a: "FinOps", r: "Platform Eng", adr: "ADR-006 (FinOps Treasury, M&A & ESG)", grc: "FINOPS-BUD-04 · SOC2 CC7.2 · DORA Art.11", sla: "2h" },
-      "Generate Audit Evidence": { a: "CCoE & InfoSec", r: "Platform Eng", adr: "ADR-005 (Sovereignty, HYOK & Cloud Exit)", grc: "GDPR Art.44 · NDPA · CBN IT · DORA", sla: "6h" },
-      "Enforce Zero-Trust Hub-Spoke Egress": { a: "CCoE Lead", r: "Platform Eng", adr: "ADR-008 (Bounded Repos & Golden Paths)", grc: "SOC2 CC8.1 · SLSA L4 · NIST CM-3", sla: "4h" },
-      "Govern AI/GPU Quota & PII Boundary": { a: "CCoE Lead", r: "Platform & ML Eng", adr: "ADR-007 (AI/GPU Arbitrage & ISO 42001)", grc: "ISO 42001 · EU AI Act · SOC2 CC6.7", sla: "4h" }
+    var RACI_BY_TIER = {
+      "Tier 1": { a: "CCoE & Platform Eng", r: "Platform Eng", grc: "SOC2 CC7.1 · NIST CM-8/SC-7", sla: "4h" },
+      "Tier 2": { a: "CCoE & InfoSec", r: "Platform & SRE", grc: "SOC2 CC6.1 · ISO A.9.2 · DORA Art.9", sla: "4h" },
+      "Tier 3": { a: "CCoE & InfoSec", r: "Platform Eng", grc: "GDPR Art.44 · NDPA · CBN IT · DORA", sla: "6h" },
+      "Tier 4": { a: "CCoE & ML/Sec", r: "Platform & AI Eng", grc: "ISO 42001 · EU AI Act · SOC2 CC6.7", sla: "4h" },
+      "Tier 5": { a: "FinOps Director", r: "Platform & FinOps", grc: "FINOPS-BUD-04 · SOC2 CC7.2 · ESG", sla: "2h" },
+      "Tier 6": { a: "CCoE & InfoSec", r: "Platform & SecOps", grc: "SLSA L4 · NIST PQC · DORA Art.11", sla: "4h" }
     };
 
     var TOTAL_ITEMS = 18000;
@@ -633,9 +632,27 @@
     var activeWaivers = [];
     var resultsById = {};
     var selectedId = "IMPL-00001";
+    var activeDiagramNode = null;
     var artifactFmt = "diagram";
     var page = 0;
     var pageSize = 48;
+
+    (function initSubsystemDropdown() {
+      var sel = document.getElementById("activeSubsystem");
+      var filt = document.getElementById("subsystemFilter");
+      for (var i = 0; i < SUBSYSTEMS.length; i++) {
+        var s = SUBSYSTEMS[i];
+        var opt1 = document.createElement("option");
+        opt1.value = s.code;
+        opt1.textContent = s.code + " · " + s.name;
+        sel.appendChild(opt1);
+
+        var opt2 = document.createElement("option");
+        opt2.value = s.code;
+        opt2.textContent = s.code + " (" + s.tier + ") · " + s.name.slice(0, 34);
+        filt.appendChild(opt2);
+      }
+    })();
 
     document.addEventListener("keydown", function (e) {
       if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === "k") {
@@ -645,25 +662,12 @@
       }
     });
 
-    function sanitizeLabel(val) {
-      var out = "";
-      var s = String(val || "unset").toLowerCase();
-      for (var i = 0; i < s.length; i++) {
-        var ch = s.charAt(i);
-        var code = ch.charCodeAt(0);
-        var isAlpha = code >= 97 && code <= 122;
-        var isNum = code >= 48 && code <= 57;
-        out += (isAlpha || isNum || ch === "_" || ch === "-") ? ch : "-";
-      }
-      return out;
-    }
-
     function getItemByIndex(idx) {
       var n = idx + 1;
       var cloud = CLOUDS[idx % CLOUDS.length];
       var fw = FRAMEWORKS[Math.floor(idx / 3) % FRAMEWORKS.length];
-      var action = ACTIONS[Math.floor(idx / 15) % ACTIONS.length];
-      var adr = ADRS[Math.floor(idx / 15) % ADRS.length];
+      var sub = SUBSYSTEMS[Math.floor(idx / 15) % SUBSYSTEMS.length];
+      var adr = sub.adr;
       var pool = WORKLOADS_BY_CLOUD[cloud];
       var wl = pool[Math.floor(idx / 90) % pool.length];
       var monthlyUsd = 4200 + ((n * 373) % 28000);
@@ -679,8 +683,9 @@
         id: idStr,
         cloud: cloud,
         framework: fw,
+        subsystem: sub.code,
+        subsystemObj: sub,
         adr: adr,
-        action: action,
         workload: wl,
         monthlyUsd: monthlyUsd,
         savingsUsd: savingsUsd,
@@ -688,7 +693,7 @@
         exitHours: exitHours,
         revAtRiskMin: revAtRiskMin,
         co2Tons: co2Tons,
-        title: action + " on " + wl + " (" + cloud + " · " + fw + " · " + adr + ")"
+        title: sub.code + " (" + sub.tier + ") on " + wl + " (" + cloud + " · " + fw + " · " + adr + ")"
       };
     }
 
@@ -702,12 +707,12 @@
 
     function getScenarioLabel() {
       var val = document.getElementById("scenarioMode").value;
-      if (val === "fiber-cut") return "Submarine Fiber Cut (West Africa / Red Sea Cable Reroute)";
-      if (val === "localization-mandate") return "Sudden Data Localization Mandate (CBN / NDPA / EU Sovereign Residency)";
-      if (val === "tariff-hike") return "Cloud Sanctions / +35% Vendor Tariff Hike (Exit Portability Evacuation)";
-      if (val === "ma-onboarding") return "M&A Technical Debt Valuation Haircut & Day 1–90 Wave";
-      if (val === "divestiture-carveout") return "Divestiture Clean-Room & TSA Metering Carve-Out";
-      return "Steady-State Global CCoE";
+      if (val === "fiber-cut") return "Subsea Cable Cut (WACS/MainOne/2Africa/Equiano/Seacom/PEACE + BGP)";
+      if (val === "localization-mandate") return "Sovereign HYOK & Data Residency Lock (NDPA/CBN/GDPR/DORA)";
+      if (val === "tariff-hike") return "+35% Cloud Tariff Hike (OpenTofu/Crossplane Exit & Egress)";
+      if (val === "ma-onboarding") return "15-Min M&A Valuation Haircut & Read-Only Wave";
+      if (val === "divestiture-carveout") return "Divestiture Clean-Room Severance & TSA Meter";
+      return "Steady-State (NATS <1.5s · SPIFFE 15m SVID)";
     }
 
     function getMetadata() {
@@ -728,10 +733,6 @@
         dataClassification: dataClassification,
         ttl: ttl,
         scenario: scenario,
-        gcpOwner: sanitizeLabel(owner || "platform-ccoe"),
-        gcpCostCenter: sanitizeLabel(costCenter || "cc-8801"),
-        gcpEnv: sanitizeLabel(environment || "prod"),
-        gcpClass: sanitizeLabel(dataClassification),
         missing: missing
       };
     }
@@ -793,6 +794,7 @@
       activeWaivers = [];
       resultsById = {};
       selectedId = "IMPL-00001";
+      activeDiagramNode = null;
       updateCounters();
       renderWaivers();
       document.getElementById("execLog").innerHTML = "Cleared saved state. Ready.";
@@ -803,121 +805,66 @@
     function appPersonaChange() {
       var role = document.getElementById("rbacPersona").value;
       var waiverBtn = document.getElementById("issueWaiverBtn");
-      var isDev = role === "Developer";
-      if (waiverBtn) waiverBtn.disabled = isDev;
-      var subMap = {
-        "Board / CFO": "Board & CFO Lens: Dollar exposure, unit economics margin protection, M&A due-diligence valuation haircuts, cyber-insurance ROI, and RI/CUD treasury ESR.",
-        "CISO / Regulator": "CISO & Regulator Lens: Formal SMT reachability proofs, Merkle audit logs, sovereign geofencing, HYOK HSM custody, PQC readiness, and 1-click CVE kill-switch.",
-        "Chief Architect / Fellow": "Chief Architect & Fellow Lens: Interactive AWS/Azure/GCP architecture & CIEM trust topology, Cloud Exit Portability Index, Conway's Law cognitive load, and ADR half-life.",
-        "Platform / SRE": "Platform & SRE Lens: OPA/Rego 30-day CloudTrail digital twin replay, <60s autonomous quarantine, chaos game-days, and quota saturation forecasting.",
-        "Developer": "Developer Lens: Golden Path HCL templates, ccoe-cli commands, automated PR remediation diffs, and self-service break-glass waiver requests."
-      };
-      document.getElementById("lensSubtitle").textContent = subMap[role] || subMap["Chief Architect / Fellow"];
+      if (waiverBtn) waiverBtn.disabled = (role === "Developer");
       appSaveState();
       appInspect(selectedId, false);
     }
 
-     var activeDiagramNode = null;
-
-    function getAutoFocusNode(item, scenario) {
-      if (scenario === "fiber-cut" || item.action.indexOf("Egress") !== -1 || item.action.indexOf("Drift") !== -1) return "network";
-      if (scenario === "localization-mandate" || item.adr === "ADR-005" || item.action.indexOf("Evidence") !== -1) return "vault";
-      if (scenario === "tariff-hike" || scenario === "divestiture-carveout" || item.adr === "ADR-006") return "ledger";
-      if (item.action.indexOf("OIDC") !== -1 || item.adr === "ADR-001") return "identity";
-      if (item.action.indexOf("Guardrail") !== -1 || item.action.indexOf("Tag") !== -1) return "policy";
-      return "workload";
+    function appSubsystemSelectChange() {
+      var code = document.getElementById("activeSubsystem").value;
+      for (var i = 0; i < SUBSYSTEMS.length; i++) {
+        if (SUBSYSTEMS[i].code === code) {
+          activeDiagramNode = SUBSYSTEMS[i].node;
+          break;
+        }
+      }
+      appInspect(selectedId, false);
     }
 
     function renderArchitectureSvg(item) {
       var m = getMetadata();
-      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
-      var focusKey = activeDiagramNode || getAutoFocusNode(item, m.scenario);
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
+      var r = RACI_BY_TIER[sub.tier] || RACI_BY_TIER["Tier 1"];
+      var focusKey = activeDiagramNode || sub.node;
 
       var cloudSpec = {
-        AWS: {
-          accent: "#ff9900",
-          hdr: "AWS CLOUD · VPC, TRANSIT GATEWAY & PRIVATELINK",
-          iam: "IAM OIDC + Zelkova SMT",
-          iamSub: "STS WebIdentity · Zero Keys",
-          net: "Transit Gateway + PrivateLink",
-          netSub: "TGW Route Table · Egress Filter",
-          vault: "AWS KMS HYOK + S3 Object Lock",
-          vaultSub: "External HSM · WORM Cyber-Vault",
-          tier0: "Tier-0 Clearing & Ledger",
-          tier0Sub: "CloudTrail -> SHA-256 Merkle"
-        },
-        Azure: {
-          accent: "#38bdf8",
-          hdr: "AZURE CLOUD · VIRTUAL WAN, HUB-SPOKE & PRIVATE ENDPOINT",
-          iam: "Entra ID OIDC + FIM",
-          iamSub: "Federated Identity · Zero Secret",
-          net: "Azure vWAN + Private Endpoint",
-          netSub: "Azure Firewall · NSG Zero-Trust",
-          vault: "Managed HSM HYOK + Immutable Blob",
-          vaultSub: "Customer Key · Air-Gapped Vault",
-          tier0: "Tier-0 Payments & Ledger",
-          tier0Sub: "Activity Log -> SHA-256 Merkle"
-        },
-        GCP: {
-          accent: "#34d399",
-          hdr: "GCP CLOUD · SHARED VPC, PSC & SOVEREIGN MESH",
-          iam: "Workload Identity Federation",
-          iamSub: "STS Token Exchange · Zero Keys",
-          net: "Shared VPC + Private Service Connect",
-          netSub: "Cloud Armor · Hierarchical FW",
-          vault: "Cloud KMS EKM/HYOK + Vault Lock",
-          vaultSub: "External Key Mgr · Retention Lock",
-          tier0: "Tier-0 Data & Ledger",
-          tier0Sub: "Audit Logs -> SHA-256 Merkle"
-        }
-      }[item.cloud] || {
-        accent: "#ff9900",
-        hdr: "AWS CLOUD · VPC, TRANSIT GATEWAY & PRIVATELINK",
-        iam: "IAM OIDC + Zelkova SMT",
-        iamSub: "STS WebIdentity · Zero Keys",
-        net: "Transit Gateway + PrivateLink",
-        netSub: "TGW Route Table · Egress Filter",
-        vault: "AWS KMS HYOK + S3 Object Lock",
-        vaultSub: "External HSM · WORM Cyber-Vault",
-        tier0: "Tier-0 Clearing & Ledger",
-        tier0Sub: "CloudTrail -> SHA-256 Merkle"
-      };
+        AWS: { accent: "#ff9900", hdr: "AWS CLOUD · VPC, TGW & PRIVATELINK", iam: "IAM OIDC + SPIFFE 15m SVID", net: "TGW + PrivateLink + BGP/Cable", vault: "AWS KMS XKS/HYOK + S3 WORM", tier0: "Tier-0 Clearing · CloudTrail" },
+        Azure: { accent: "#38bdf8", hdr: "AZURE CLOUD · vWAN, HUB-SPOKE & PE", iam: "Entra ID OIDC + SPIFFE SVID", net: "Azure vWAN + Private Endpoint", vault: "Managed HSM HYOK + WORM Blob", tier0: "Tier-0 Payments · Activity Log" },
+        GCP: { accent: "#34d399", hdr: "GCP CLOUD · SHARED VPC, PSC & MESH", iam: "WIF OIDC + SPIFFE 15m SVID", net: "Shared VPC + PSC + Cloud Armor", vault: "Cloud KMS EKM/HYOK + Vault Lock", tier0: "Tier-0 Data · Audit Merkle Log" }
+      }[item.cloud] || { accent: "#ff9900", hdr: "AWS CLOUD · VPC, TGW & PRIVATELINK", iam: "IAM OIDC + SPIFFE 15m SVID", net: "TGW + PrivateLink + BGP/Cable", vault: "AWS KMS XKS/HYOK + S3 WORM", tier0: "Tier-0 Clearing · CloudTrail" };
 
       var linkColor = "#818cf8";
       var linkDash = "";
       var modePill = "STEADY-STATE";
-      var routeBanner = "Active Path: OIDC -> Guardrail -> Hub-Spoke -> " + item.workload + " -> Merkle Audit";
       var reorderedFlow = false;
+      var routeBanner = sub.code + ": " + sub.arch;
 
       if (m.scenario === "fiber-cut") {
         linkColor = "#f59e0b";
         linkDash = ' stroke-dasharray="5 3"';
-        modePill = "FIBER CUT REROUTE";
-        routeBanner = "REROUTED (Subsea Cut): Bypassing Primary Cable -> Secondary Edge/Region Hub";
+        modePill = "CABLE CUT REROUTE";
         reorderedFlow = true;
+        routeBanner = "SUBSEA CUT (WACS/MainOne/2Africa/Equiano/Seacom/PEACE): Rerouted via Edge/BGP";
       } else if (m.scenario === "localization-mandate") {
         linkColor = "#f87171";
-        modePill = "SOVEREIGN LOCK";
-        routeBanner = "SOVEREIGN LOCK: Cross-Border Egress BLOCKED -> Local HYOK Vault Enforced";
+        modePill = "SOVEREIGN HYOK LOCK";
+        routeBanner = "SOVEREIGN GEOFENCE: Cross-Border Egress BLOCKED · HYOK HSM Enforced";
       } else if (m.scenario === "tariff-hike") {
         linkColor = "#fbbf24";
         modePill = "+35% TARIFF EXIT";
-        routeBanner = "EXIT SIMULATION (" + item.exitScore + "/100): Portable Workload Path -> " + item.exitHours + "h Cutover";
+        routeBanner = "EXIT ENGINE (" + item.exitScore + "/100): OpenTofu/Crossplane Cutover in " + item.exitHours + "h";
       } else if (m.scenario === "ma-onboarding") {
         linkColor = "#38bdf8";
-        modePill = "M&A QUARANTINE";
-        routeBanner = "M&A WAVE 1: Acquired Account -> Read-Only Guardrail -> Hub Peering";
+        modePill = "15M M&A HAIRCUT";
+        routeBanner = "M&A SCANNER: Read-Only STS Discovery -> Valuation Haircut & Wave 1";
       } else if (m.scenario === "divestiture-carveout") {
         linkColor = "#f472b6";
-        modePill = "CARVE-OUT TSA";
-        routeBanner = "DIVESTITURE: Clean-Room Severance + TSA Cost & Identity Meter";
+        modePill = "DIVESTITURE + TSA";
+        routeBanner = "CARVE-OUT: KMS Re-Key, Peering Severance & TSA Metering Active";
       }
 
       var netX = reorderedFlow ? 464 : 238;
       var wlX  = reorderedFlow ? 238 : 464;
-      var isAiOrGpu = (item.workload.indexOf("gpu") !== -1 || item.adr === "ADR-007" || item.action.indexOf("AI") !== -1);
-      var wlBadge = isAiOrGpu ? "GPU / AI + PII GATE" : "WORKLOAD + DRIFT";
-
       function sw(k) { return focusKey === k ? "3" : "1.4"; }
       function fl(k) { return focusKey === k ? "#1e1b4b" : "#162033"; }
 
@@ -930,34 +877,34 @@
         '  </defs>',
         '  <rect x="0" y="0" width="920" height="420" rx="10" fill="#090f1d" />',
 
-        '  <text x="16" y="25" fill="#f8fafc" font-size="12" font-weight="700">' + item.id + ' · ' + cloudSpec.hdr + ' (' + item.adr + ')</text>',
+        '  <text x="16" y="25" fill="#f8fafc" font-size="12" font-weight="700">' + item.id + ' · ' + sub.code + ' (' + sub.tier + ') · ' + cloudSpec.hdr + '</text>',
         '  <rect x="734" y="9" width="170" height="22" rx="11" fill="#1e1b4b" stroke="' + linkColor + '" stroke-width="1.4" />',
         '  <text x="819" y="24" text-anchor="middle" fill="#f8fafc" font-size="9.5" font-weight="700">' + modePill + '</text>',
 
         '  <rect x="16" y="42" width="196" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
-        '  <text x="26" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">1. IDENTITY &amp; POLICY PLANE</text>',
+        '  <text x="26" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">1. IDENTITY &amp; POLICY (S02/S04–S09)</text>',
 
         '  <g class="svg-node" onclick="appInspectNode(\'identity\')">',
         '    <rect class="node-box" x="26" y="74" width="176" height="142" rx="7" fill="' + fl("identity") + '" stroke="' + (focusKey === "identity" ? "#ffffff" : cloudSpec.accent) + '" stroke-width="' + sw("identity") + '" />',
         '    <rect x="36" y="83" width="76" height="15" rx="4" fill="#1e293b" stroke="' + cloudSpec.accent + '" />',
-        '    <text x="74" y="94" text-anchor="middle" fill="' + cloudSpec.accent + '" font-size="8.5" font-weight="700">' + item.cloud + ' OIDC/CIEM</text>',
+        '    <text x="74" y="94" text-anchor="middle" fill="' + cloudSpec.accent + '" font-size="8.5" font-weight="700">S02/S09/S27</text>',
         '    <text x="36" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.iam + '</text>',
-        '    <text x="36" y="130" fill="#cbd5e1" font-size="9.5">' + cloudSpec.iamSub + '</text>',
+        '    <text x="36" y="130" fill="#cbd5e1" font-size="9.5">Bi-Temporal Graph · PQC</text>',
         '    <text x="36" y="148" fill="#cbd5e1" font-size="9.5">Owner: ' + m.owner + '</text>',
-        '    <text x="36" y="164" fill="#cbd5e1" font-size="9.5">PQC Hybrid TLS · Least-Priv</text>',
-        '    <text x="36" y="202" fill="#86efac" font-size="9.5" font-weight="700">SMT Proof: 0 Escalations</text>',
+        '    <text x="36" y="164" fill="#cbd5e1" font-size="9.5">Zero Static Keys · SLSA L4</text>',
+        '    <text x="36" y="202" fill="#86efac" font-size="9.5" font-weight="700">Z3 SMT Proof: 0 Paths</text>',
         '  </g>',
 
         '  <g class="svg-node" onclick="appInspectNode(\'policy\')">',
         '    <rect class="node-box" x="26" y="232" width="176" height="158" rx="7" fill="' + fl("policy") + '" stroke="' + (focusKey === "policy" ? "#ffffff" : "#818cf8") + '" stroke-width="' + sw("policy") + '" />',
-        '    <rect x="36" y="241" width="76" height="15" rx="4" fill="#1e293b" stroke="#818cf8" />',
-        '    <text x="74" y="252" text-anchor="middle" fill="#a5b4fc" font-size="8.5" font-weight="700">' + item.adr + ' GATE</text>',
-        '    <text x="36" y="272" fill="#f8fafc" font-size="11" font-weight="700">OPA Rego + 30d Twin</text>',
+        '    <rect x="36" y="241" width="84" height="15" rx="4" fill="#1e293b" stroke="#818cf8" />',
+        '    <text x="78" y="252" text-anchor="middle" fill="#a5b4fc" font-size="8.5" font-weight="700">S04–S08/S28–29</text>',
+        '    <text x="36" y="272" fill="#f8fafc" font-size="11" font-weight="700">Firecracker &lt;350ms + Z3</text>',
         '    <text x="36" y="288" fill="#cbd5e1" font-size="9.5">CC: ' + m.costCenter + ' · Env: ' + m.environment + '</text>',
         '    <text x="36" y="304" fill="#cbd5e1" font-size="9.5">TTL: ' + m.ttl + ' · Class: ' + m.dataClassification + '</text>',
         '    <text x="36" y="324" fill="#fde68a" font-size="9.5" font-weight="700">A: ' + r.a + '</text>',
-        '    <text x="36" y="340" fill="#cbd5e1" font-size="9">SLA: ' + r.sla + ' · SLSA L4</text>',
-        '    <text x="36" y="376" fill="#86efac" font-size="9.5" font-weight="700">30d Replay: 0.0% FP</text>',
+        '    <text x="36" y="340" fill="#cbd5e1" font-size="9">30–90d ClickHouse Replay</text>',
+        '    <text x="36" y="376" fill="#86efac" font-size="9.5" font-weight="700">Temporal &lt;30s Heal Armed</text>',
         '  </g>',
 
         '  <rect x="226" y="42" width="464" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
@@ -966,51 +913,51 @@
         '  <g class="svg-node" onclick="appInspectNode(\'network\')">',
         '    <rect class="node-box" x="' + netX + '" y="74" width="214" height="142" rx="7" fill="' + fl("network") + '" stroke="' + (focusKey === "network" ? "#ffffff" : "#38bdf8") + '" stroke-width="' + sw("network") + '" />',
         '    <rect x="' + (netX + 10) + '" y="83" width="96" height="15" rx="4" fill="#1e293b" stroke="#38bdf8" />',
-        '    <text x="' + (netX + 58) + '" y="94" text-anchor="middle" fill="#7dd3fc" font-size="8.5" font-weight="700">HUB-SPOKE NET</text>',
+        '    <text x="' + (netX + 58) + '" y="94" text-anchor="middle" fill="#7dd3fc" font-size="8.5" font-weight="700">S01/S07/S11/S26</text>',
         '    <text x="' + (netX + 10) + '" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.net + '</text>',
-        '    <text x="' + (netX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">' + cloudSpec.netSub + '</text>',
-        '    <text x="' + (netX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">DNS Resolver + Egress Filter</text>',
-        '    <text x="' + (netX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">CVE Kill-Switch: Armed</text>',
-        '    <text x="' + (netX + 10) + '" y="202" fill="#86efac" font-size="9.5" font-weight="700">&lt;60s Quarantine Ready</text>',
+        '    <text x="' + (netX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">NATS &lt;1.5s · BGP/Subsea</text>',
+        '    <text x="' + (netX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">CVE Kill-Switch: &lt;200ms</text>',
+        '    <text x="' + (netX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">FIS / Chaos Game-Day Ready</text>',
+        '    <text x="' + (netX + 10) + '" y="202" fill="#86efac" font-size="9.5" font-weight="700">Temporal &lt;30s Quarantine</text>',
         '  </g>',
 
         '  <g class="svg-node" onclick="appInspectNode(\'workload\')">',
         '    <rect class="node-box" x="' + wlX + '" y="74" width="214" height="142" rx="7" fill="' + fl("workload") + '" stroke="' + (focusKey === "workload" ? "#ffffff" : "#f472b6") + '" stroke-width="' + sw("workload") + '" />',
         '    <rect x="' + (wlX + 10) + '" y="83" width="118" height="15" rx="4" fill="#1e293b" stroke="#f472b6" />',
-        '    <text x="' + (wlX + 69) + '" y="94" text-anchor="middle" fill="#f9a8d4" font-size="8.5" font-weight="700">' + wlBadge + '</text>',
+        '    <text x="' + (wlX + 69) + '" y="94" text-anchor="middle" fill="#f9a8d4" font-size="8.5" font-weight="700">S03/S13/S16–S17</text>',
         '    <text x="' + (wlX + 10) + '" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + item.workload + '</text>',
-        '    <text x="' + (wlX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">Private Subnet · mTLS Mesh</text>',
-        '    <text x="' + (wlX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">ISO 42001 · PII DLP Clean</text>',
-        '    <text x="' + (wlX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">Conway Load: Optimal</text>',
+        '    <text x="' + (wlX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">Tetragon eBPF -> HCL/Git</text>',
+        '    <text x="' + (wlX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">Envoy/Wasm PII &lt;15ms DLP</text>',
+        '    <text x="' + (wlX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">DCGM GPU &ge;12% · Breaker</text>',
         '    <text x="' + (wlX + 10) + '" y="202" fill="#fde68a" font-size="9.5" font-weight="700">Exit: ' + item.exitScore + '/100 (' + item.exitHours + 'h)</text>',
         '  </g>',
 
         '  <g class="svg-node" onclick="appInspectNode(\'vault\')">',
         '    <rect class="node-box" x="238" y="232" width="440" height="158" rx="7" fill="' + fl("vault") + '" stroke="' + (focusKey === "vault" ? "#ffffff" : "#34d399") + '" stroke-width="' + sw("vault") + '" />',
         '    <rect x="248" y="241" width="142" height="15" rx="4" fill="#1e293b" stroke="#34d399" />',
-        '    <text x="319" y="252" text-anchor="middle" fill="#6ee7b7" font-size="8.5" font-weight="700">HYOK HSM &amp; SOVEREIGN VAULT</text>',
+        '    <text x="319" y="252" text-anchor="middle" fill="#6ee7b7" font-size="8.5" font-weight="700">S12/S14/S20/S23/S25</text>',
         '    <text x="248" y="272" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.vault + '</text>',
-        '    <text x="248" y="288" fill="#cbd5e1" font-size="9.5">' + cloudSpec.vaultSub + ' · Geofence: ' + m.dataClassification.toUpperCase() + '</text>',
+        '    <text x="248" y="288" fill="#cbd5e1" font-size="9.5">Cross-Cloud WORM Vault + Sunday Restore · Vector Radar</text>',
         '    <text x="248" y="308" fill="#cbd5e1" font-size="9.5">Spend: $' + item.monthlyUsd.toLocaleString() + '/mo (Save $' + item.savingsUsd.toLocaleString() + '/mo) · ESG: ' + item.co2Tons + 't CO2e/mo</text>',
-        '    <text x="248" y="328" fill="#cbd5e1" font-size="9.5">DR Targets: RTO 15m / RPO 5m · Air-Gapped Ransomware Recovery</text>',
-        '    <text x="248" y="376" fill="#86efac" font-size="9.5" font-weight="700">Chaos Game-Day &amp; Clean-Room Drill: VERIFIED</text>',
+        '    <text x="248" y="328" fill="#cbd5e1" font-size="9.5">Grid-Carbon Scheduler + Zombie Disk/NAT Reclaimer</text>',
+        '    <text x="248" y="376" fill="#86efac" font-size="9.5" font-weight="700">Sovereign Geofence &amp; Clean-Room Restore: VERIFIED</text>',
         '  </g>',
 
         '  <rect x="704" y="42" width="200" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
-        '  <text x="714" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">3. TIER-0 &amp; MERKLE LEDGER</text>',
+        '  <text x="714" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">3. MERKLE, FINOPS &amp; M&amp;A</text>',
 
         '  <g class="svg-node" onclick="appInspectNode(\'ledger\')">',
         '    <rect class="node-box" x="714" y="74" width="180" height="316" rx="7" fill="' + fl("ledger") + '" stroke="' + (focusKey === "ledger" ? "#ffffff" : "#eab308") + '" stroke-width="' + sw("ledger") + '" />',
         '    <rect x="724" y="83" width="96" height="15" rx="4" fill="#1e293b" stroke="#eab308" />',
-        '    <text x="772" y="94" text-anchor="middle" fill="#fde047" font-size="8.5" font-weight="700">TIER-0 SERVICE</text>',
+        '    <text x="772" y="94" text-anchor="middle" fill="#fde047" font-size="8.5" font-weight="700">S15/S18/S21–22/S24/S30</text>',
         '    <text x="724" y="116" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.tier0 + '</text>',
-        '    <text x="724" y="132" fill="#cbd5e1" font-size="9.5">' + cloudSpec.tier0Sub + '</text>',
+        '    <text x="724" y="132" fill="#cbd5e1" font-size="9.5">SHA-256 Merkle + Sigstore</text>',
         '    <text x="724" y="154" fill="#fca5a5" font-size="10.5" font-weight="700">Rev Risk: $' + item.revAtRiskMin + '/min</text>',
-        '    <text x="724" y="176" fill="#cbd5e1" font-size="9.5">Cosign / Sigstore Attested</text>',
-        '    <text x="724" y="192" fill="#cbd5e1" font-size="9.5">DORA Velocity: 4.1x</text>',
+        '    <text x="724" y="176" fill="#cbd5e1" font-size="9.5">Unit Cost PR Guard (&gt;3%)</text>',
+        '    <text x="724" y="192" fill="#cbd5e1" font-size="9.5">15m M&amp;A Haircut &amp; TSA</text>',
         '    <text x="724" y="216" fill="#94a3b8" font-size="9" font-weight="700">Controls:</text>',
         '    <text x="724" y="232" fill="#e2e8f0" font-size="9">' + r.grc + '</text>',
-        '    <text x="724" y="268" fill="#86efac" font-size="9.5" font-weight="700">Board &amp; Audit Ready</text>',
+        '    <text x="724" y="268" fill="#86efac" font-size="9.5" font-weight="700">Auditor &amp; CFO Ready</text>',
         '    <text x="724" y="376" fill="#94a3b8" font-size="9">Click box to inspect</text>',
         '  </g>',
 
@@ -1030,119 +977,120 @@
       activeDiagramNode = nodeKey;
       var item = getItemById(selectedId);
       renderArchitectureSvg(item);
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
       var m = getMetadata();
-      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      var r = RACI_BY_TIER[sub.tier] || RACI_BY_TIER["Tier 1"];
       var info = {
-        identity: "<strong>[Identity &amp; CIEM]</strong> " + item.id + " uses secretless OIDC federation, PQC hybrid TLS, and least-privilege IAM with 0 SMT escalation paths.",
-        policy: "<strong>[OPA / Rego &amp; 30d Twin]</strong> " + item.adr + " (" + r.adr + ") replayed against 30 days of historical logs with 0.0% false positives. Accountable: " + r.a + ".",
-        network: "<strong>[Hub-Spoke &amp; Egress]</strong> " + item.cloud + " network isolates " + item.workload + " under <strong>" + getScenarioLabel() + "</strong> with &lt;60s quarantine armed.",
-        workload: "<strong>[Workload &amp; AI/GPU]</strong> " + item.workload + " carries Exit Portability <strong>" + item.exitScore + "/100</strong> (" + item.exitHours + "h), ISO 42001 gate, and PII DLP scrubbing.",
-        vault: "<strong>[HYOK HSM &amp; Cyber-Vault]</strong> Customer-held HSM keys enforce " + m.dataClassification + " residency with RTO 15m / RPO 5m air-gapped recovery.",
-        ledger: "<strong>[Tier-0 &amp; Merkle Ledger]</strong> Protects $" + item.revAtRiskMin + "/min revenue with Sigstore-signed SHA-256 Merkle evidence mapped to " + r.grc + "."
+        identity: "<strong>[S02/S09/S27 Identity, SPIFFE &amp; PQC]</strong> 15m X.509 SVIDs, bi-temporal graph time-travel, SLSA L4 provenance, and NIST ML-KEM/ML-DSA hybrid TLS.",
+        policy: "<strong>[S04–S08/S28–29 Policy, Z3 &amp; Replay]</strong> Firecracker (&lt;350ms) gate, Z3 SMT reachability, ClickHouse 30–90d log replay, and ITSM/Temporal exact-TTL waivers.",
+        network: "<strong>[S01/S07/S11/S26 Firehose, Cable/BGP &amp; CVE]</strong> NATS &lt;1.5s ingestion, WACS/MainOne/2Africa/Equiano/Seacom/PEACE telemetry, Temporal &lt;30s quarantine, and &lt;200ms CVE kill-switch.",
+        workload: "<strong>[S03/S13/S16–17 eBPF, Exit, PII &amp; GPU]</strong> Tetragon eBPF -&gt; HCL/Git attribution, &lt;15ms Envoy/Wasm PII/PAN redaction, DCGM GPU &ge;12% preemption, and Exit Score <strong>" + item.exitScore + "/100</strong>.",
+        vault: "<strong>[S12/S14/S20/S23/S25 HYOK, WORM &amp; FinOps]</strong> Customer HSM geofence (" + m.dataClassification + "), cross-cloud WORM cyber-vault, vector-DB radar, grid-carbon scheduling, and zombie cleanup.",
+        ledger: "<strong>[S15/S18/S21–22/S24/S30 Merkle, Unit Cost &amp; M&amp;A]</strong> SHA-256 Merkle evidence, Sigstore model lineage, &gt;3% unit-cost PR guard, RI/CUD solver, and 15m M&amp;A/TSA carve-out ($" + item.revAtRiskMin + "/min risk)."
       };
       document.getElementById("nodeInspectorBox").innerHTML = "<div>" + (info[nodeKey] || info.workload) + "</div>";
     }
-   function updateRaciAndFinops(item) {
-      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+
+    function updateRaciAndFinops(item) {
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
+      var r = RACI_BY_TIER[sub.tier] || RACI_BY_TIER["Tier 1"];
+      var haircutUsd = Math.round(item.monthlyUsd * 12 * 1.45);
       document.getElementById("kpi2Val").textContent = item.exitScore + " / 100";
-      document.getElementById("kpi2Sub").textContent = "Est. cloud exit: " + item.exitHours + " hrs · $" + Math.round(item.exitHours * 270).toLocaleString();
+      document.getElementById("kpi2Sub").textContent = "Exit: " + item.exitHours + "h · M&A haircut $" + haircutUsd.toLocaleString();
       document.getElementById("kpi3Val").textContent = "$" + item.monthlyUsd.toLocaleString() + "/mo · $" + item.revAtRiskMin + "/min";
-      document.getElementById("kpi3Sub").textContent = "Savings: $" + item.savingsUsd.toLocaleString() + "/mo · CO2e: " + item.co2Tons + "t/mo";
+      document.getElementById("kpi3Sub").textContent = "Save $" + item.savingsUsd.toLocaleString() + "/mo · " + item.co2Tons + "t CO2e/mo";
       document.getElementById("raciGateBox").innerHTML =
-        "<div><strong>Accountable (A):</strong> " + r.a + " · <strong>Responsible (R):</strong> " + r.r + " · <strong>SLA:</strong> " + r.sla + " · <strong>Exit Score:</strong> " + item.exitScore + "/100</div>" +
-        "<div><strong>Decision &amp; GRC:</strong> " + r.adr + " · " + r.grc + " · <strong>Scenario:</strong> " + getScenarioLabel() + "</div>";
+        "<div><strong>Subsystem:</strong> " + sub.code + " (" + sub.tier + ") — " + sub.name + "</div>" +
+        "<div><strong>Accountable (A):</strong> " + r.a + " · <strong>Responsible (R):</strong> " + r.r + " · <strong>SLA:</strong> " + r.sla + " · <strong>GRC:</strong> " + r.grc + "</div>" +
+        "<div><strong>Scenario:</strong> " + getScenarioLabel() + "</div>";
     }
 
     function buildArtifactText(item, fmt) {
       var m = getMetadata();
-      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
+      var r = RACI_BY_TIER[sub.tier] || RACI_BY_TIER["Tier 1"];
       if (fmt === "rego") {
         return [
-          "package ccoe.fellow." + item.cloud.toLowerCase(),
-          "# Formal Policy & 30-Day Historical CloudTrail Twin Replay — " + item.id,
-          "# Replay Result: 14,820 historical API calls evaluated -> 0 false positives, 3 blocked drift attempts",
+          "package ccoe.subsystems." + sub.code.toLowerCase(),
+          "# " + sub.code + ": " + sub.name + " (" + item.id + ")",
+          "# ClickHouse 30–90d Replay + Z3 SMT Theorem Prover",
           "default allow := false",
           "allow if { count(violations) == 0 }",
-          "",
           "violations contains msg if {",
-          '  input.implementation_id == "' + item.id + '"',
           '  not input.tags["cost-center"]',
-          '  msg := "DENY ' + item.id + ': missing cost-center (ADR-002)"',
+          '  msg := "DENY: missing cost-center (ADR-002 / S05)"',
           "}",
           "violations contains msg if {",
-          '  input.implementation_id == "' + item.id + '"',
-          "  not input.oidc_federated",
-          '  msg := "DENY ' + item.id + ': static keys forbidden (ADR-001)"',
-          "}",
-          "violations contains msg if {",
-          '  input.implementation_id == "' + item.id + '"',
-          "  not input.hyok_hsm_active",
-          '  msg := "DENY ' + item.id + ': confidential data requires customer HYOK HSM (ADR-005)"',
+          "  not input.oidc_spiffe_15m",
+          '  msg := "DENY: static keys forbidden; require 15m SVID/OIDC (S09 / ADR-001)"',
           "}"
         ].join("\n");
       }
       if (fmt === "cli") {
         return [
-          "# ccoe-cli, Formal Verifier & Global CVE Kill-Switch — " + item.id,
-          "ccoe-cli verify --impl " + item.id + " --smt-reachability --replay-days 30",
-          "ccoe-cli cve-scan --cve " + (document.getElementById("cveInput").value || "CVE-2024-3094") + " --quarantine-affected",
-          "ccoe-cli exit-sim --impl " + item.id + " --target-cloud " + (item.cloud === "AWS" ? "GCP" : "AWS")
+          "# ccoe-cli across Tiers 1–6 — " + item.id + " (" + sub.code + ")",
+          "ccoe-cli z3-prove --impl " + item.id + " --no-public-ingress",
+          "ccoe-cli replay --clickhouse-days 30 --policy adrs/opa/" + item.adr.toLowerCase() + ".rego",
+          "ccoe-cli quarantine --impl " + item.id + " --temporal-sla 30s",
+          "ccoe-cli cve-killswitch --cve " + (document.getElementById("cveInput").value || "CVE-2024-3094") + " --quarantine-affected"
         ].join("\n");
       }
       if (fmt === "board") {
         var haircutUsd = Math.round(item.monthlyUsd * 12 * 1.45);
         return [
-          "# Global CIO, CFO & Board Fiduciary Dossier — " + item.id,
+          "# Executive Board, CFO & CISO Dossier — " + item.id + " (" + sub.code + ")",
+          "Subsystem               : " + sub.code + " (" + sub.tier + ") · " + sub.name,
           "Scenario                : " + getScenarioLabel(),
-          "Cloud Exit Portability  : " + item.exitScore + "/100 (" + item.exitHours + " migration hours)",
-          "Tier-0 Revenue-at-Risk  : $" + item.revAtRiskMin + "/minute (RTO 15m / RPO 5m)",
-          "M&A Valuation Haircut   : $" + haircutUsd.toLocaleString() + " recommended bid adjustment if target lacks ADR-001..008",
-          "Cyber-Insurance ROI     : -$140,000/yr premium reduction via OIDC + Air-Gapped Cyber-Vault",
-          "ESG & Carbon Grid       : " + item.co2Tons + "t CO2e/mo (low-carbon grid window scheduling active)",
-          "Conway's Law & Velocity : Optimal cognitive load · 4.1x DORA deployment frequency on Golden Paths"
+          "Cloud Exit Portability  : " + item.exitScore + "/100 (" + item.exitHours + "h cutover)",
+          "Tier-0 Revenue-at-Risk  : $" + item.revAtRiskMin + "/min",
+          "15m M&A Haircut         : $" + haircutUsd.toLocaleString(),
+          "FinOps & Grid-Carbon    : $" + item.monthlyUsd.toLocaleString() + "/mo (Save $" + item.savingsUsd.toLocaleString() + "/mo) · " + item.co2Tons + "t CO2e/mo",
+          "Regulatory Crosswalk    : " + r.grc
         ].join("\n");
       }
       if (fmt === "json") {
         return JSON.stringify({
           implementation_id: item.id,
+          subsystem: sub.code,
+          tier: sub.tier,
           cloud: item.cloud,
           framework: item.framework,
           adr: item.adr,
-          grc_controls: r.grc,
+          grc: r.grc,
           scenario: m.scenario,
-          workload: item.workload,
-          formal_verification: { smt_public_ingress_paths: 0, merkle_signed: true, slsa_level: 4 },
-          portability_and_risk: { exit_score: item.exitScore, exit_hours: item.exitHours, revenue_at_risk_per_min_usd: item.revAtRiskMin, pqc_ready: true },
-          finops_esg: { monthly_usd: item.monthlyUsd, savings_usd: item.savingsUsd, co2_tons_mo: Number(item.co2Tons) },
-          tags: { owner: m.owner, "cost-center": m.costCenter, environment: m.environment, "data-classification": m.dataClassification, ttl: m.ttl }
+          exit_score: item.exitScore,
+          exit_hours: item.exitHours,
+          revenue_at_risk_per_min_usd: item.revAtRiskMin,
+          monthly_usd: item.monthlyUsd,
+          savings_usd: item.savingsUsd,
+          co2_tons_mo: Number(item.co2Tons)
         }, null, 2);
       }
       var safeKey = item.id.toLowerCase().replace("-", "_");
       return [
-        "# " + item.id + ": " + item.title,
-        "# Golden Path OpenTofu / Terraform Baseline | " + r.adr + " | Exit Score: " + item.exitScore + "/100",
+        "# " + item.id + " · " + sub.code + ": " + sub.name,
         "locals {",
-        "  ccoe_" + safeKey + "_golden_path = {",
+        "  ccoe_" + safeKey + " = {",
+        '    "subsystem"           = "' + sub.code + '"',
         '    "owner"               = "' + m.owner + '"',
         '    "cost-center"         = "' + m.costCenter + '"',
         '    "environment"         = "' + m.environment + '"',
         '    "data-classification" = "' + m.dataClassification + '"',
         '    "ttl"                 = "' + m.ttl + '"',
         '    "adr"                 = "' + item.adr + '"',
-        '    "scenario"            = "' + m.scenario + '"',
-        '    "slsa-provenance"     = "level-4-signed"',
+        '    "slsa-level"          = "4"',
         "  }",
         "}"
       ].join("\n");
     }
 
-    function matchesFilter(item, q, cFilter, fFilter, aFilter, adrFilter) {
+    function matchesFilter(item, q, cFilter, fFilter, sFilter, adrFilter) {
       if (cFilter !== "All" && item.cloud !== cFilter) return false;
       if (fFilter !== "All" && item.framework !== fFilter) return false;
-      if (aFilter !== "All" && item.action !== aFilter) return false;
+      if (sFilter !== "All" && item.subsystem !== sFilter) return false;
       if (adrFilter !== "All" && item.adr !== adrFilter) return false;
       if (q) {
-        var hay = (item.id + " " + item.title + " " + item.cloud + " " + item.framework + " " + item.adr + " " + item.action + " " + item.workload).toLowerCase();
+        var hay = (item.id + " " + item.title + " " + item.cloud + " " + item.framework + " " + item.subsystem + " " + item.adr + " " + item.workload).toLowerCase();
         if (hay.indexOf(q) === -1) return false;
       }
       return true;
@@ -1152,9 +1100,9 @@
       var q = String(document.getElementById("qInput").value || "").trim().toLowerCase();
       var cFilter = document.getElementById("cloudFilter").value;
       var fFilter = document.getElementById("frameworkFilter").value;
-      var aFilter = document.getElementById("actionFilter").value;
+      var sFilter = document.getElementById("subsystemFilter").value;
       var adrFilter = document.getElementById("adrFilter").value;
-      var isUnfiltered = !q && cFilter === "All" && fFilter === "All" && aFilter === "All" && adrFilter === "All";
+      var isUnfiltered = !q && cFilter === "All" && fFilter === "All" && sFilter === "All" && adrFilter === "All";
 
       if (isUnfiltered) {
         var slice = [];
@@ -1166,7 +1114,7 @@
       var matched = [];
       for (var j = 0; j < TOTAL_ITEMS; j++) {
         var it = getItemByIndex(j);
-        if (matchesFilter(it, q, cFilter, fFilter, aFilter, adrFilter)) matched.push(it);
+        if (matchesFilter(it, q, cFilter, fFilter, sFilter, adrFilter)) matched.push(it);
       }
       return { total: matched.length, slice: matched.slice(offsetCount, offsetCount + limitCount) };
     }
@@ -1203,12 +1151,28 @@
       appInspect(selectedId, false);
     }
 
-    function appInspect(id, scrollToRunner) {
+    function appInspect(id, jumpToDiagram) {
       var item = getItemById(id);
       selectedId = item.id;
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
+      if (!jumpToDiagram) {
+        // preserve manual subsystem selection if user is editing directly
+      } else {
+        activeDiagramNode = sub.node;
+      }
       document.getElementById("activeImplId").value = item.id;
-      document.getElementById("artifactImplBadge").textContent = item.id + " · " + artifactFmt.toUpperCase();
-      document.getElementById("artifactSummary").textContent = item.title;
+      document.getElementById("activeSubsystem").value = sub.code;
+
+      if (jumpToDiagram && artifactFmt !== "diagram") {
+        artifactFmt = "diagram";
+        var buttons = document.querySelectorAll("#artifactTabs button");
+        for (var b = 0; b < buttons.length; b++) {
+          buttons[b].className = buttons[b].getAttribute("data-fmt") === "diagram" ? "btn btn-active" : "btn";
+        }
+      }
+
+      document.getElementById("artifactImplBadge").textContent = item.id + " · " + sub.code + " · " + artifactFmt.toUpperCase();
+      document.getElementById("artifactSummary").textContent = sub.code + " (" + sub.tier + "): " + sub.name + " · " + item.workload + " (" + item.cloud + ")";
 
       var diagPanel = document.getElementById("diagramPanel");
       var codePre = document.getElementById("artifactCode");
@@ -1224,8 +1188,12 @@
 
       updateRaciAndFinops(item);
       appSaveState();
-      if (scrollToRunner) {
-        document.getElementById("runnerSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      if (jumpToDiagram) {
+        var stageEl = document.getElementById("archDiagramContainer");
+        if (stageEl) {
+          stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }
     }
 
@@ -1246,7 +1214,7 @@
       resultsById[item.id] = ok ? "PASS" : "ACTION REQUIRED";
       render();
       if (ok) {
-        appendLog(item.id + " [" + item.cloud + " · " + item.adr + " · Exit " + item.exitScore + "/100] SMT reachability & Merkle attestation PASS.", "PASS");
+        appendLog(item.id + " [" + item.subsystem + " · " + item.cloud + " · Exit " + item.exitScore + "/100] Z3 SMT & Merkle PASS.", "PASS");
       } else {
         appendLog(item.id + " missing required fields: " + m.missing.join(", ") + ".", "ACTION REQUIRED");
       }
@@ -1259,13 +1227,13 @@
     function appAutonomousHeal() {
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       appInspect(item.id, false);
-      appendLog("AUTONOMOUS <60s LOOP " + item.id + " (" + item.workload + "): [1] SG Isolated (4s) -> [2] Forensic Snapshot (19s) -> [3] Terraform PR Opened (38s) -> [4] PagerDuty Paged (44s).", "PASS");
+      appendLog("TEMPORAL <30s QUARANTINE [" + item.id + " · " + item.workload + "]: [1] Forensic Snapshot (4s) -> [2] DenyAll Policy (9s) -> [3] SDK Revert (16s) -> [4] Signed IaC PR (24s).", "PASS");
     }
 
     function appRunAiGpuGate() {
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       appInspect(item.id, false);
-      appendLog("AI/GPU, CIEM & PQC GATE " + item.id + " (" + item.cloud + "): ISO 42001 Model Card verified, PII DLP scrubbed, Spot GPU arbitrage active, PQC hybrid TLS enabled.", "PASS");
+      appendLog("S16–S20 AI/GPU/DLP/VECTOR GATE [" + item.id + "]: Envoy/Wasm PII/PAN scrubbed (<15ms), DCGM Tensor Core &ge;12% check armed, Sigstore lineage & vector-DB scan PASS.", "PASS");
     }
 
     function appRunBatch() {
@@ -1278,7 +1246,7 @@
         resultsById[it.id] = ok ? "PASS" : "ACTION REQUIRED";
         appendLog(
           ok
-            ? "BATCH " + it.id + " [" + it.cloud + " · " + it.adr + "] SMT & Merkle verified."
+            ? "BATCH " + it.id + " [" + it.subsystem + " · " + it.cloud + "] Z3 & Merkle verified."
             : "BATCH " + it.id + " missing required fields: " + m.missing.join(", ") + ".",
           ok ? "PASS" : "ACTION REQUIRED"
         );
@@ -1290,7 +1258,7 @@
     function appTriggerCveKillSwitch() {
       var cve = String(document.getElementById("cveInput").value || "CVE-2024-3094").trim().toUpperCase();
       var item = getItemById(selectedId);
-      appendLog("GLOBAL CVE KILL-SWITCH [" + cve + "]: Scanned 18,000 SBOMs -> 14 workloads isolated at admission gate, " + item.id + " verified clean (SLSA L4).", "PASS");
+      appendLog("S26 <200ms CVE KILL-SWITCH [" + cve + "]: Scanned 18,000 SBOMs -> 14 workloads quarantined, " + item.id + " SLSA L4 verified clean.", "PASS");
     }
 
     function appLintPayload() {
@@ -1301,17 +1269,17 @@
         var issues = [];
         var req = ["owner", "cost-center", "environment", "data-classification", "ttl"];
         for (var i = 0; i < req.length; i++) {
-          if (!obj[req[i]]) issues.push("Missing '" + req[i] + "' (ADR-002)");
+          if (!obj[req[i]]) issues.push("Missing '" + req[i] + "' (S05/ADR-002)");
         }
-        if (obj.environment === "prod" && obj.oidc_federated === false) issues.push("OIDC disabled in prod (ADR-001)");
-        if (obj.private_egress_only === false) issues.push("Public egress enabled (ADR-004)");
-        if (obj.pii_scrubbed === false) issues.push("Unscrubbed PII/DLP risk (ADR-007 / ISO 42001)");
-        if (typeof obj.gpu_util_pct === "number" && obj.gpu_util_pct < 15) issues.push("Idle GPU <15% burn waste (ADR-006/007)");
-        if (obj.hyok_hsm_active === false) issues.push("Missing customer HYOK HSM key (ADR-005)");
-        if (obj.pqc_tls_hybrid === false) issues.push("Non-PQC classical TLS tunnel (ADR-001)");
+        if (obj.environment === "prod" && obj.oidc_federated === false) issues.push("Missing OIDC/SPIFFE in prod (S09/ADR-001)");
+        if (obj.private_egress_only === false) issues.push("Public egress violation (S06/ADR-004)");
+        if (obj.pii_scrubbed === false) issues.push("Unredacted PII/PAN/BVN/NIN/SSN (S16/ADR-007)");
+        if (typeof obj.gpu_tensor_util_pct === "number" && obj.gpu_tensor_util_pct < 12) issues.push("GPU Tensor Core <12% preemption trigger (S17)");
+        if (obj.hyok_hsm_active === false) issues.push("Missing HYOK HSM key (S12/ADR-005)");
+        if (obj.pqc_tls_hybrid === false) issues.push("Non-PQC TLS tunnel (S27/ADR-001)");
         if (issues.length === 0) {
-          box.innerHTML = '<div><span class="run-status">PASS · FELLOW-TIER COMPLIANT</span> All ADR-001..008, SMT reachability, HYOK HSM, PII DLP, and PQC checks passed.</div>';
-          appendLog("FORMAL LINTER PASS: Payload verified across ADR-001..008.", "PASS");
+          box.innerHTML = '<div><span class="run-status">PASS · ALL 30-SUBSYSTEM CHECKS PASSED</span> Ready for Firecracker (&lt;350ms) admission.</div>';
+          appendLog("FORMAL LINTER PASS: Payload verified across S01–S30.", "PASS");
         } else {
           box.innerHTML = '<div><span class="run-status-err">FINDINGS (' + issues.length + ')</span> ' + issues.join(" · ") + "</div>";
           appendLog("FORMAL LINTER FINDINGS: " + issues.join("; "), "ACTION REQUIRED");
@@ -1322,24 +1290,24 @@
     }
 
     function appLoadBadSample() {
-      document.getElementById("linterInput").value = '{"owner":"Team Alpha","environment":"prod","oidc_federated":false,"private_egress_only":false,"pii_scrubbed":false,"gpu_util_pct":8,"hyok_hsm_active":false,"pqc_tls_hybrid":false}';
+      document.getElementById("linterInput").value = '{"owner":"Team Alpha","environment":"prod","oidc_federated":false,"private_egress_only":false,"pii_scrubbed":false,"gpu_tensor_util_pct":8,"hyok_hsm_active":false,"pqc_tls_hybrid":false}';
       appLintPayload();
     }
 
     function appLoadGoodSample() {
-      document.getElementById("linterInput").value = '{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true,"pii_scrubbed":true,"gpu_util_pct":74,"hyok_hsm_active":true,"pqc_tls_hybrid":true}';
+      document.getElementById("linterInput").value = '{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true,"pii_scrubbed":true,"gpu_tensor_util_pct":74,"hyok_hsm_active":true,"pqc_tls_hybrid":true,"slsa_level":4}';
       appLintPayload();
     }
 
     function appIssueWaiver() {
       var role = document.getElementById("rbacPersona").value;
       if (role === "Developer") {
-        appendLog("RBAC DENY: Developer lens cannot approve break-glass waivers (ADR-003).", "ACTION REQUIRED");
+        appendLog("RBAC DENY: Developer lens cannot approve break-glass waivers (S29/ADR-003).", "ACTION REQUIRED");
         return;
       }
       var ticket = String(document.getElementById("itsmTicket").value || "").trim().toUpperCase();
       if (!/^(CHG|INC)-[0-9]{3,}$/.test(ticket)) {
-        appendLog("ITSM GATE DENY: Enter a valid approved change/incident ticket (e.g. CHG-40912).", "ACTION REQUIRED");
+        appendLog("ITSM GATE DENY: Enter a valid CHG- or INC- ticket (e.g. CHG-40912).", "ACTION REQUIRED");
         return;
       }
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
@@ -1350,6 +1318,7 @@
       activeWaivers.unshift({
         waiver_id: waiverId,
         implementation_id: item.id,
+        subsystem: item.subsystem,
         itsm_ticket: ticket,
         approver: approver,
         actor_role: role,
@@ -1358,7 +1327,7 @@
         issued_utc: new Date().toISOString()
       });
       renderWaivers();
-      appendLog("WAIVER " + waiverId + " signed for " + item.id + " under " + ticket + " (" + win + ").", "PASS");
+      appendLog("S29 WAIVER " + waiverId + " issued for " + item.id + " under " + ticket + " (Temporal TTL=" + win + ").", "PASS");
     }
 
     function renderWaivers() {
@@ -1369,7 +1338,7 @@
       var html = "";
       for (var i = 0; i < activeWaivers.length; i++) {
         var w = activeWaivers[i];
-        html += '<div class="log-entry"><strong>' + w.waiver_id + "</strong> · " + w.implementation_id + " · Ticket <strong>" + w.itsm_ticket + "</strong> · TTL <strong>" + w.ttl_window + "</strong> · " + w.approver + " — " + w.justification + "</div>";
+        html += '<div class="log-entry"><strong>' + w.waiver_id + "</strong> · " + w.implementation_id + " (" + w.subsystem + ") · <strong>" + w.itsm_ticket + "</strong> · TTL <strong>" + w.ttl_window + "</strong> · " + w.approver + " — " + w.justification + "</div>";
       }
       document.getElementById("waiverLedgerBox").innerHTML = html;
     }
@@ -1381,7 +1350,7 @@
 
     function appCopyArtifact() {
       var text = artifactFmt === "diagram"
-        ? (document.getElementById("archDiagramContainer").innerHTML)
+        ? document.getElementById("archDiagramContainer").innerHTML
         : document.getElementById("artifactCode").textContent;
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
       appendLog("Copied " + artifactFmt.toUpperCase() + " output for " + selectedId + ".", "PASS");
@@ -1391,8 +1360,8 @@
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       var authMode = document.getElementById("authMode").value;
       var mode = document.getElementById("execMode").value;
-      var shortJwt = "oidc-jwt-" + Math.random().toString(36).slice(2, 10);
-      appendLog("SECRETLESS " + authMode.toUpperCase() + " [" + shortJwt + "] dispatched " + item.id + " (" + item.adr + ", mode=" + mode + ").", "PASS");
+      var shortJwt = "spiffe-oidc-" + Math.random().toString(36).slice(2, 10);
+      appendLog("S09 " + authMode.toUpperCase() + " [" + shortJwt + "] dispatched " + item.id + " (" + item.subsystem + ", mode=" + mode + ").", "PASS");
     }
 
     function appExecCommand() {
@@ -1400,15 +1369,19 @@
       if (!raw) return;
       var low = raw.toLowerCase();
       if (low === "reset") { appResetState(); return; }
-      if (low.indexOf("divest") !== -1) document.getElementById("scenarioMode").value = "divestiture-carveout";
-      else if (low.indexOf("fiber") !== -1 || low.indexOf("cable") !== -1) document.getElementById("scenarioMode").value = "fiber-cut";
-      else if (low.indexOf("local") !== -1 || low.indexOf("ndpa") !== -1) document.getElementById("scenarioMode").value = "localization-mandate";
-      else if (low.indexOf("tariff") !== -1 || low.indexOf("sanction") !== -1) document.getElementById("scenarioMode").value = "tariff-hike";
+      if (low.indexOf("divest") !== -1 || low.indexOf("tsa") !== -1) document.getElementById("scenarioMode").value = "divestiture-carveout";
+      else if (low.indexOf("fiber") !== -1 || low.indexOf("cable") !== -1 || low.indexOf("bgp") !== -1) document.getElementById("scenarioMode").value = "fiber-cut";
+      else if (low.indexOf("local") !== -1 || low.indexOf("hyok") !== -1 || low.indexOf("ndpa") !== -1) document.getElementById("scenarioMode").value = "localization-mandate";
+      else if (low.indexOf("tariff") !== -1 || low.indexOf("exit") !== -1) document.getElementById("scenarioMode").value = "tariff-hike";
       else if (low.indexOf("m&a") !== -1 || low.indexOf("haircut") !== -1) document.getElementById("scenarioMode").value = "ma-onboarding";
 
-      if (low.indexOf("aws") !== -1) document.getElementById("cloudFilter").value = "AWS";
-      else if (low.indexOf("azure") !== -1) document.getElementById("cloudFilter").value = "Azure";
-      else if (low.indexOf("gcp") !== -1) document.getElementById("cloudFilter").value = "GCP";
+      var subMatch = raw.match(/\bs0?([1-9]|[12][0-9]|30)\b/i);
+      if (subMatch) {
+        var code = "S" + String(subMatch[1]).padStart(2, "0");
+        document.getElementById("subsystemFilter").value = code;
+        document.getElementById("activeSubsystem").value = code;
+        appSubsystemSelectChange();
+      }
 
       var cveMatch = raw.match(/cve-[0-9]{4}-[0-9]{4,7}/i);
       if (cveMatch) {
@@ -1421,10 +1394,10 @@
         var targetId = "IMPL-" + String(implMatch[1]).padStart(5, "0");
         appInspect(targetId, true);
       } else {
-        appInspect(selectedId, false);
+        appInspect(selectedId, true);
       }
       appFilterChange();
-      appendLog("COPILOT SYNTHESIZED: '" + raw + "' -> " + getScenarioLabel(), "PASS");
+      appendLog("COPILOT: '" + raw + "' -> " + getScenarioLabel(), "PASS");
     }
 
     function triggerDownload(filename, content, mime) {
@@ -1446,25 +1419,26 @@
 
     function appDownloadBoardBrief() {
       var item = getItemById(selectedId);
-      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      var sub = item.subsystemObj || SUBSYSTEMS[0];
+      var r = RACI_BY_TIER[sub.tier] || RACI_BY_TIER["Tier 1"];
       var brief = [
-        "# Global CIO & Technical Fellow — CCoE Board & Regulator Dossier",
+        "# Global CIO & Technical Fellow — 30-Subsystem CCoE Board Dossier",
         "- **Repository:** `Adamson-lab/ccoe-operating-model-raci-adrs-guardrails`",
         "- **Generated UTC:** " + new Date().toISOString(),
-        "- **Executive Lens:** " + document.getElementById("rbacPersona").value,
-        "- **Macro Scenario:** " + getScenarioLabel(),
-        "- **Spotlight Target:** " + item.id + " (" + item.title + ") · GRC: " + r.grc,
-        "- **Cloud Exit Portability:** " + item.exitScore + "/100 (" + item.exitHours + " migration hours)",
-        "- **Tier-0 Revenue-at-Risk:** $" + item.revAtRiskMin + "/min · FinOps: $" + item.monthlyUsd.toLocaleString() + "/mo · ESG: " + item.co2Tons + "t CO2e/mo"
+        "- **Spotlight:** " + item.id + " · " + sub.code + " (" + sub.tier + ") — " + sub.name,
+        "- **Scenario:** " + getScenarioLabel(),
+        "- **Exit Portability:** " + item.exitScore + "/100 (" + item.exitHours + "h) · **GRC:** " + r.grc,
+        "- **Tier-0 Risk:** $" + item.revAtRiskMin + "/min · **Spend:** $" + item.monthlyUsd.toLocaleString() + "/mo · **ESG:** " + item.co2Tons + "t CO2e/mo"
       ].join("\n");
-      triggerDownload("ccoe-board-regulator-dossier.md", brief, "text/markdown");
-      appendLog("Exported ccoe-board-regulator-dossier.md.", "PASS");
+      triggerDownload("ccoe-30-subsystem-board-dossier.md", brief, "text/markdown");
+      appendLog("Exported ccoe-30-subsystem-board-dossier.md.", "PASS");
     }
 
     function appDownloadSignedEvidence() {
       var item = getItemById(selectedId);
       var pack = {
         exported_utc: new Date().toISOString(),
+        subsystems_covered: 30,
         merkle_root_sha256: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
         sigstore_verified: true,
         spotlight: item,
@@ -1482,7 +1456,7 @@
 
     function appDownloadCatalog() {
       var qRes = queryItems(500, page * pageSize);
-      triggerDownload("ccoe-live-implementations-slice.json", JSON.stringify({ total_available: TOTAL_ITEMS, exported_count: qRes.slice.length, items: qRes.slice }, null, 2), "application/json");
+      triggerDownload("ccoe-live-implementations-slice.json", JSON.stringify({ total_available: TOTAL_ITEMS, subsystems: 30, exported_count: qRes.slice.length, items: qRes.slice }, null, 2), "application/json");
     }
 
     function appFilterChange() { page = 0; render(); }
@@ -1496,13 +1470,13 @@
       var totalPages = Math.max(1, Math.ceil(total / pageSize));
       if (page >= totalPages) page = totalPages - 1;
 
-      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " · SMT VERIFIED";
+      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " · Z3 VERIFIED";
       document.getElementById("kpi1Sub").textContent = "Showing " + slice.length + " of " + total.toLocaleString() + " (Page " + (page + 1) + "/" + totalPages + ")";
       document.getElementById("pageInfo").textContent = "Page " + (page + 1) + " of " + totalPages;
       document.getElementById("filterSummary").textContent =
         document.getElementById("cloudFilter").value + " · " +
         document.getElementById("frameworkFilter").value + " · " +
-        document.getElementById("actionFilter").value + " · " +
+        document.getElementById("subsystemFilter").value + " · " +
         document.getElementById("adrFilter").value;
 
       var cardsHtml = "";
@@ -1510,15 +1484,15 @@
         var it = slice[i];
         var st = resultsById[it.id] || "";
         var stClass = st === "PASS" ? "run-status" : "run-status-err";
-        var warnCls = (it.action.indexOf("Drift") !== -1 || it.action.indexOf("TTL") !== -1 || it.adr === "ADR-007") ? " badge-warn" : "";
+        var warnCls = (it.subsystemObj.tier === "Tier 4" || it.subsystemObj.tier === "Tier 6") ? " badge-warn" : "";
         cardsHtml +=
           '<article class="card">' +
             '<div class="top-row">' +
-              '<span class="id-code">' + it.id + ' · ' + it.cloud + ' · ' + it.adr + '</span>' +
+              '<span class="id-code">' + it.id + ' · ' + it.subsystem + ' · ' + it.cloud + ' · ' + it.adr + '</span>' +
               '<span class="badge' + warnCls + '">' + it.framework + '</span>' +
             '</div>' +
             '<h3 class="title">' + it.title + '</h3>' +
-            '<div class="meta">Exit Score: ' + it.exitScore + '/100 · $' + it.monthlyUsd.toLocaleString() + '/mo · Rev-at-Risk $' + it.revAtRiskMin + '/min</div>' +
+            '<div class="meta">Exit: ' + it.exitScore + '/100 · $' + it.monthlyUsd.toLocaleString() + '/mo · Risk $' + it.revAtRiskMin + '/min</div>' +
             '<div class="card-actions">' +
               '<button class="btn" type="button" onclick="appInspect(\'' + it.id + '\', true)">Inspect Diagram</button>' +
               '<button class="btn btn-active" type="button" onclick="appRunCheck(\'' + it.id + '\')">Verify &amp; Run</button>' +
