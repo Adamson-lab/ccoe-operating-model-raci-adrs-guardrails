@@ -133,15 +133,15 @@
     .tab-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
     .diagram-stage {
       margin-top: 12px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #334155;
       border-radius: 12px;
-      background: #0b1220;
-      padding: 12px;
-      overflow-x: auto;
+      background: #090f1d;
+      padding: 10px;
+      overflow: hidden;
     }
     .diagram-stage svg {
       width: 100%;
-      min-width: 720px;
+      max-width: 100%;
       height: auto;
       display: block;
     }
@@ -817,113 +817,209 @@
       appInspect(selectedId, false);
     }
 
+     var activeDiagramNode = null;
+
+    function getAutoFocusNode(item, scenario) {
+      if (scenario === "fiber-cut" || item.action.indexOf("Egress") !== -1 || item.action.indexOf("Drift") !== -1) return "network";
+      if (scenario === "localization-mandate" || item.adr === "ADR-005" || item.action.indexOf("Evidence") !== -1) return "vault";
+      if (scenario === "tariff-hike" || scenario === "divestiture-carveout" || item.adr === "ADR-006") return "ledger";
+      if (item.action.indexOf("OIDC") !== -1 || item.adr === "ADR-001") return "identity";
+      if (item.action.indexOf("Guardrail") !== -1 || item.action.indexOf("Tag") !== -1) return "policy";
+      return "workload";
+    }
+
     function renderArchitectureSvg(item) {
       var m = getMetadata();
       var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
-      var cloudPalette = {
-        AWS: { badge: "#f59e0b", hub: "AWS Transit Gateway & PrivateLink", iam: "AWS IAM OIDC + Zelkova SMT", vault: "AWS KMS HYOK + S3 Air-Gap" },
-        Azure: { badge: "#38bdf8", hub: "Azure Virtual WAN & Private Endpoint", iam: "Entra ID Workload Federation", vault: "Azure Managed HSM + Immutable Blob" },
-        GCP: { badge: "#34d399", hub: "GCP Shared VPC & Private Service Connect", iam: "GCP Workforce / Workload Identity", vault: "Cloud KMS Autokey + Vault Lock" }
+      var focusKey = activeDiagramNode || getAutoFocusNode(item, m.scenario);
+
+      var cloudSpec = {
+        AWS: {
+          accent: "#ff9900",
+          hdr: "AWS CLOUD · VPC, TRANSIT GATEWAY & PRIVATELINK",
+          iam: "IAM OIDC + Zelkova SMT",
+          iamSub: "STS WebIdentity · Zero Keys",
+          net: "Transit Gateway + PrivateLink",
+          netSub: "TGW Route Table · Egress Filter",
+          vault: "AWS KMS HYOK + S3 Object Lock",
+          vaultSub: "External HSM · WORM Cyber-Vault",
+          tier0: "Tier-0 Clearing & Ledger",
+          tier0Sub: "CloudTrail -> SHA-256 Merkle"
+        },
+        Azure: {
+          accent: "#38bdf8",
+          hdr: "AZURE CLOUD · VIRTUAL WAN, HUB-SPOKE & PRIVATE ENDPOINT",
+          iam: "Entra ID OIDC + FIM",
+          iamSub: "Federated Identity · Zero Secret",
+          net: "Azure vWAN + Private Endpoint",
+          netSub: "Azure Firewall · NSG Zero-Trust",
+          vault: "Managed HSM HYOK + Immutable Blob",
+          vaultSub: "Customer Key · Air-Gapped Vault",
+          tier0: "Tier-0 Payments & Ledger",
+          tier0Sub: "Activity Log -> SHA-256 Merkle"
+        },
+        GCP: {
+          accent: "#34d399",
+          hdr: "GCP CLOUD · SHARED VPC, PSC & SOVEREIGN MESH",
+          iam: "Workload Identity Federation",
+          iamSub: "STS Token Exchange · Zero Keys",
+          net: "Shared VPC + Private Service Connect",
+          netSub: "Cloud Armor · Hierarchical FW",
+          vault: "Cloud KMS EKM/HYOK + Vault Lock",
+          vaultSub: "External Key Mgr · Retention Lock",
+          tier0: "Tier-0 Data & Ledger",
+          tier0Sub: "Audit Logs -> SHA-256 Merkle"
+        }
+      }[item.cloud] || {
+        accent: "#ff9900",
+        hdr: "AWS CLOUD · VPC, TRANSIT GATEWAY & PRIVATELINK",
+        iam: "IAM OIDC + Zelkova SMT",
+        iamSub: "STS WebIdentity · Zero Keys",
+        net: "Transit Gateway + PrivateLink",
+        netSub: "TGW Route Table · Egress Filter",
+        vault: "AWS KMS HYOK + S3 Object Lock",
+        vaultSub: "External HSM · WORM Cyber-Vault",
+        tier0: "Tier-0 Clearing & Ledger",
+        tier0Sub: "CloudTrail -> SHA-256 Merkle"
       };
-      var cp = cloudPalette[item.cloud] || cloudPalette.AWS;
-      var scenarioBadge = m.scenario === "steady-state" ? "STEADY-STATE TOPOLOGY" : m.scenario.toUpperCase() + " ACTIVE";
+
+      var linkColor = "#818cf8";
+      var linkDash = "";
+      var modePill = "STEADY-STATE";
+      var routeBanner = "Active Path: OIDC -> Guardrail -> Hub-Spoke -> " + item.workload + " -> Merkle Audit";
+      var reorderedFlow = false;
+
+      if (m.scenario === "fiber-cut") {
+        linkColor = "#f59e0b";
+        linkDash = ' stroke-dasharray="5 3"';
+        modePill = "FIBER CUT REROUTE";
+        routeBanner = "REROUTED (Subsea Cut): Bypassing Primary Cable -> Secondary Edge/Region Hub";
+        reorderedFlow = true;
+      } else if (m.scenario === "localization-mandate") {
+        linkColor = "#f87171";
+        modePill = "SOVEREIGN LOCK";
+        routeBanner = "SOVEREIGN LOCK: Cross-Border Egress BLOCKED -> Local HYOK Vault Enforced";
+      } else if (m.scenario === "tariff-hike") {
+        linkColor = "#fbbf24";
+        modePill = "+35% TARIFF EXIT";
+        routeBanner = "EXIT SIMULATION (" + item.exitScore + "/100): Portable Workload Path -> " + item.exitHours + "h Cutover";
+      } else if (m.scenario === "ma-onboarding") {
+        linkColor = "#38bdf8";
+        modePill = "M&A QUARANTINE";
+        routeBanner = "M&A WAVE 1: Acquired Account -> Read-Only Guardrail -> Hub Peering";
+      } else if (m.scenario === "divestiture-carveout") {
+        linkColor = "#f472b6";
+        modePill = "CARVE-OUT TSA";
+        routeBanner = "DIVESTITURE: Clean-Room Severance + TSA Cost & Identity Meter";
+      }
+
+      var netX = reorderedFlow ? 464 : 238;
+      var wlX  = reorderedFlow ? 238 : 464;
+      var isAiOrGpu = (item.workload.indexOf("gpu") !== -1 || item.adr === "ADR-007" || item.action.indexOf("AI") !== -1);
+      var wlBadge = isAiOrGpu ? "GPU / AI + PII GATE" : "WORKLOAD + DRIFT";
+
+      function sw(k) { return focusKey === k ? "3" : "1.4"; }
+      function fl(k) { return focusKey === k ? "#1e1b4b" : "#162033"; }
 
       var svg = [
-        '<svg id="liveArchSvg" viewBox="0 0 980 410" xmlns="http://www.w3.org/2000/svg">',
+        '<svg id="liveArchSvg" viewBox="0 0 920 420" xmlns="http://www.w3.org/2000/svg">',
         '  <defs>',
-        '    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">',
-        '      <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8" />',
+        '    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">',
+        '      <path d="M 0 1 L 10 5 L 0 9 z" fill="' + linkColor + '" />',
         '    </marker>',
         '  </defs>',
-        '  <rect x="0" y="0" width="980" height="410" rx="10" fill="#0b1220" />',
-        '  <text x="20" y="28" fill="#f8fafc" font-size="13" font-weight="700" font-family="system-ui, sans-serif">' + item.id + ' · ' + item.cloud + ' Multi-Cloud Landing Zone &amp; CIEM Trust Architecture (' + item.adr + ')</text>',
-        '  <rect x="755" y="12" width="205" height="22" rx="11" fill="#1e1b4b" stroke="#6366f1" />',
-        '  <text x="857" y="27" text-anchor="middle" fill="#c7d2fe" font-size="10" font-weight="700" font-family="system-ui, sans-serif">' + scenarioBadge + '</text>',
+        '  <rect x="0" y="0" width="920" height="420" rx="10" fill="#090f1d" />',
 
-        '  <!-- Zone Boxes -->',
-        '  <rect x="20" y="48" width="215" height="335" rx="8" fill="#111827" stroke="#334155" stroke-dasharray="4 3" />',
-        '  <text x="32" y="68" fill="#94a3b8" font-size="10" font-weight="700" font-family="system-ui, sans-serif">1. ZERO-TRUST IDENTITY (ADR-001)</text>',
+        '  <text x="16" y="25" fill="#f8fafc" font-size="12" font-weight="700">' + item.id + ' · ' + cloudSpec.hdr + ' (' + item.adr + ')</text>',
+        '  <rect x="734" y="9" width="170" height="22" rx="11" fill="#1e1b4b" stroke="' + linkColor + '" stroke-width="1.4" />',
+        '  <text x="819" y="24" text-anchor="middle" fill="#f8fafc" font-size="9.5" font-weight="700">' + modePill + '</text>',
 
-        '  <rect x="255" y="48" width="465" height="335" rx="8" fill="#111827" stroke="#334155" stroke-dasharray="4 3" />',
-        '  <text x="268" y="68" fill="#94a3b8" font-size="10" font-weight="700" font-family="system-ui, sans-serif">2. ' + item.cloud + ' LANDING ZONE, HUB-SPOKE &amp; AI/GPU BOUNDARY</text>',
+        '  <rect x="16" y="42" width="196" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
+        '  <text x="26" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">1. IDENTITY &amp; POLICY PLANE</text>',
 
-        '  <rect x="740" y="48" width="220" height="335" rx="8" fill="#111827" stroke="#334155" stroke-dasharray="4 3" />',
-        '  <text x="752" y="68" fill="#94a3b8" font-size="10" font-weight="700" font-family="system-ui, sans-serif">3. TIER-0 &amp; MERKLE AUDIT</text>',
-
-        '  <!-- Node 1: OIDC & CIEM -->',
         '  <g class="svg-node" onclick="appInspectNode(\'identity\')">',
-        '    <rect class="node-box" x="34" y="88" width="187" height="115" rx="8" fill="#1e293b" stroke="' + cp.badge + '" stroke-width="1.6" />',
-        '    <text x="46" y="109" fill="' + cp.badge + '" font-size="10" font-weight="700">SECRETLESS OIDC + CIEM</text>',
-        '    <text x="46" y="128" fill="#f8fafc" font-size="11.5" font-weight="700">' + cp.iam + '</text>',
-        '    <text x="46" y="147" fill="#cbd5e1" font-size="10">Owner: ' + m.owner + '</text>',
-        '    <text x="46" y="163" fill="#cbd5e1" font-size="10">Zero Static Keys · PQC Hybrid</text>',
-        '    <text x="46" y="182" fill="#86efac" font-size="9.5" font-weight="700">SMT Proof: 0 Escalation Paths</text>',
+        '    <rect class="node-box" x="26" y="74" width="176" height="142" rx="7" fill="' + fl("identity") + '" stroke="' + (focusKey === "identity" ? "#ffffff" : cloudSpec.accent) + '" stroke-width="' + sw("identity") + '" />',
+        '    <rect x="36" y="83" width="76" height="15" rx="4" fill="#1e293b" stroke="' + cloudSpec.accent + '" />',
+        '    <text x="74" y="94" text-anchor="middle" fill="' + cloudSpec.accent + '" font-size="8.5" font-weight="700">' + item.cloud + ' OIDC/CIEM</text>',
+        '    <text x="36" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.iam + '</text>',
+        '    <text x="36" y="130" fill="#cbd5e1" font-size="9.5">' + cloudSpec.iamSub + '</text>',
+        '    <text x="36" y="148" fill="#cbd5e1" font-size="9.5">Owner: ' + m.owner + '</text>',
+        '    <text x="36" y="164" fill="#cbd5e1" font-size="9.5">PQC Hybrid TLS · Least-Priv</text>',
+        '    <text x="36" y="202" fill="#86efac" font-size="9.5" font-weight="700">SMT Proof: 0 Escalations</text>',
         '  </g>',
 
-        '  <!-- Node 2: Formal Policy Gate -->',
         '  <g class="svg-node" onclick="appInspectNode(\'policy\')">',
-        '    <rect class="node-box" x="34" y="232" width="187" height="128" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.6" />',
-        '    <text x="46" y="253" fill="#a5b4fc" font-size="10" font-weight="700">FORMAL POLICY &amp; TWIN GATE</text>',
-        '    <text x="46" y="272" fill="#f8fafc" font-size="11.5" font-weight="700">' + item.adr + ' · OPA / Rego</text>',
-        '    <text x="46" y="291" fill="#cbd5e1" font-size="10">CC: ' + m.costCenter + ' · Env: ' + m.environment + '</text>',
-        '    <text x="46" y="307" fill="#cbd5e1" font-size="10">30d Log Replay: 0.0% FP</text>',
-        '    <text x="46" y="325" fill="#fde68a" font-size="9.5" font-weight="700">Accountable: ' + r.a + '</text>',
-        '    <text x="46" y="342" fill="#94a3b8" font-size="9.5">SLA: ' + r.sla + ' · SLSA L4 Signed</text>',
+        '    <rect class="node-box" x="26" y="232" width="176" height="158" rx="7" fill="' + fl("policy") + '" stroke="' + (focusKey === "policy" ? "#ffffff" : "#818cf8") + '" stroke-width="' + sw("policy") + '" />',
+        '    <rect x="36" y="241" width="76" height="15" rx="4" fill="#1e293b" stroke="#818cf8" />',
+        '    <text x="74" y="252" text-anchor="middle" fill="#a5b4fc" font-size="8.5" font-weight="700">' + item.adr + ' GATE</text>',
+        '    <text x="36" y="272" fill="#f8fafc" font-size="11" font-weight="700">OPA Rego + 30d Twin</text>',
+        '    <text x="36" y="288" fill="#cbd5e1" font-size="9.5">CC: ' + m.costCenter + ' · Env: ' + m.environment + '</text>',
+        '    <text x="36" y="304" fill="#cbd5e1" font-size="9.5">TTL: ' + m.ttl + ' · Class: ' + m.dataClassification + '</text>',
+        '    <text x="36" y="324" fill="#fde68a" font-size="9.5" font-weight="700">A: ' + r.a + '</text>',
+        '    <text x="36" y="340" fill="#cbd5e1" font-size="9">SLA: ' + r.sla + ' · SLSA L4</text>',
+        '    <text x="36" y="376" fill="#86efac" font-size="9.5" font-weight="700">30d Replay: 0.0% FP</text>',
         '  </g>',
 
-        '  <!-- Node 3: Hub-Spoke Network -->',
+        '  <rect x="226" y="42" width="464" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
+        '  <text x="238" y="60" fill="#94a3b8" font-size="9" font-weight="700">' + routeBanner + '</text>',
+
         '  <g class="svg-node" onclick="appInspectNode(\'network\')">',
-        '    <rect class="node-box" x="275" y="88" width="205" height="122" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.6" />',
-        '    <text x="287" y="109" fill="#7dd3fc" font-size="10" font-weight="700">ZERO-TRUST HUB-SPOKE</text>',
-        '    <text x="287" y="128" fill="#f8fafc" font-size="11.5" font-weight="700">' + cp.hub + '</text>',
-        '    <text x="287" y="147" fill="#cbd5e1" font-size="10">DNS Private Resolver + Allowlist</text>',
-        '    <text x="287" y="163" fill="#cbd5e1" font-size="10">0.0.0.0/0 Ingress: BLOCKED</text>',
-        '    <text x="287" y="183" fill="#86efac" font-size="9.5" font-weight="700">&lt;60s Auto-Quarantine Armed</text>',
+        '    <rect class="node-box" x="' + netX + '" y="74" width="214" height="142" rx="7" fill="' + fl("network") + '" stroke="' + (focusKey === "network" ? "#ffffff" : "#38bdf8") + '" stroke-width="' + sw("network") + '" />',
+        '    <rect x="' + (netX + 10) + '" y="83" width="96" height="15" rx="4" fill="#1e293b" stroke="#38bdf8" />',
+        '    <text x="' + (netX + 58) + '" y="94" text-anchor="middle" fill="#7dd3fc" font-size="8.5" font-weight="700">HUB-SPOKE NET</text>',
+        '    <text x="' + (netX + 10) + '" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.net + '</text>',
+        '    <text x="' + (netX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">' + cloudSpec.netSub + '</text>',
+        '    <text x="' + (netX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">DNS Resolver + Egress Filter</text>',
+        '    <text x="' + (netX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">CVE Kill-Switch: Armed</text>',
+        '    <text x="' + (netX + 10) + '" y="202" fill="#86efac" font-size="9.5" font-weight="700">&lt;60s Quarantine Ready</text>',
         '  </g>',
 
-        '  <!-- Node 4: Target Workload & AI/GPU -->',
         '  <g class="svg-node" onclick="appInspectNode(\'workload\')">',
-        '    <rect class="node-box" x="500" y="88" width="202" height="122" rx="8" fill="#1e293b" stroke="#f472b6" stroke-width="1.6" />',
-        '    <text x="512" y="109" fill="#f9a8d4" font-size="10" font-weight="700">WORKLOAD &amp; AI/GPU GATE</text>',
-        '    <text x="512" y="128" fill="#f8fafc" font-size="11.5" font-weight="700">' + item.workload + '</text>',
-        '    <text x="512" y="147" fill="#cbd5e1" font-size="10">Class: ' + m.dataClassification + ' · TTL ' + m.ttl + '</text>',
-        '    <text x="512" y="163" fill="#cbd5e1" font-size="10">ISO 42001 + PII DLP Scrubbed</text>',
-        '    <text x="512" y="183" fill="#fde68a" font-size="9.5" font-weight="700">Exit Portability: ' + item.exitScore + '/100</text>',
+        '    <rect class="node-box" x="' + wlX + '" y="74" width="214" height="142" rx="7" fill="' + fl("workload") + '" stroke="' + (focusKey === "workload" ? "#ffffff" : "#f472b6") + '" stroke-width="' + sw("workload") + '" />',
+        '    <rect x="' + (wlX + 10) + '" y="83" width="118" height="15" rx="4" fill="#1e293b" stroke="#f472b6" />',
+        '    <text x="' + (wlX + 69) + '" y="94" text-anchor="middle" fill="#f9a8d4" font-size="8.5" font-weight="700">' + wlBadge + '</text>',
+        '    <text x="' + (wlX + 10) + '" y="114" fill="#f8fafc" font-size="11" font-weight="700">' + item.workload + '</text>',
+        '    <text x="' + (wlX + 10) + '" y="130" fill="#cbd5e1" font-size="9.5">Private Subnet · mTLS Mesh</text>',
+        '    <text x="' + (wlX + 10) + '" y="148" fill="#cbd5e1" font-size="9.5">ISO 42001 · PII DLP Clean</text>',
+        '    <text x="' + (wlX + 10) + '" y="164" fill="#cbd5e1" font-size="9.5">Conway Load: Optimal</text>',
+        '    <text x="' + (wlX + 10) + '" y="202" fill="#fde68a" font-size="9.5" font-weight="700">Exit: ' + item.exitScore + '/100 (' + item.exitHours + 'h)</text>',
         '  </g>',
 
-        '  <!-- Node 5: HYOK HSM & Sovereign Vault -->',
         '  <g class="svg-node" onclick="appInspectNode(\'vault\')">',
-        '    <rect class="node-box" x="275" y="232" width="427" height="128" rx="8" fill="#1e293b" stroke="#34d399" stroke-width="1.6" />',
-        '    <text x="287" y="253" fill="#6ee7b7" font-size="10" font-weight="700">SOVEREIGNTY, HYOK HSM &amp; AIR-GAPPED CYBER-VAULT (ADR-005)</text>',
-        '    <text x="287" y="272" fill="#f8fafc" font-size="11.5" font-weight="700">' + cp.vault + ' · Geofenced Residency</text>',
-        '    <text x="287" y="291" fill="#cbd5e1" font-size="10">External Customer-Controlled HSM (Subpoena-Proof) · 90d Rotation</text>',
-        '    <text x="287" y="309" fill="#cbd5e1" font-size="10">FinOps: $' + item.monthlyUsd.toLocaleString() + '/mo (Save $' + item.savingsUsd.toLocaleString() + '/mo) · Carbon: ' + item.co2Tons + 't CO2e/mo</text>',
-        '    <text x="287" y="330" fill="#86efac" font-size="9.5" font-weight="700">RTO 15m / RPO 5m · Clean-Room Ransomware Drill: VERIFIED</text>',
+        '    <rect class="node-box" x="238" y="232" width="440" height="158" rx="7" fill="' + fl("vault") + '" stroke="' + (focusKey === "vault" ? "#ffffff" : "#34d399") + '" stroke-width="' + sw("vault") + '" />',
+        '    <rect x="248" y="241" width="142" height="15" rx="4" fill="#1e293b" stroke="#34d399" />',
+        '    <text x="319" y="252" text-anchor="middle" fill="#6ee7b7" font-size="8.5" font-weight="700">HYOK HSM &amp; SOVEREIGN VAULT</text>',
+        '    <text x="248" y="272" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.vault + '</text>',
+        '    <text x="248" y="288" fill="#cbd5e1" font-size="9.5">' + cloudSpec.vaultSub + ' · Geofence: ' + m.dataClassification.toUpperCase() + '</text>',
+        '    <text x="248" y="308" fill="#cbd5e1" font-size="9.5">Spend: $' + item.monthlyUsd.toLocaleString() + '/mo (Save $' + item.savingsUsd.toLocaleString() + '/mo) · ESG: ' + item.co2Tons + 't CO2e/mo</text>',
+        '    <text x="248" y="328" fill="#cbd5e1" font-size="9.5">DR Targets: RTO 15m / RPO 5m · Air-Gapped Ransomware Recovery</text>',
+        '    <text x="248" y="376" fill="#86efac" font-size="9.5" font-weight="700">Chaos Game-Day &amp; Clean-Room Drill: VERIFIED</text>',
         '  </g>',
 
-        '  <!-- Node 6: Tier-0 Business & Merkle Ledger -->',
+        '  <rect x="704" y="42" width="200" height="362" rx="8" fill="#0f172a" stroke="#334155" stroke-dasharray="4 3" />',
+        '  <text x="714" y="60" fill="#94a3b8" font-size="9.5" font-weight="700">3. TIER-0 &amp; MERKLE LEDGER</text>',
+
         '  <g class="svg-node" onclick="appInspectNode(\'ledger\')">',
-        '    <rect class="node-box" x="754" y="88" width="192" height="272" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="1.6" />',
-        '    <text x="766" y="109" fill="#fde047" font-size="10" font-weight="700">TIER-0 SERVICE &amp; GRC</text>',
-        '    <text x="766" y="129" fill="#f8fafc" font-size="11.5" font-weight="700">Core Payment &amp; Ledger</text>',
-        '    <text x="766" y="150" fill="#fca5a5" font-size="10.5" font-weight="700">Rev-at-Risk: $' + item.revAtRiskMin + '/min</text>',
-        '    <text x="766" y="172" fill="#cbd5e1" font-size="10">SHA-256 Merkle Tree</text>',
-        '    <text x="766" y="188" fill="#cbd5e1" font-size="10">Cosign / Sigstore Signed</text>',
-        '    <text x="766" y="210" fill="#cbd5e1" font-size="10">Frameworks:</text>',
-        '    <text x="766" y="226" fill="#e2e8f0" font-size="9.5">' + r.grc + '</text>',
-        '    <text x="766" y="252" fill="#cbd5e1" font-size="10">Conway Load: Optimal</text>',
-        '    <text x="766" y="268" fill="#cbd5e1" font-size="10">DORA Velocity: 4.1x</text>',
-        '    <text x="766" y="295" fill="#86efac" font-size="9.5" font-weight="700">Board &amp; Regulator Ready</text>',
-        '    <text x="766" y="344" fill="#94a3b8" font-size="9">Click any node to inspect</text>',
+        '    <rect class="node-box" x="714" y="74" width="180" height="316" rx="7" fill="' + fl("ledger") + '" stroke="' + (focusKey === "ledger" ? "#ffffff" : "#eab308") + '" stroke-width="' + sw("ledger") + '" />',
+        '    <rect x="724" y="83" width="96" height="15" rx="4" fill="#1e293b" stroke="#eab308" />',
+        '    <text x="772" y="94" text-anchor="middle" fill="#fde047" font-size="8.5" font-weight="700">TIER-0 SERVICE</text>',
+        '    <text x="724" y="116" fill="#f8fafc" font-size="11" font-weight="700">' + cloudSpec.tier0 + '</text>',
+        '    <text x="724" y="132" fill="#cbd5e1" font-size="9.5">' + cloudSpec.tier0Sub + '</text>',
+        '    <text x="724" y="154" fill="#fca5a5" font-size="10.5" font-weight="700">Rev Risk: $' + item.revAtRiskMin + '/min</text>',
+        '    <text x="724" y="176" fill="#cbd5e1" font-size="9.5">Cosign / Sigstore Attested</text>',
+        '    <text x="724" y="192" fill="#cbd5e1" font-size="9.5">DORA Velocity: 4.1x</text>',
+        '    <text x="724" y="216" fill="#94a3b8" font-size="9" font-weight="700">Controls:</text>',
+        '    <text x="724" y="232" fill="#e2e8f0" font-size="9">' + r.grc + '</text>',
+        '    <text x="724" y="268" fill="#86efac" font-size="9.5" font-weight="700">Board &amp; Audit Ready</text>',
+        '    <text x="724" y="376" fill="#94a3b8" font-size="9">Click box to inspect</text>',
         '  </g>',
 
-        '  <!-- Connectors -->',
-        '  <line x1="221" y1="145" x2="271" y2="145" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />',
-        '  <line x1="221" y1="295" x2="271" y2="295" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />',
-        '  <line x1="480" y1="145" x2="496" y2="145" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />',
-        '  <line x1="702" y1="145" x2="750" y2="145" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />',
-        '  <line x1="702" y1="295" x2="750" y2="295" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />',
-        '  <line x1="601" y1="210" x2="601" y2="228" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />',
+        '  <line x1="202" y1="145" x2="234" y2="145" stroke="' + linkColor + '" stroke-width="2"' + linkDash + ' marker-end="url(#arr)" />',
+        '  <line x1="202" y1="311" x2="234" y2="311" stroke="' + linkColor + '" stroke-width="2"' + linkDash + ' marker-end="url(#arr)" />',
+        '  <line x1="452" y1="145" x2="460" y2="145" stroke="' + linkColor + '" stroke-width="2"' + linkDash + ' marker-end="url(#arr)" />',
+        '  <line x1="678" y1="145" x2="710" y2="145" stroke="' + linkColor + '" stroke-width="2"' + linkDash + ' marker-end="url(#arr)" />',
+        '  <line x1="678" y1="311" x2="710" y2="311" stroke="' + linkColor + '" stroke-width="2"' + linkDash + ' marker-end="url(#arr)" />',
+        '  <line x1="571" y1="216" x2="571" y2="228" stroke="#34d399" stroke-width="2" marker-end="url(#arr)" />',
         '</svg>'
       ].join("\n");
 
@@ -931,21 +1027,22 @@
     }
 
     function appInspectNode(nodeKey) {
+      activeDiagramNode = nodeKey;
       var item = getItemById(selectedId);
+      renderArchitectureSvg(item);
       var m = getMetadata();
       var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
       var info = {
-        identity: "<strong>[1. Identity &amp; CIEM Privilege Graph]</strong> " + item.id + " enforces ADR-001 secretless OIDC JWT exchange, removes unused >90d IAM permissions, and requires NIST Post-Quantum hybrid TLS.",
-        policy: "<strong>[2. Formal Policy &amp; 30d Digital Twin]</strong> " + item.adr + " (" + r.adr + ") verified against 30 days of historical " + item.cloud + " logs with 0.0% false positives. Accountable: " + r.a + ".",
-        network: "<strong>[3. Zero-Trust Hub-Spoke &amp; DNS Egress]</strong> " + item.cloud + " hub-spoke isolates " + item.workload + ", blocks 0.0.0.0/0 ingress, enforces DNS domain allowlists, and arms &lt;60s autonomous quarantine.",
-        workload: "<strong>[4. Workload, AI/GPU &amp; Exit Portability]</strong> " + item.workload + " carries Exit Portability Score <strong>" + item.exitScore + "/100</strong> (" + item.exitHours + "h migration estimate), ISO 42001 model card gate, and PII DLP scrubbing.",
-        vault: "<strong>[5. Sovereignty, HYOK HSM &amp; Cyber-Vault]</strong> Customer-held HSM keys enforce " + m.dataClassification + " residency (" + getScenarioLabel() + ") with immutable air-gapped recovery (RTO 15m / RPO 5m).",
-        ledger: "<strong>[6. Tier-0 Business Service &amp; Merkle Ledger]</strong> Protects $" + item.revAtRiskMin + "/min Tier-0 revenue; every state change is hashed into a Sigstore-signed SHA-256 Merkle tree mapped to " + r.grc + "."
+        identity: "<strong>[Identity &amp; CIEM]</strong> " + item.id + " uses secretless OIDC federation, PQC hybrid TLS, and least-privilege IAM with 0 SMT escalation paths.",
+        policy: "<strong>[OPA / Rego &amp; 30d Twin]</strong> " + item.adr + " (" + r.adr + ") replayed against 30 days of historical logs with 0.0% false positives. Accountable: " + r.a + ".",
+        network: "<strong>[Hub-Spoke &amp; Egress]</strong> " + item.cloud + " network isolates " + item.workload + " under <strong>" + getScenarioLabel() + "</strong> with &lt;60s quarantine armed.",
+        workload: "<strong>[Workload &amp; AI/GPU]</strong> " + item.workload + " carries Exit Portability <strong>" + item.exitScore + "/100</strong> (" + item.exitHours + "h), ISO 42001 gate, and PII DLP scrubbing.",
+        vault: "<strong>[HYOK HSM &amp; Cyber-Vault]</strong> Customer-held HSM keys enforce " + m.dataClassification + " residency with RTO 15m / RPO 5m air-gapped recovery.",
+        ledger: "<strong>[Tier-0 &amp; Merkle Ledger]</strong> Protects $" + item.revAtRiskMin + "/min revenue with Sigstore-signed SHA-256 Merkle evidence mapped to " + r.grc + "."
       };
       document.getElementById("nodeInspectorBox").innerHTML = "<div>" + (info[nodeKey] || info.workload) + "</div>";
     }
-
-    function updateRaciAndFinops(item) {
+   function updateRaciAndFinops(item) {
       var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
       document.getElementById("kpi2Val").textContent = item.exitScore + " / 100";
       document.getElementById("kpi2Sub").textContent = "Est. cloud exit: " + item.exitHours + " hrs · $" + Math.round(item.exitHours * 270).toLocaleString();
