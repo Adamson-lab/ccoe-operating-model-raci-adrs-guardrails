@@ -203,11 +203,15 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 30 Subsystems Across Tiers 1–6</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;">
+          <span class="pill" style="margin-bottom:0;">ccoe-operating-model-raci-adrs-guardrails · 30 Subsystems</span>
+          <span class="badge badge-warn" style="padding:5px 11px;font-size:11px;">Telemetry Mode: Deterministic Digital Twin (18,000 Nodes)</span>
+        </div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub" id="lensSubtitle">Unified multi-cloud CCoE control plane across AWS, Azure, and GCP (30 subsystems across Tiers 1–6): real-time event ingestion, bi-temporal identity/resource graphs, eBPF runtime attribution, AST drift reconciliation, Firecracker pre-flight gates, Z3 formal verification, &lt;30s Temporal quarantine, historical policy replay, SPIFFE/SPIRE zero-secret identity, chaos fault injection, subsea cable/BGP corridor failover, HYOK HSM sovereignty, multi-cloud exit &amp; WORM cyber-vault resilience, Merkle audit ledgers, AI/GPU/DLP/vector guardrails, FinOps unit economics &amp; carbon scheduling, SBOM/CVE kill-switch, SLSA L4 + PQC readiness, Conway cognitive load telemetry, ITSM waivers, and 15-minute M&amp;A/TSA carve-outs.</p>
+        <p class="sub" id="lensSubtitle">Autonomous multi-cloud governance, Z3 formal verification, and sovereign resilience across 18,000 AWS, Azure, and GCP workloads.</p>
       </div>
       <div class="actions">
+        <button class="btn" type="button" onclick="appToggleCloudDrawer()">Connect Live Cloud / GitHub App</button>
         <select class="input" id="rbacPersona" style="width:auto;" onchange="appPersonaChange()">
           <option value="Chief Architect / Fellow">Lens: Chief Architect / Fellow</option>
           <option value="Board / CFO">Lens: Board / CFO</option>
@@ -221,6 +225,39 @@
         <button class="btn" type="button" onclick="appDownloadSignedEvidence()">Merkle Audit Pack</button>
         <button class="btn" type="button" onclick="appDownloadSvg()">Export Diagram SVG</button>
         <button class="btn btn-primary" type="button" onclick="appDownloadCatalog()">Export JSON</button>
+      </div>
+    </div>
+        <div class="sub-bar" id="liveConnectDrawer" style="display:none;background:#f1f5f9;">
+      <div class="wrap">
+        <div class="sec-head" style="margin-bottom:6px;">
+          <div>
+            <strong>Connect Live Cloud / GitHub App (Secretless Federation)</strong>
+            <p class="sub" style="margin-top:2px;">Currently running as a deterministic 18,000-node digital twin. Provide non-secret role/tenant/installation identifiers below to bind live cloud APIs or GitHub App webhooks.</p>
+          </div>
+          <button class="btn" type="button" onclick="appToggleCloudDrawer()">Hide Drawer</button>
+        </div>
+        <div class="form-grid" style="margin-top:6px;">
+          <label>
+            AWS IAM Role ARN (OIDC)
+            <input class="input" id="liveAwsRole" placeholder="arn:aws:iam::123456789012:role/ccoe-twin-readonly" oninput="appSaveState()" />
+          </label>
+          <label>
+            Azure Tenant / Client ID
+            <input class="input" id="liveAzureId" placeholder="tenant-id / federated-app-id" oninput="appSaveState()" />
+          </label>
+          <label>
+            GCP WIF Provider / Project
+            <input class="input" id="liveGcpWif" placeholder="projects/123/locations/global/workloadIdentityPools/ccoe" oninput="appSaveState()" />
+          </label>
+          <label>
+            GitHub App Installation ID
+            <input class="input" id="liveGhAppId" placeholder="e.g. 58492011 (Adamson-lab)" oninput="appSaveState()" />
+          </label>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-active" type="button" onclick="appSaveLiveBindings()">Save Federation Bindings</button>
+          <span class="sub" id="liveBindingStatus">Status: Deterministic Digital Twin active (no live credentials bound).</span>
+        </div>
       </div>
     </div>
     <div class="sub-bar">
@@ -476,9 +513,8 @@
         <table>
           <thead>
             <tr>
-              <th>Tier &amp; Subsystems</th>
-              <th>Governance Domain</th>
-              <th>ADR</th>
+              <th>ADR &amp; Subsystems</th>
+              <th>Regulatory Crosswalk</th>
               <th>CCoE</th>
               <th>Platform</th>
               <th>InfoSec</th>
@@ -488,9 +524,35 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Tier 1 (S01–S05)</strong></td>
-              <td>NATS Firehose (&lt;1.5s), Bi-Temporal Graph, Tetragon eBPF, AST Drift, Firecracker (&lt;350ms)</td>
-              <td><strong>ADR-004</strong></td>
+              <td><strong>ADR-001</strong> · OIDC, SPIFFE 15m SVID &amp; PQC (S02, S09, S27)</td>
+              <td>SOC2 CC6.1 · ISO A.9.2 · NIST PQC</td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-i">I</span></td>
+              <td>8h</td>
+            </tr>
+            <tr>
+              <td><strong>ADR-002</strong> · 5-Key Canonical Tags &amp; GCP Labels (S04, S05, S21)</td>
+              <td>FINOPS-TAG-01 · SOC2 CC7.1 · NIST CM-8</td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td>24h</td>
+            </tr>
+            <tr>
+              <td><strong>ADR-003</strong> · ITSM-Verified Break-Glass Waivers &amp; Exact-TTL (S07, S29)</td>
+              <td>PCI 7.2 · ISO A.12.4 · DORA Art.9</td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td><span class="raci-pill r-i">I</span></td>
+              <td>12h</td>
+            </tr>
+            <tr>
+              <td><strong>ADR-004</strong> · NATS Firehose, Tetragon eBPF, Z3 SMT &amp; Replay (S01, S03, S06, S08)</td>
+              <td>PCI 1.3 · HIPAA 164.312(e) · NIST SC-7</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
@@ -498,39 +560,17 @@
               <td>4h</td>
             </tr>
             <tr>
-              <td><strong>Tier 2 (S06–S10)</strong></td>
-              <td>Z3 SMT Prover, Temporal &lt;30s Quarantine, ClickHouse 30–90d Replay, SPIFFE/SPIRE, Chaos FIS</td>
-              <td><strong>ADR-001</strong></td>
+              <td><strong>ADR-005</strong> · Subsea Cable/BGP, HYOK HSM, Exit &amp; WORM Vault (S10–S15)</td>
+              <td>GDPR Art.44 · NDPA · CBN IT · DORA</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
-              <td>4h</td>
-            </tr>
-            <tr>
-              <td><strong>Tier 3 (S11–S15)</strong></td>
-              <td>Subsea Cable (WACS/MainOne/2Africa/Equiano/Seacom/PEACE) &amp; BGP, HYOK HSM, Exit, WORM Vault, Merkle</td>
-              <td><strong>ADR-005</strong></td>
-              <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-c">C</span></td>
               <td>6h</td>
             </tr>
             <tr>
-              <td><strong>Tier 4 (S16–S20)</strong></td>
-              <td>Envoy/Wasm PII DLP, DCGM GPU Preemption (&lt;12% / 20m), Sigstore Lineage, Token Breaker, Vector Radar</td>
-              <td><strong>ADR-007</strong></td>
-              <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
-              <td>4h</td>
-            </tr>
-            <tr>
-              <td><strong>Tier 5 (S21–S25)</strong></td>
-              <td>CUR/BigQuery OLAP, Unit Cost PR Guard (&gt;3%), Grid-Carbon Scheduler, RI/CUD Solver, Zombie Reclaimer</td>
-              <td><strong>ADR-006</strong></td>
+              <td><strong>ADR-006</strong> · FinOps OLAP, Unit Cost, Carbon, RI/CUD &amp; 15m M&amp;A (S21–S25, S30)</td>
+              <td>FINOPS-BUD-04 · SOC2 CC7.2 · DORA Art.11</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-i">I</span></td>
@@ -538,13 +578,21 @@
               <td>2h</td>
             </tr>
             <tr>
-              <td><strong>Tier 6 (S26–S30)</strong></td>
-              <td>SBOM &amp; &lt;200ms CVE Kill-Switch, SLSA L4 + PQC (ML-KEM/DSA), Conway Load, ITSM Waivers, 15m M&amp;A/TSA</td>
-              <td><strong>ADR-008</strong></td>
+              <td><strong>ADR-007</strong> · Envoy/Wasm PII DLP, DCGM GPU, Lineage &amp; Vector Radar (S16–S20)</td>
+              <td>ISO 42001 · EU AI Act · SOC2 CC6.7</td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-c">C</span></td>
+              <td>4h</td>
+            </tr>
+            <tr>
+              <td><strong>ADR-008</strong> · SBOM &amp; &lt;200ms CVE Kill-Switch, SLSA L4 &amp; Conway Load (S26, S28)</td>
+              <td>SOC2 CC8.1 · SLSA L4 · NIST CM-3</td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td><span class="raci-pill r-i">I</span></td>
               <td>4h</td>
             </tr>
           </tbody>
@@ -1505,6 +1553,28 @@
       document.getElementById("nextBtn").disabled = page >= totalPages - 1;
     }
 
+    function appToggleCloudDrawer() {
+      var d = document.getElementById("liveConnectDrawer");
+      if (!d) return;
+      d.style.display = (d.style.display === "none") ? "block" : "none";
+    }
+    function appSaveLiveBindings() {
+      appSaveState();
+      var aws = document.getElementById("liveAwsRole").value.trim();
+      var az = document.getElementById("liveAzureId").value.trim();
+      var gcp = document.getElementById("liveGcpWif").value.trim();
+      var gh = document.getElementById("liveGhAppId").value.trim();
+      var bound = [];
+      if (aws) bound.push("AWS OIDC");
+      if (az) bound.push("Azure WIF");
+      if (gcp) bound.push("GCP WIF");
+      if (gh) bound.push("GitHub App #" + gh);
+      var msg = bound.length
+        ? "Saved federation targets (" + bound.join(", ") + ") — still running Deterministic Digital Twin locally until backend worker is attached."
+        : "Status: Deterministic Digital Twin active (no live credentials bound).";
+      document.getElementById("liveBindingStatus").textContent = msg;
+      appendLog(msg, "PASS");
+    }
     appLoadState();
     updateCounters();
     renderWaivers();
