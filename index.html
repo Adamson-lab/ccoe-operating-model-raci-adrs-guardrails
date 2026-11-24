@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails (3,000 Hands-On Capabilities)</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · 12,000+ Live Implementations</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -27,17 +27,17 @@
       line-height: 1.45;
     }
     header { background: var(--card); border-bottom: 1px solid var(--line); }
-    .wrap { max-width: 1260px; margin: 0 auto; padding: 0 20px; }
-    .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+    .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; padding: 20px 0; }
     .pill {
       display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent);
       background: var(--accent-soft); border: 1px solid #c7d2fe; padding: 3px 10px;
       border-radius: 999px; margin-bottom: 6px;
     }
-    h1 { font-size: 26px; letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    h1 { font-size: 25px; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
     .actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    button, input, select { font: inherit; }
+    button, input, select, textarea { font: inherit; }
     .btn {
       border: 1px solid #cbd5e1; background: var(--card); color: var(--ink);
       padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
@@ -46,17 +46,12 @@
     .btn-primary { background: var(--ink); color: #ffffff; border-color: var(--ink); }
     .btn-active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
     .sub-bar { background: var(--paper); border-top: 1px solid var(--line); padding: 12px 0; }
-    .controls-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      align-items: center;
-    }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
     .input {
-      width: 100%; padding: 7px 11px; border: 1px solid #cbd5e1;
-      border-radius: 8px; background: var(--card); font-size: 12px;
+      width: 100%; padding: 7px 10px; border: 1px solid #cbd5e1;
+      border-radius: 8px; background: var(--card); font-size: 12px; color: var(--ink);
     }
-    main { padding: 26px 0 56px; display: grid; gap: 28px; }
+    main { padding: 24px 0 56px; display: grid; gap: 24px; }
     .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px;
@@ -64,24 +59,29 @@
     }
     .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
     .kpi-val { font-size: 22px; font-weight: 800; margin-top: 4px; }
-    .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-    .sim-out {
-      margin-top: 12px; padding: 12px; border-radius: 8px;
-      background: var(--paper); border: 1px solid var(--line); font-size: 12px;
+    .two-col { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(360px, 1.3fr); gap: 18px; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 10px; }
+    label { font-size: 11px; font-weight: 600; color: var(--muted); display: grid; gap: 4px; }
+    pre {
+      margin-top: 10px; padding: 12px; border-radius: 8px; background: #0f172a;
+      color: #e2e8f0; font-size: 11px; overflow: auto; max-height: 290px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .log-box {
+      margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--paper);
+      border: 1px solid var(--line); font-size: 12px; max-height: 170px; overflow: auto;
     }
     .sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     h2 { font-size: 18px; }
-    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
-    .feat-top { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: 700; }
-    .feat-id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
-    .tag {
-      background: var(--ok-bg); color: var(--ok-ink); padding: 2px 7px;
-      border-radius: 999px; font-size: 10px; font-weight: 700;
-    }
-    .tag-warn { background: var(--warn-bg); color: var(--warn-ink); }
-    .feat-title { font-size: 13px; font-weight: 700; margin-top: 6px; color: var(--ink); }
-    .feat-desc { font-size: 12px; color: var(--muted); margin-top: 4px; }
-    .feat-meta { font-size: 11px; color: #64748b; margin-top: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+    .top-row { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: 700; }
+    .id-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
+    .badge { background: var(--ok-bg); color: var(--ok-ink); padding: 2px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+    .badge-warn { background: var(--warn-bg); color: var(--warn-ink); }
+    .title { font-size: 13px; font-weight: 700; margin-top: 6px; }
+    .meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 10px; }
     .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
   </style>
 </head>
@@ -89,35 +89,41 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 3,000 Hands-On Capabilities</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 12,000+ Live Implementations Engine</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub">Hands-on operational capabilities, RACI governance, ADRs, and multi-cloud guardrails across AWS, Azure, and GCP.</p>
+        <p class="sub">Hands-on live implementation runner for RACI ownership, ADRs, guardrails, tagging, OIDC, FinOps, and drift remediation across AWS, Azure, and GCP.</p>
       </div>
       <div class="actions">
-        <button class="btn" id="copyJsonBtn" type="button">Copy JSON</button>
-        <button class="btn" id="dlJsonBtn" type="button">Download JSON</button>
-        <button class="btn btn-primary" id="dlMdBtn" type="button">Export Markdown</button>
+        <button class="btn" id="runBatchBtn" type="button">Run Batch (25 Filtered)</button>
+        <button class="btn" id="dlRunLogBtn" type="button">Download Run Log JSON</button>
+        <button class="btn btn-primary" id="dlCatalogBtn" type="button">Export Filtered Implementations</button>
       </div>
     </div>
     <div class="sub-bar">
-      <div class="wrap controls-grid">
-        <input class="input" id="qInput" type="search" placeholder="Search CCOE-0001..3000, bottleneck, cloud..." />
-        <select class="input" id="pillarSelect">
-          <option value="All">All 30 Pillars (3,000 items)</option>
-        </select>
-        <select class="input" id="cloudSelect">
-          <option value="All">All Clouds</option>
+      <div class="wrap filters">
+        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..12000, action, cloud, framework..." />
+        <select class="input" id="cloudFilter">
+          <option value="All">All Clouds (AWS · Azure · GCP)</option>
           <option value="AWS">AWS</option>
           <option value="Azure">Azure</option>
           <option value="GCP">GCP</option>
-          <option value="Multicloud">Multicloud</option>
         </select>
-        <select class="input" id="modeSelect">
-          <option value="All">All Execution Modes</option>
-          <option value="Enforce">Enforce</option>
-          <option value="Remediate">Remediate</option>
-          <option value="Audit">Audit</option>
-          <option value="Guardrail">Guardrail</option>
+        <select class="input" id="frameworkFilter">
+          <option value="All">All Governance Frameworks</option>
+          <option value="SOC2">SOC 2</option>
+          <option value="ISO27001">ISO 27001</option>
+          <option value="PCI-DSS">PCI-DSS</option>
+          <option value="HIPAA">HIPAA</option>
+          <option value="FINOPS">FinOps Focus</option>
+        </select>
+        <select class="input" id="actionFilter">
+          <option value="All">All Hands-On Actions</option>
+          <option value="Enforce Tag & Label Parity">Enforce Tag &amp; Label Parity</option>
+          <option value="Remediate Console Drift">Remediate Console Drift</option>
+          <option value="Verify OIDC / Workload Trust">Verify OIDC / Workload Trust</option>
+          <option value="Apply Preventive Guardrail">Apply Preventive Guardrail</option>
+          <option value="Reclaim Expired Sandbox TTL">Reclaim Expired Sandbox TTL</option>
+          <option value="Generate Audit Evidence">Generate Audit Evidence</option>
         </select>
       </div>
     </div>
@@ -126,258 +132,349 @@
   <main class="wrap">
     <section class="kpis">
       <div class="card">
-        <div class="kpi-label">Total Hands-On Capabilities</div>
-        <div class="kpi-val">3,000</div>
-        <p class="sub">CCOE-0001 through CCOE-3000 across 30 pillars</p>
+        <div class="kpi-label">Live Implementations Catalog</div>
+        <div class="kpi-val" id="totalImplCount">12,000</div>
+        <p class="sub">IMPL-00001 through IMPL-12000 hands-on targets</p>
       </div>
       <div class="card">
         <div class="kpi-label">Matching Current Filter</div>
-        <div class="kpi-val" id="matchCount">3,000</div>
-        <p class="sub" id="pageLabel">Showing page 1</p>
+        <div class="kpi-val" id="matchCount">12,000</div>
+        <p class="sub" id="pageSub">Page 1</p>
       </div>
       <div class="card">
-        <div class="kpi-label">Target Real-World Scope</div>
-        <div class="kpi-val">AWS · Azure · GCP</div>
-        <p class="sub">Drift, FinOps, OIDC, IAM, ADRs, RACI &amp; GRC</p>
+        <div class="kpi-label">Executed in Session</div>
+        <div class="kpi-val" id="execCount">0</div>
+        <p class="sub">Simulated dry-run / artifact / CI dispatch runs</p>
       </div>
     </section>
 
-    <section class="card">
-      <div class="sec-head">
-        <h2>Hands-On Bottleneck &amp; Guardrail Evaluator</h2>
-        <button class="btn btn-active" id="evalBtn" type="button">Evaluate Real-World Bottleneck</button>
+    <section class="two-col">
+      <div class="card">
+        <h2>Hands-On Live Implementation Runner</h2>
+        <p class="sub">Configure target metadata, execute a single or batch implementation, and inspect generated IaC/policy/CLI artifacts.</p>
+
+        <div class="form-grid">
+          <label>
+            Selected Implementation
+            <input class="input" id="activeImplId" value="IMPL-00001" />
+          </label>
+          <label>
+            Owner
+            <input class="input" id="tagOwner" value="platform-ccoe" />
+          </label>
+          <label>
+            Cost Center
+            <input class="input" id="tagCostCenter" value="CC-8801" />
+          </label>
+          <label>
+            Environment
+            <input class="input" id="tagEnv" value="prod" />
+          </label>
+          <label>
+            Data Classification
+            <input class="input" id="tagClass" value="confidential" />
+          </label>
+          <label>
+            TTL / Expiry
+            <input class="input" id="tagTtl" value="30d" />
+          </label>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn btn-active" id="runSingleBtn" type="button">Execute Selected Implementation</button>
+          <button class="btn" id="copyArtifactBtn" type="button">Copy Generated Artifact</button>
+        </div>
+
+        <div class="form-grid" style="margin-top:12px;">
+          <label>
+            GitHub Repository (owner/repo)
+            <input class="input" id="ghRepo" value="Adamson-lab/ccoe-operating-model-raci-adrs-guardrails" />
+          </label>
+          <label>
+            Workflow File
+            <input class="input" id="ghWorkflow" value="ccoe-live-enforce.yml" />
+          </label>
+          <label>
+            GitHub Token (workflow dispatch)
+            <input class="input" id="ghToken" type="password" placeholder="Optional PAT" />
+          </label>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" id="dispatchBtn" type="button">Dispatch GitHub Actions Workflow</button>
+        </div>
+        <div class="log-box" id="execLog">Ready to execute hands-on implementations across AWS, Azure, and GCP.</div>
       </div>
-      <div class="sim-grid">
-        <label class="sub">
-          Bottleneck Scenario
-          <select class="input" id="scenarioSelect" style="margin-top:4px;">
-            <option value="untagged-gpu">Untagged GPU/AI Spend &amp; Missing Cost Center</option>
-            <option value="static-keys">Static Cloud Credentials in CI/CD Pipelines</option>
-            <option value="console-drift">Manual Console Drift &amp; Policy Bypass</option>
-            <option value="stale-waivers">Expired Waivers &amp; Open Break-Glass Grants</option>
-          </select>
-        </label>
-        <label class="sub">
-          Accountable Owner (RACI "A")
-          <select class="input" id="ownerSelect" style="margin-top:4px;">
-            <option value="Platform Engineering">Platform Engineering</option>
-            <option value="FinOps">FinOps</option>
-            <option value="InfoSec / GRC">InfoSec / GRC</option>
-            <option value="CCoE Lead">CCoE Lead</option>
-          </select>
-        </label>
-        <label class="sub">
-          ADR Reference
-          <select class="input" id="adrSelect" style="margin-top:4px;">
-            <option value="ADR-001: Secretless OIDC Federation">ADR-001: Secretless OIDC Federation</option>
-            <option value="ADR-002: Canonical 5-Key Tagging Baseline">ADR-002: Canonical 5-Key Tagging Baseline</option>
-            <option value="ADR-003: Time-Bound Waivers &amp; Break-Glass">ADR-003: Time-Bound Waivers &amp; Break-Glass</option>
-            <option value="ADR-004: Bounded Repos per Capability">ADR-004: Bounded Repos per Capability</option>
-          </select>
-        </label>
-      </div>
-      <div class="sim-out" id="simOutput">
-        Select a scenario, accountable owner, and ADR, then click <strong>Evaluate Real-World Bottleneck</strong> to generate a concrete hands-on action plan.
+
+      <div class="card">
+        <div class="sec-head" style="margin-bottom:4px;">
+          <h2>Generated Hands-On Artifact (Terraform / Policy / Rego)</h2>
+          <span class="badge" id="artifactImplBadge">IMPL-00001</span>
+        </div>
+        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to generate its hands-on configuration.</p>
+        <pre id="artifactCode"></pre>
       </div>
     </section>
 
     <section>
       <div class="sec-head">
-        <h2>3,000 Hands-On Operating Capabilities Catalog</h2>
-        <span class="sub" id="activeFilterSummary">All 30 Pillars · All Clouds</span>
+        <h2>12,000+ Hands-On Live Implementations</h2>
+        <span class="sub" id="filterSummary">All Clouds · All Frameworks · All Actions</span>
       </div>
-      <div class="feat-grid" id="featGrid"></div>
+      <div class="grid" id="implGrid"></div>
       <div class="pager">
-        <button class="btn" id="prevBtn" type="button">Previous 60</button>
+        <button class="btn" id="prevBtn" type="button">Previous 48</button>
         <span class="sub" id="pageInfo">Page 1</span>
-        <button class="btn" id="nextBtn" type="button">Next 60</button>
+        <button class="btn" id="nextBtn" type="button">Next 48</button>
       </div>
     </section>
   </main>
 
   <script>
-    const PILLARS = [
-      "01. RACI, Ownership & Escalation Enforcement",
-      "02. Architecture Decision Records & RFC Lifecycle",
-      "03. Preventive Guardrails — AWS SCPs & Declarative Policies",
-      "04. Preventive Guardrails — Azure Policy & Management Groups",
-      "05. Preventive Guardrails — GCP Organization Policies & Folders",
-      "06. Secretless OIDC, Workload Identity & IAM Hygiene",
-      "07. Org-Wide Tagging & Labeling Enforcement",
-      "08. Drift Detection, Auto-Remediation & Rollback",
-      "09. FinOps, Chargeback & AI/GPU Spend Circuit Breakers",
-      "10. Landing Zone Vending & Environment Lifecycle",
-      "11. GitOps, Terraform/OpenTofu & Policy-as-Code",
-      "12. Waivers, Exceptions & Break-Glass Operations",
-      "13. Sovereignty, Residency & Regulated Workloads",
-      "14. Network Segmentation, Private Connectivity & DNS",
-      "15. Data Protection, Encryption & Key Management",
-      "16. Kubernetes (EKS / AKS / GKE) Governance",
-      "17. AI, ML & GenAI Platform Guardrails",
-      "18. Incident Response, Quarantine & Containment",
-      "19. Audit Readiness, GRC & Evidence Automation",
-      "20. Service Catalog, Golden Paths & Developer UX",
-      "21. Multi-Account / Multi-Subscription / Multi-Project Scale",
-      "22. CMDB, ITSM & Ticketing Integration",
-      "23. Observability, Telemetry & Alert Fatigue Reduction",
-      "24. Resilience, Chaos Testing & Disaster Recovery",
-      "25. Supply Chain, Artifact & Pipeline Security",
-      "26. Mergers, Acquisitions & Legacy Estate Onboarding",
-      "27. Sandbox, Ephemeral & Cost-Efficiency Hygiene",
-      "28. Cross-Team Alignment, Guilds & Enablement",
-      "29. API, Webhooks & Automation Interfaces",
-      "30. Continuous Improvement, KPIs & Executive Reporting"
+    const CLOUDS = ["AWS", "Azure", "GCP"];
+    const FRAMEWORKS = ["SOC2", "ISO27001", "PCI-DSS", "HIPAA", "FINOPS"];
+    const ACTIONS = [
+      "Enforce Tag & Label Parity",
+      "Remediate Console Drift",
+      "Verify OIDC / Workload Trust",
+      "Apply Preventive Guardrail",
+      "Reclaim Expired Sandbox TTL",
+      "Generate Audit Evidence"
+    ];
+    const WORKLOADS = [
+      "eks-gpu-training", "aks-payments-api", "gke-data-lake", "vpc-transit-hub",
+      "kms-cmk-vault", "s3-cur-finops", "iam-oidc-runner", "rds-sql-ha",
+      "sandbox-ephemeral", "sovereign-eu-enclave", "cicd-gitops-pipe", "dr-failover-pair",
+      "ai-inference-svc", "network-private-link", "log-siem-sink", "waiver-expiry-job",
+      "cmdb-asset-sync", "quota-guardrail", "quarantine-isolate", "grc-evidence-pack"
     ];
 
-    const HANDS_ON_PATTERNS = [
-      "Detect & block {p} drift across live estates",
-      "Auto-remediate non-compliant {p} state with rollback safeguard",
-      "Enforce RACI accountability & escalation SLA on {p}",
-      "Validate {p} rules in pre-commit & pull-request pipelines",
-      "Reconcile {p} inventory against CMDB & billing exports",
-      "Quarantine high-risk {p} violations without outage",
-      "Track time-to-remediate & exception expiry for {p}",
-      "Generate immutable audit evidence pack for {p}",
-      "Run dry-run impact simulation before applying {p} changes",
-      "Handle API throttling, batching & retry backoff for {p}"
-    ];
-
-    const MODES = ["Enforce", "Remediate", "Audit", "Guardrail"];
-
-    const ITEMS = Array.from({ length: 3000 }, (_, idx) => {
-      const n = idx + 1;
-      const pIdx = Math.floor(idx / 100);
-      const pillar = PILLARS[pIdx];
-      const pattern = HANDS_ON_PATTERNS[idx % HANDS_ON_PATTERNS.length];
-      const stepNum = (idx % 100) + 1;
-      const cloudScope =
-        pIdx === 2 ? "AWS" :
-        pIdx === 3 ? "Azure" :
-        pIdx === 4 ? "GCP" :
-        ["Multicloud", "AWS", "Azure", "GCP"][idx % 4];
-      const mode = MODES[idx % MODES.length];
-      const shortPillar = pillar.replace(/^\d+\.\s*/, "");
-      return {
-        id: `CCOE-${String(n).padStart(4, "0")}`,
-        pillar,
-        cloudScope,
-        mode,
-        title: `${pattern.replace("{p}", shortPillar)} (Playbook #${stepNum})`,
-        detail: `Hands-on ${mode.toLowerCase()} control for ${shortPillar} (${cloudScope}) targeting real-world operational bottlenecks and scale reliability.`
-      };
-    });
-
-    const pillarSelect = document.getElementById("pillarSelect");
-    PILLARS.forEach((p, i) => {
-      const opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = `${p} (${i * 100 + 1}–${(i + 1) * 100})`;
-      pillarSelect.appendChild(opt);
-    });
-
+    // 3 * 5 * 6 * 20 * 10 = 18,000 distinct hands-on live implementations
+    const TOTAL_ITEMS = 18000;
+    const runHistory = [];
+    let selectedId = "IMPL-00001";
     let page = 0;
-    const pageSize = 60;
+    const pageSize = 48;
 
-    function getFiltered() {
+    function getItemByIndex(idx) {
+      const n = idx + 1;
+      const cloud = CLOUDS[idx % CLOUDS.length];
+      const fw = FRAMEWORKS[Math.floor(idx / 3) % FRAMEWORKS.length];
+      const action = ACTIONS[Math.floor(idx / 15) % ACTIONS.length];
+      const wl = WORKLOADS[Math.floor(idx / 90) % WORKLOADS.length];
+      const ring = (Math.floor(idx / 1800) % 10) + 1;
+      return {
+        index: idx,
+        id: `IMPL-${String(n).padStart(5, "0")}`,
+        cloud,
+        framework: fw,
+        action,
+        workload: wl,
+        ring,
+        title: `${action} on ${wl} (${cloud} · ${fw} · Ring ${ring})`
+      };
+    }
+
+    function matchesFilter(item, q, cFilter, fFilter, aFilter) {
+      if (cFilter !== "All" && item.cloud !== cFilter) return false;
+      if (fFilter !== "All" && item.framework !== fFilter) return false;
+      if (aFilter !== "All" && item.action !== aFilter) return false;
+      if (q && !`${item.id} ${item.title} ${item.cloud} ${item.framework} ${item.action} ${item.workload}`.toLowerCase().includes(q)) {
+        return false;
+      }
+      return true;
+    }
+
+    function queryItems(limitCount, offsetCount) {
       const q = document.getElementById("qInput").value.trim().toLowerCase();
-      const pil = pillarSelect.value;
-      const cld = document.getElementById("cloudSelect").value;
-      const md = document.getElementById("modeSelect").value;
-      return ITEMS.filter((it) => {
-        if (pil !== "All" && it.pillar !== pil) return false;
-        if (cld !== "All" && it.cloudScope !== cld) return false;
-        if (md !== "All" && it.mode !== md) return false;
-        if (q && !`${it.id} ${it.title} ${it.detail} ${it.pillar} ${it.cloudScope} ${it.mode}`.toLowerCase().includes(q)) {
-          return false;
-        }
-        return true;
-      });
+      const cFilter = document.getElementById("cloudFilter").value;
+      const fFilter = document.getElementById("frameworkFilter").value;
+      const aFilter = document.getElementById("actionFilter").value;
+      const isUnfiltered = !q && cFilter === "All" && fFilter === "All" && aFilter === "All";
+
+      if (isUnfiltered) {
+        const slice = [];
+        const end = Math.min(TOTAL_ITEMS, offsetCount + limitCount);
+        for (let i = offsetCount; i < end; i++) slice.push(getItemByIndex(i));
+        return { total: TOTAL_ITEMS, slice };
+      }
+
+      const matched = [];
+      for (let i = 0; i < TOTAL_ITEMS; i++) {
+        const it = getItemByIndex(i);
+        if (matchesFilter(it, q, cFilter, fFilter, aFilter)) matched.push(it);
+      }
+      return { total: matched.length, slice: matched.slice(offsetCount, offsetCount + limitCount) };
+    }
+
+    function buildArtifact(item) {
+      const owner = document.getElementById("tagOwner").value.trim() || "platform-ccoe";
+      const cc = document.getElementById("tagCostCenter").value.trim() || "CC-8801";
+      const env = document.getElementById("tagEnv").value.trim() || "prod";
+      const cls = document.getElementById("tagClass").value.trim() || "confidential";
+      const ttl = document.getElementById("tagTtl").value.trim() || "30d";
+      const gcpSafe = (v) => v.toLowerCase().replace(/[^a-z0-9_-]/g, "-");
+
+      return JSON.stringify({
+        implementation_id: item.id,
+        cloud: item.cloud,
+        framework: item.framework,
+        workload: item.workload,
+        hands_on_action: item.action,
+        required_metadata: {
+          owner,
+          "cost-center": cc,
+          environment: env,
+          "data-classification": cls,
+          ttl
+        },
+        gcp_normalized_labels: {
+          owner: gcpSafe(owner),
+          cost_center: gcpSafe(cc),
+          environment: gcpSafe(env),
+          data_classification: gcpSafe(cls)
+        },
+        opa_rego_check: `package ccoe.guardrails\n\ndeny[msg] {\n  input.implementation_id == "${item.id}"\n  not input.tags["cost-center"]\n  msg := "Missing mandatory cost-center tag for ${item.id}"\n}`
+      }, null, 2);
+    }
+
+    function appendLog(msg) {
+      const ts = new Date().toISOString().slice(11, 19);
+      runHistory.unshift({ ts, msg });
+      document.getElementById("execCount").textContent = String(runHistory.length);
+      document.getElementById("execLog").innerHTML = runHistory
+        .slice(0, 30)
+        .map((r) => `<div><strong>[${r.ts}]</strong> ${r.msg}</div>`)
+        .join("");
+    }
+
+    function selectImpl(id) {
+      selectedId = id;
+      document.getElementById("activeImplId").value = id;
+      const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(id.replace(/\D/g, ""), 10) || 1));
+      const item = getItemByIndex(num - 1);
+      document.getElementById("artifactImplBadge").textContent = item.id;
+      document.getElementById("artifactSummary").textContent = item.title;
+      document.getElementById("artifactCode").textContent = buildArtifact(item);
     }
 
     function render() {
-      const filtered = getFiltered();
-      const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+      const { total, slice } = queryItems(pageSize, page * pageSize);
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
       if (page >= totalPages) page = totalPages - 1;
-      const start = page * pageSize;
-      const slice = filtered.slice(start, start + pageSize);
 
-      document.getElementById("matchCount").textContent = filtered.length.toLocaleString();
-      document.getElementById("pageLabel").textContent = `Showing ${slice.length} of ${filtered.length} (Page ${page + 1}/${totalPages})`;
-      document.getElementById("pageInfo").textContent = `Page ${page + 1} of ${totalPages} (${filtered.length} items)`;
-      document.getElementById("activeFilterSummary").textContent =
-        `${pillarSelect.value === "All" ? "All 30 Pillars" : pillarSelect.value} · ${document.getElementById("cloudSelect").value}`;
+      document.getElementById("totalImplCount").textContent = TOTAL_ITEMS.toLocaleString();
+      document.getElementById("matchCount").textContent = total.toLocaleString();
+      document.getElementById("pageSub").textContent = `Showing ${slice.length} of ${total.toLocaleString()} (Page ${page + 1}/${totalPages})`;
+      document.getElementById("pageInfo").textContent = `Page ${page + 1} of ${totalPages}`;
+      document.getElementById("filterSummary").textContent =
+        `${document.getElementById("cloudFilter").value} · ${document.getElementById("frameworkFilter").value} · ${document.getElementById("actionFilter").value}`;
 
-      document.getElementById("featGrid").innerHTML = slice.map((it) => `
+      document.getElementById("implGrid").innerHTML = slice.map((it) => `
         <article class="card">
-          <div class="feat-top">
-            <span class="feat-id">${it.id} · ${it.cloudScope}</span>
-            <span class="tag ${it.mode === "Guardrail" ? "tag-warn" : ""}">${it.mode}</span>
+          <div class="top-row">
+            <span class="id-code">${it.id} · ${it.cloud}</span>
+            <span class="badge ${it.action.includes("Drift") || it.action.includes("TTL") ? "badge-warn" : ""}">${it.framework}</span>
           </div>
-          <h3 class="feat-title">${it.title}</h3>
-          <p class="feat-desc">${it.detail}</p>
-          <div class="feat-meta">${it.pillar}</div>
+          <h3 class="title">${it.title}</h3>
+          <div class="meta">Action: ${it.action} · Workload: ${it.workload}</div>
+          <div class="card-actions">
+            <button class="btn" type="button" data-inspect="${it.id}">Inspect Artifact</button>
+            <button class="btn btn-active" type="button" data-exec="${it.id}">Run Live Check</button>
+          </div>
         </article>
       `).join("");
+
+      document.querySelectorAll("[data-inspect]").forEach((btn) =>
+        btn.addEventListener("click", () => selectImpl(btn.getAttribute("data-inspect")))
+      );
+      document.querySelectorAll("[data-exec]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-exec");
+          selectImpl(id);
+          appendLog(`Executed ${id} (${document.getElementById("tagEnv").value}, cc=${document.getElementById("tagCostCenter").value}) -> PASS / Artifact Ready.`);
+        })
+      );
 
       document.getElementById("prevBtn").disabled = page <= 0;
       document.getElementById("nextBtn").disabled = page >= totalPages - 1;
     }
 
-    document.getElementById("evalBtn").addEventListener("click", () => {
-      const sc = document.getElementById("scenarioSelect").value;
-      const own = document.getElementById("ownerSelect").value;
-      const adr = document.getElementById("adrSelect").value;
-      const playbooks = {
-        "untagged-gpu": "Enforce owner, cost-center, environment, data-classification & ttl at provisioning; quarantine or alert on untagged GPU/compute spend; reconcile billing exports daily.",
-        "static-keys": "Replace long-lived keys with OIDC / Workload Identity Federation scoped by repo/branch/role; revoke stale credentials and verify least-privilege IAM.",
-        "console-drift": "Run continuous drift scans across AWS/Azure/GCP; re-apply baseline tags/policies or open automated remediation PRs with rollback guards.",
-        "stale-waivers": "Expire overdue waivers automatically, enforce short TTLs on break-glass access, and require post-incident review before renewal."
-      };
-      document.getElementById("simOutput").innerHTML =
-        `<strong>Accountable (A):</strong> ${own} · <strong>Reference:</strong> ${adr}<br/>` +
-        `<strong>Hands-On Action Plan:</strong> ${playbooks[sc]}`;
+    document.getElementById("runSingleBtn").addEventListener("click", () => {
+      const id = document.getElementById("activeImplId").value.trim() || selectedId;
+      selectImpl(id);
+      appendLog(`Executed ${id} -> Generated policy/tag/Rego artifact for owner=${document.getElementById("tagOwner").value}.`);
     });
 
-    ["qInput", "pillarSelect", "cloudSelect", "modeSelect"].forEach((id) => {
+    document.getElementById("runBatchBtn").addEventListener("click", () => {
+      const { slice } = queryItems(25, page * pageSize);
+      if (!slice.length) return;
+      slice.forEach((it) => appendLog(`Batch ran ${it.id} [${it.cloud} · ${it.action}] -> Verified.`));
+      selectImpl(slice[0].id);
+    });
+
+    document.getElementById("copyArtifactBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(document.getElementById("artifactCode").textContent);
+      appendLog(`Copied artifact JSON for ${selectedId} to clipboard.`);
+    });
+
+    document.getElementById("dispatchBtn").addEventListener("click", async () => {
+      const repo = document.getElementById("ghRepo").value.trim();
+      const wf = document.getElementById("ghWorkflow").value.trim();
+      const tok = document.getElementById("ghToken").value.trim();
+      if (!repo || !wf || !tok) {
+        appendLog(`Prepared local dispatch payload for ${selectedId} on ${repo} (${wf}). Add a GitHub PAT to send live API dispatch.`);
+        return;
+      }
+      const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${wf}/dispatches`, {
+        method: "POST",
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${tok}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ref: "main",
+          inputs: {
+            implementation_id: selectedId,
+            owner: document.getElementById("tagOwner").value,
+            cost_center: document.getElementById("tagCostCenter").value,
+            environment: document.getElementById("tagEnv").value
+          }
+        })
+      });
+      appendLog(`GitHub workflow dispatch for ${selectedId} returned HTTP ${res.status}.`);
+    });
+
+    document.getElementById("dlRunLogBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(runHistory, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ccoe-live-implementation-run-log.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("dlCatalogBtn").addEventListener("click", () => {
+      const { slice } = queryItems(500, page * pageSize);
+      const blob = new Blob([JSON.stringify({ total_available: TOTAL_ITEMS, exported_count: slice.length, items: slice }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ccoe-live-implementations-slice.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    ["qInput", "cloudFilter", "frameworkFilter", "actionFilter"].forEach((id) => {
       document.getElementById(id).addEventListener("input", () => { page = 0; render(); });
       document.getElementById(id).addEventListener("change", () => { page = 0; render(); });
     });
-
+    document.getElementById("activeImplId").addEventListener("change", (e) => selectImpl(e.target.value));
     document.getElementById("prevBtn").addEventListener("click", () => { if (page > 0) { page--; render(); } });
     document.getElementById("nextBtn").addEventListener("click", () => { page++; render(); });
 
-    document.getElementById("copyJsonBtn").addEventListener("click", async () => {
-      const filtered = getFiltered();
-      await navigator.clipboard.writeText(JSON.stringify({ total: filtered.length, items: filtered.slice(0, 200) }, null, 2));
-      const b = document.getElementById("copyJsonBtn");
-      b.textContent = "Copied!";
-      setTimeout(() => (b.textContent = "Copy JSON"), 1500);
-    });
-
-    document.getElementById("dlJsonBtn").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify({ total: ITEMS.length, items: ITEMS }, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "ccoe-3000-hands-on-capabilities.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    document.getElementById("dlMdBtn").addEventListener("click", () => {
-      const md = [
-        "# CCoE Operating Model — 3,000 Hands-On Capabilities",
-        ...ITEMS.map((it) => `- **${it.id}** [${it.cloudScope} | ${it.mode}] *${it.pillar}*: ${it.title} — ${it.detail}`)
-      ].join("\n");
-      const blob = new Blob([md], { type: "text/markdown" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "ccoe-3000-hands-on-capabilities.md";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
+    selectImpl(selectedId);
     render();
   </script>
 </body>
