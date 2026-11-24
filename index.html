@@ -634,7 +634,7 @@
       { code: "S04", tier: "Tier 1", name: "Structural AST IaC & Live State Drift Reconciler", adr: "ADR-004", node: "policy", arch: "Go hcl2 / OpenTofu / Crossplane AST Diff" },
       { code: "S05", tier: "Tier 1", name: "Firecracker MicroVM (<350ms) Pre-Flight Gate", adr: "ADR-002", node: "policy", arch: "Firecracker <350ms -> tofu/OPA/Checkov/Infracost/Z3" },
       { code: "S06", tier: "Tier 2", name: "Z3 SMT-Solver Network & IAM Theorem Prover", adr: "ADR-004", node: "policy", arch: "Microsoft Z3 First-Order Logic Reachability Proof" },
-      { code: "S07", tier: "Tier 2", name: "Temporal.io <30s Autonomous Quarantine State Machine", adr: "ADR-003", node: "network", arch: "Temporal Workflow: Snapshot -> DenyAll -> PR" },
+      { code: "S07", tier: "Tier 2", name: "Temporal.io Quarantine State Machine (Blueprint)", adr: "ADR-003", node: "network", arch: "Temporal Workflow: Snapshot -> DenyAll -> PR" },
       { code: "S08", tier: "Tier 2", name: "ClickHouse 30–90d Historical Event-Replay Sandbox", adr: "ADR-004", node: "policy", arch: "ClickHouse OLAP + OPA Worker Replay" },
       { code: "S09", tier: "Tier 2", name: "SPIFFE/SPIRE 15m SVID & Vault Ephemeral Identity", adr: "ADR-001", node: "identity", arch: "SPIFFE/SPIRE 15m X.509 SVID + FIDO2 + Vault" },
       { code: "S10", tier: "Tier 2", name: "AWS FIS / Azure Chaos Studio Fault-Injection Orchestrator", adr: "ADR-005", node: "network", arch: "AWS FIS + Azure Chaos Studio + RTO/RPO Scorer" },
@@ -1275,7 +1275,7 @@
     function appAutonomousHeal() {
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       appInspect(item.id, false);
-      appendLog("TEMPORAL <30s QUARANTINE [" + item.id + " · " + item.workload + "]: [1] Forensic Snapshot (4s) -> [2] DenyAll Policy (9s) -> [3] SDK Revert (16s) -> [4] Signed IaC PR (24s).", "PASS");
+      appendLog("SIMULATED TEMPORAL QUARANTINE MODEL [" + item.id + " · " + item.workload + "]: [1] Forensic Snapshot (4s) -> [2] DenyAll Policy (9s) -> [3] SDK Revert (16s) -> [4] Signed IaC PR (24s).", "PASS");
     }
 
     function appRunAiGpuGate() {
