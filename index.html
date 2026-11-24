@@ -208,7 +208,7 @@
           <span class="badge badge-warn" style="padding:5px 11px;font-size:11px;">Telemetry Mode: Local Digital Twin + Go API (:8080)</span>
         </div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub" id="lensSubtitle">Autonomous multi-cloud governance, Z3 formal verification, and sovereign resilience across 18,000 AWS, Azure, and GCP workloads.</p>
+        <p class="sub" id="lensSubtitle">Multi-cloud governance model, policy/ADR guardrails, and interactive reference architecture across AWS, Azure, and GCP blueprints.</p>
       </div>
       <div class="actions">
         <button class="btn" type="button" onclick="appToggleCloudDrawer()">Connect Live Cloud / GitHub App</button>
@@ -232,7 +232,7 @@
         <div class="sec-head" style="margin-bottom:6px;">
           <div>
             <strong>Connect Live Cloud / GitHub App (Secretless Federation)</strong>
-            <p class="sub" style="margin-top:2px;">Currently running as a deterministic 18,000-node digital twin. Provide non-secret role/tenant/installation identifiers below to bind live cloud APIs or GitHub App webhooks.</p>
+            <p class="sub" style="margin-top:2px;">Connected to local Go API (:8080) with deterministic twin fallback. Provide non-secret role/tenant/installation identifiers below to save federation bindings.</p>
           </div>
           <button class="btn" type="button" onclick="appToggleCloudDrawer()">Hide Drawer</button>
         </div>
@@ -304,7 +304,7 @@
     <section class="kpis">
       <div class="card">
         <div class="kpi-label">Catalog &amp; Z3 Formal Proof</div>
-        <div class="kpi-val" id="kpi1Val">18,000 · Z3 VERIFIED</div>
+        <div class="kpi-val" id="kpi1Val">30 SUBSYSTEMS · 8 ADRs</div>
         <p class="sub" id="kpi1Sub">30 Subsystems · 0.0.0.0/0 SMT paths = 0</p>
       </div>
       <div class="card">
@@ -602,7 +602,7 @@
 
     <section>
       <div class="sec-head">
-        <h2>18,000 Hands-On Live Implementations (Across All 30 Subsystems)</h2>
+        <h2>Reference Implementations & Guardrail Catalog (Across All 30 Subsystems)</h2>
         <span class="sub" id="filterSummary">All Clouds · All Frameworks · All Subsystems · All ADRs</span>
       </div>
       <div class="grid" id="implGrid"></div>
@@ -1306,7 +1306,7 @@
     function appTriggerCveKillSwitch() {
       var cve = String(document.getElementById("cveInput").value || "CVE-2024-3094").trim().toUpperCase();
       var item = getItemById(selectedId);
-      appendLog("S26 <200ms CVE KILL-SWITCH [" + cve + "]: Scanned 18,000 SBOMs -> 14 workloads quarantined, " + item.id + " SLSA L4 verified clean.", "PASS");
+      appendLog("S26 <200ms CVE KILL-SWITCH [" + cve + "]: Simulated SBOM check (local twin) -> sample drift alert, " + item.id + " SLSA L4 verified clean.", "PASS");
     }
 
     function appLintPayload() {
@@ -1534,7 +1534,7 @@
       var totalPages = Math.max(1, Math.ceil(total / pageSize));
       if (page >= totalPages) page = totalPages - 1;
 
-      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " · Z3 VERIFIED";
+      document.getElementById("kpi1Val").textContent = total.toLocaleString() + " ITEMS · CATALOG";
       document.getElementById("kpi1Sub").textContent = "Showing " + slice.length + " of " + total.toLocaleString() + " (Page " + (page + 1) + "/" + totalPages + ")";
       document.getElementById("pageInfo").textContent = "Page " + (page + 1) + " of " + totalPages;
       document.getElementById("filterSummary").textContent =
