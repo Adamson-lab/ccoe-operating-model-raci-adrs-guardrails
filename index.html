@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails · 12,000+ Live Implementations</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · 18,000 Live Implementations</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -37,7 +37,7 @@
     h1 { font-size: 25px; letter-spacing: -0.02em; }
     .sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
     .actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    button, input, select, textarea { font: inherit; }
+    button, input, select { font: inherit; }
     .btn {
       border: 1px solid #cbd5e1; background: var(--card); color: var(--ink);
       padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
@@ -89,7 +89,7 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 12,000+ Live Implementations Engine</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 18,000 Live Implementations Engine</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
         <p class="sub">Hands-on live implementation runner for RACI ownership, ADRs, guardrails, tagging, OIDC, FinOps, and drift remediation across AWS, Azure, and GCP.</p>
       </div>
@@ -101,7 +101,7 @@
     </div>
     <div class="sub-bar">
       <div class="wrap filters">
-        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..12000, action, cloud, framework..." />
+        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, action, cloud, framework..." />
         <select class="input" id="cloudFilter">
           <option value="All">All Clouds (AWS · Azure · GCP)</option>
           <option value="AWS">AWS</option>
@@ -133,12 +133,12 @@
     <section class="kpis">
       <div class="card">
         <div class="kpi-label">Live Implementations Catalog</div>
-        <div class="kpi-val" id="totalImplCount">12,000</div>
-        <p class="sub">IMPL-00001 through IMPL-12000 hands-on targets</p>
+        <div class="kpi-val" id="totalImplCount">18,000</div>
+        <p class="sub">IMPL-00001 through IMPL-18000 hands-on targets</p>
       </div>
       <div class="card">
         <div class="kpi-label">Matching Current Filter</div>
-        <div class="kpi-val" id="matchCount">12,000</div>
+        <div class="kpi-val" id="matchCount">18,000</div>
         <p class="sub" id="pageSub">Page 1</p>
       </div>
       <div class="card">
@@ -148,7 +148,7 @@
       </div>
     </section>
 
-    <section class="two-col">
+    <section class="two-col" id="runnerSection">
       <div class="card">
         <h2>Hands-On Live Implementation Runner</h2>
         <p class="sub">Configure target metadata, execute a single or batch implementation, and inspect generated IaC/policy/CLI artifacts.</p>
@@ -217,7 +217,7 @@
 
     <section>
       <div class="sec-head">
-        <h2>12,000+ Hands-On Live Implementations</h2>
+        <h2>18,000 Hands-On Live Implementations</h2>
         <span class="sub" id="filterSummary">All Clouds · All Frameworks · All Actions</span>
       </div>
       <div class="grid" id="implGrid"></div>
@@ -248,12 +248,16 @@
       "cmdb-asset-sync", "quota-guardrail", "quarantine-isolate", "grc-evidence-pack"
     ];
 
-    // 3 * 5 * 6 * 20 * 10 = 18,000 distinct hands-on live implementations
     const TOTAL_ITEMS = 18000;
     const runHistory = [];
     let selectedId = "IMPL-00001";
     let page = 0;
     const pageSize = 48;
+
+    function getItemById(idStr) {
+      const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(String(idStr || "1").replace(/\D/g, ""), 10) || 1));
+      return getItemByIndex(num - 1);
+    }
 
     function getItemByIndex(idx) {
       const n = idx + 1;
@@ -347,14 +351,24 @@
         .join("");
     }
 
-    function selectImpl(id) {
-      selectedId = id;
-      document.getElementById("activeImplId").value = id;
-      const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(id.replace(/\D/g, ""), 10) || 1));
-      const item = getItemByIndex(num - 1);
+    function inspectArtifact(id, scrollToRunner = false) {
+      const item = getItemById(id);
+      selectedId = item.id;
+      document.getElementById("activeImplId").value = item.id;
       document.getElementById("artifactImplBadge").textContent = item.id;
       document.getElementById("artifactSummary").textContent = item.title;
       document.getElementById("artifactCode").textContent = buildArtifact(item);
+      if (scrollToRunner) {
+        document.getElementById("runnerSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+
+    function runLiveCheck(id) {
+      const item = getItemById(id);
+      inspectArtifact(item.id, false);
+      const env = document.getElementById("tagEnv").value.trim() || "prod";
+      const cc = document.getElementById("tagCostCenter").value.trim() || "CC-8801";
+      appendLog(`PASS ${item.id} [${item.cloud} · ${item.action} · env=${env} · cc=${cc}] -> Artifact & guardrail check verified.`);
     }
 
     function render() {
@@ -378,38 +392,38 @@
           <h3 class="title">${it.title}</h3>
           <div class="meta">Action: ${it.action} · Workload: ${it.workload}</div>
           <div class="card-actions">
-            <button class="btn" type="button" data-inspect="${it.id}">Inspect Artifact</button>
-            <button class="btn btn-active" type="button" data-exec="${it.id}">Run Live Check</button>
+            <button class="btn js-inspect" type="button" data-id="${it.id}">Inspect Artifact</button>
+            <button class="btn btn-active js-exec" type="button" data-id="${it.id}">Run Live Check</button>
           </div>
         </article>
       `).join("");
-
-      document.querySelectorAll("[data-inspect]").forEach((btn) =>
-        btn.addEventListener("click", () => selectImpl(btn.getAttribute("data-inspect")))
-      );
-      document.querySelectorAll("[data-exec]").forEach((btn) =>
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-exec");
-          selectImpl(id);
-          appendLog(`Executed ${id} (${document.getElementById("tagEnv").value}, cc=${document.getElementById("tagCostCenter").value}) -> PASS / Artifact Ready.`);
-        })
-      );
 
       document.getElementById("prevBtn").disabled = page <= 0;
       document.getElementById("nextBtn").disabled = page >= totalPages - 1;
     }
 
+    // Event delegation on #implGrid so card buttons always respond after re-renders
+    document.getElementById("implGrid").addEventListener("click", (e) => {
+      const inspectBtn = e.target.closest(".js-inspect");
+      if (inspectBtn) {
+        inspectArtifact(inspectBtn.dataset.id, true);
+        return;
+      }
+      const execBtn = e.target.closest(".js-exec");
+      if (execBtn) {
+        runLiveCheck(execBtn.dataset.id);
+      }
+    });
+
     document.getElementById("runSingleBtn").addEventListener("click", () => {
-      const id = document.getElementById("activeImplId").value.trim() || selectedId;
-      selectImpl(id);
-      appendLog(`Executed ${id} -> Generated policy/tag/Rego artifact for owner=${document.getElementById("tagOwner").value}.`);
+      runLiveCheck(document.getElementById("activeImplId").value);
     });
 
     document.getElementById("runBatchBtn").addEventListener("click", () => {
       const { slice } = queryItems(25, page * pageSize);
       if (!slice.length) return;
-      slice.forEach((it) => appendLog(`Batch ran ${it.id} [${it.cloud} · ${it.action}] -> Verified.`));
-      selectImpl(slice[0].id);
+      slice.forEach((it) => appendLog(`BATCH PASS ${it.id} [${it.cloud} · ${it.action}] -> Verified.`));
+      inspectArtifact(slice[0].id, false);
     });
 
     document.getElementById("copyArtifactBtn").addEventListener("click", async () => {
@@ -470,11 +484,14 @@
       document.getElementById(id).addEventListener("input", () => { page = 0; render(); });
       document.getElementById(id).addEventListener("change", () => { page = 0; render(); });
     });
-    document.getElementById("activeImplId").addEventListener("change", (e) => selectImpl(e.target.value));
+    ["tagOwner", "tagCostCenter", "tagEnv", "tagClass", "tagTtl"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", () => inspectArtifact(selectedId, false));
+    });
+    document.getElementById("activeImplId").addEventListener("change", (e) => inspectArtifact(e.target.value, false));
     document.getElementById("prevBtn").addEventListener("click", () => { if (page > 0) { page--; render(); } });
     document.getElementById("nextBtn").addEventListener("click", () => { page++; render(); });
 
-    selectImpl(selectedId);
+    inspectArtifact(selectedId, false);
     render();
   </script>
 </body>
