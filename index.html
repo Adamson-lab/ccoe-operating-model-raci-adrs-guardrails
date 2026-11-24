@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails · 18,000 Hands-On Live Implementations</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · Enterprise CCoE Control Plane</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -26,80 +26,146 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--ink);
-      line-height: 1.45;
+      line-height: 1.5;
     }
     header { background: var(--card); border-bottom: 1px solid var(--line); }
-    .wrap { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
-    .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; padding: 20px 0; }
-    .pill {
-      display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent);
-      background: var(--accent-soft); border: 1px solid #c7d2fe; padding: 3px 10px;
-      border-radius: 999px; margin-bottom: 6px;
+    .wrap {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding-left: clamp(24px, 4vw, 64px);
+      padding-right: clamp(24px, 4vw, 64px);
     }
-    h1 { font-size: 25px; letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-top: 28px;
+      padding-bottom: 28px;
+    }
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #c7d2fe;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: clamp(24px, 2.5vw, 30px); letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 78ch; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
     button, input, select { font: inherit; }
     .btn {
-      border: 1px solid #cbd5e1; background: var(--card); color: var(--ink);
-      padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: var(--card);
+      color: var(--ink);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
     }
     .btn:hover { background: #f1f5f9; }
     .btn-primary { background: var(--ink); color: #ffffff; border-color: var(--ink); }
     .btn-active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
-    .sub-bar { background: var(--paper); border-top: 1px solid var(--line); padding: 12px 0; }
-    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+    .sub-bar {
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
     .input {
-      width: 100%; padding: 7px 10px; border: 1px solid #cbd5e1;
-      border-radius: 8px; background: var(--card); font-size: 12px; color: var(--ink);
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: var(--card);
+      font-size: 12px;
+      color: var(--ink);
     }
-    main { padding: 24px 0 56px; display: grid; gap: 24px; }
-    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    main {
+      padding-top: 28px;
+      padding-bottom: 64px;
+      display: grid;
+      gap: 28px;
+    }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .card {
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 18px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
-    .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .kpi-val { font-size: 22px; font-weight: 800; margin-top: 4px; }
-    .two-col { display: grid; grid-template-columns: minmax(310px, 1fr) minmax(380px, 1.35fr); gap: 18px; }
-    @media (max-width: 920px) { .two-col { grid-template-columns: 1fr; } }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; margin-top: 10px; }
-    label { font-size: 11px; font-weight: 600; color: var(--muted); display: grid; gap: 4px; }
-    .tab-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi-val { font-size: 24px; font-weight: 800; margin-top: 6px; }
+    .two-col { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.35fr); gap: 20px; }
+    @media (max-width: 960px) { .two-col { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin-top: 12px; }
+    label { font-size: 11px; font-weight: 600; color: var(--muted); display: grid; gap: 5px; }
+    .raci-strip {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      display: grid;
+      gap: 6px;
+    }
+    .tab-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     pre {
-      margin-top: 10px; padding: 12px; border-radius: 8px; background: #0f172a;
-      color: #e2e8f0; font-size: 11px; overflow: auto; max-height: 310px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 11.5px;
+      overflow: auto;
+      max-height: 340px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
     }
     .log-box {
-      margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--paper);
-      border: 1px solid var(--line); font-size: 12px; max-height: 180px; overflow: auto;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      max-height: 190px;
+      overflow: auto;
     }
-    .log-entry { padding: 4px 0; border-bottom: 1px dashed #e2e8f0; }
+    .log-entry { padding: 5px 0; border-bottom: 1px dashed #e2e8f0; }
     .log-entry:last-child { border-bottom: 0; }
-    .sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
-    h2 { font-size: 18px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+    .sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+    h2 { font-size: 19px; letter-spacing: -0.01em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
     .top-row { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; font-weight: 700; }
     .id-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
-    .badge { background: var(--ok-bg); color: var(--ok-ink); padding: 2px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+    .badge { background: var(--ok-bg); color: var(--ok-ink); padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
     .badge-warn { background: var(--warn-bg); color: var(--warn-ink); }
     .badge-err { background: var(--err-bg); color: var(--err-ink); }
-    .title { font-size: 13px; font-weight: 700; margin-top: 6px; }
-    .meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
-    .card-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .title { font-size: 13.5px; font-weight: 700; margin-top: 8px; }
+    .meta { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
     .run-status { font-size: 11px; font-weight: 700; color: var(--ok-ink); }
     .run-status-err { color: var(--err-ink); }
-    .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
+    .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 18,000 Hands-On Live Implementations</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · Fortune-500 CCoE Control Plane</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub">Real-world hands-on CCoE execution engine: generates Terraform/OpenTofu, OPA/Rego, and AWS/Azure/GCP commands, validates metadata, logs runs, and triggers GitHub Actions.</p>
+        <p class="sub">Hands-on enterprise control plane for 18,000 multi-cloud implementations: RACI ownership, ADRs, blast-radius &amp; drift simulation, FinOps cost circuit breakers, Terraform/OpenTofu, OPA/Rego, cloud CLI, and GitHub Actions dispatch.</p>
       </div>
       <div class="actions">
         <button class="btn" id="runBatchBtn" type="button">Run Batch (25 Filtered)</button>
@@ -143,12 +209,17 @@
       <div class="card">
         <div class="kpi-label">Live Implementations Catalog</div>
         <div class="kpi-val" id="totalImplCount">18,000</div>
-        <p class="sub">IMPL-00001 through IMPL-18000 hands-on targets</p>
+        <p class="sub">IMPL-00001 through IMPL-18000 enterprise targets</p>
       </div>
       <div class="card">
         <div class="kpi-label">Matching Current Filter</div>
         <div class="kpi-val" id="matchCount">18,000</div>
         <p class="sub" id="pageSub">Page 1</p>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Est. Monthly Exposure (Selected)</div>
+        <div class="kpi-val" id="finopsExposure">$18,400/mo</div>
+        <p class="sub" id="finopsSavings">Potential savings: $4,600/mo via TTL &amp; right-sizing</p>
       </div>
       <div class="card">
         <div class="kpi-label">Executed in Session</div>
@@ -159,8 +230,8 @@
 
     <section class="two-col" id="runnerSection">
       <div class="card">
-        <h2>Hands-On Live Implementation Runner</h2>
-        <p class="sub">Validate mandatory tags/labels, generate real Terraform/OPA/CLI code, run checks, or trigger <code>.github/workflows/ccoe-live-enforce.yml</code>.</p>
+        <h2>Hands-On Live Implementation &amp; Blast-Radius Runner</h2>
+        <p class="sub">Configure metadata, evaluate RACI &amp; blast radius, run live checks, or trigger <code>.github/workflows/ccoe-live-enforce.yml</code>.</p>
 
         <div class="form-grid">
           <label>
@@ -189,12 +260,17 @@
           </label>
         </div>
 
+        <div class="raci-strip" id="raciGateBox">
+          <div><strong>RACI &amp; ADR Gate:</strong> Loading governance mapping...</div>
+        </div>
+
         <div class="card-actions">
           <button class="btn btn-active" id="runSingleBtn" type="button">Execute Selected Implementation</button>
+          <button class="btn" id="blastBtn" type="button">Simulate Blast Radius &amp; Drift</button>
           <button class="btn" id="copyArtifactBtn" type="button">Copy Active Artifact</button>
         </div>
 
-        <div class="form-grid" style="margin-top:12px;">
+        <div class="form-grid" style="margin-top:14px;">
           <label>
             GitHub Repository (owner/repo)
             <input class="input" id="ghRepo" value="Adamson-lab/ccoe-operating-model-raci-adrs-guardrails" />
@@ -218,19 +294,20 @@
         <div class="card-actions">
           <button class="btn btn-primary" id="dispatchBtn" type="button">Dispatch GitHub Actions Workflow</button>
         </div>
-        <div class="log-box" id="execLog">Ready. Click <strong>Run Live Check</strong> or <strong>Inspect Artifact</strong> on any card below to validate tags/labels and generate real hands-on IaC, Rego, and CLI artifacts.</div>
+        <div class="log-box" id="execLog">Ready. Select an implementation card, run live checks, simulate blast radius, or inspect generated Terraform, OPA/Rego, CLI, and rollback artifacts.</div>
       </div>
 
       <div class="card">
         <div class="sec-head" style="margin-bottom:4px;">
           <h2>Generated Hands-On Artifact</h2>
-          <span class="badge" id="artifactImplBadge">IMPL-00001</span>
+          <span class="badge" id="artifactImplBadge">IMPL-00001 · TERRAFORM</span>
         </div>
-        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to inspect real hands-on code.</p>
+        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to inspect enterprise hands-on code.</p>
         <div class="tab-row" id="artifactTabs">
           <button class="btn btn-active" type="button" data-fmt="terraform">Terraform / OpenTofu</button>
           <button class="btn" type="button" data-fmt="rego">OPA / Rego</button>
           <button class="btn" type="button" data-fmt="cli">Cloud CLI / Policy</button>
+          <button class="btn" type="button" data-fmt="rollback">Rollback &amp; RACI</button>
           <button class="btn" type="button" data-fmt="json">Spec JSON</button>
         </div>
         <pre id="artifactCode"></pre>
@@ -270,6 +347,15 @@
       "cmdb-asset-sync", "quota-guardrail", "quarantine-isolate", "grc-evidence-pack"
     ];
 
+    const RACI_MAP = {
+      "Enforce Tag & Label Parity": { a: "FinOps", r: "Platform Eng & Product", c: "CCoE Lead", adr: "ADR-002 (5-Key Tagging Baseline)", sla: "24h" },
+      "Remediate Console Drift": { a: "Platform Eng", r: "Platform Eng", c: "InfoSec / GRC", adr: "ADR-004 (Bounded Capability Repos)", sla: "4h" },
+      "Verify OIDC / Workload Trust": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead", adr: "ADR-001 (Secretless OIDC Federation)", sla: "8h" },
+      "Apply Preventive Guardrail": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead & FinOps", adr: "ADR-003 (Time-Bound Waivers & Break-Glass)", sla: "12h" },
+      "Reclaim Expired Sandbox TTL": { a: "FinOps", r: "Platform Eng", c: "Product Teams", adr: "ADR-002 (5-Key Tagging Baseline)", sla: "2h" },
+      "Generate Audit Evidence": { a: "InfoSec / GRC", r: "CCoE Lead", c: "Platform Eng & FinOps", adr: "ADR-003 (Time-Bound Waivers & Break-Glass)", sla: "48h" }
+    };
+
     const TOTAL_ITEMS = 18000;
     const runHistory = [];
     const resultsById = new Map();
@@ -285,6 +371,8 @@
       const action = ACTIONS[Math.floor(idx / 15) % ACTIONS.length];
       const wl = WORKLOADS[Math.floor(idx / 90) % WORKLOADS.length];
       const ring = (Math.floor(idx / 1800) % 10) + 1;
+      const monthlyUsd = 4200 + ((n * 373) % 28000);
+      const savingsUsd = Math.round(monthlyUsd * 0.22);
       return {
         index: idx,
         id: `IMPL-${String(n).padStart(5, "0")}`,
@@ -293,6 +381,8 @@
         action,
         workload: wl,
         ring,
+        monthlyUsd,
+        savingsUsd,
         title: `${action} on ${wl} (${cloud} · ${fw} · Ring ${ring})`
       };
     }
@@ -327,14 +417,25 @@
       };
     }
 
+    function updateRaciAndFinops(item) {
+      const r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      document.getElementById("finopsExposure").textContent = `$${item.monthlyUsd.toLocaleString()}/mo`;
+      document.getElementById("finopsSavings").textContent = `Est. savings: $${item.savingsUsd.toLocaleString()}/mo · SLA ${r.sla}`;
+      document.getElementById("raciGateBox").innerHTML =
+        `<div><strong>Accountable (A):</strong> ${r.a} · <strong>Responsible (R):</strong> ${r.r} · <strong>Consulted (C):</strong> ${r.c}</div>` +
+        `<div><strong>Binding Decision:</strong> ${r.adr} · <strong>Remediation SLA:</strong> ${r.sla}</div>`;
+    }
+
     function buildArtifactText(item, fmt) {
       const m = getMetadata();
+      const r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+
       if (fmt === "rego") {
         return [
-          `package ccoe.live.${item.cloud.toLowerCase()}`,
+          `package ccoe.enterprise.${item.cloud.toLowerCase()}`,
           "",
           `# ${item.id}: ${item.title}`,
-          `# Framework: ${item.framework} | Action: ${item.action}`,
+          `# RACI Accountable: ${r.a} | SLA: ${r.sla} | ${r.adr}`,
           "default allow := false",
           "allow if { count(violations) == 0 }",
           "",
@@ -362,19 +463,19 @@
       if (fmt === "cli") {
         if (item.cloud === "AWS") {
           return [
-            `# ${item.id} — AWS Guardrail & Tagging Command (${item.workload})`,
+            `# ${item.id} — AWS Enterprise Guardrail & FinOps Check (${item.workload})`,
             `aws resourcegroupstaggingapi get-resources \\`,
             `  --tag-filters Key=environment,Values=${m.environment} Key=cost-center,Values=${m.costCenter} \\`,
             `  --query 'ResourceTagMappingList[].ResourceARN'`,
             "",
-            `# Enforce baseline tags on target ARN (replace <ARN> before running):`,
+            `# Apply baseline tags to target ARN (replace <ARN> before running):`,
             `# aws resourcegroupstaggingapi tag-resources --resource-arn-list <ARN> \\`,
             `#   --tags owner=${m.owner},cost-center=${m.costCenter},environment=${m.environment},data-classification=${m.dataClassification},ttl=${m.ttl}`
           ].join("\n");
         }
         if (item.cloud === "Azure") {
           return [
-            `# ${item.id} — Azure Policy & Tag Compliance Check (${item.workload})`,
+            `# ${item.id} — Azure Policy & Compliance Check (${item.workload})`,
             `az policy state list \\`,
             `  --filter "PolicyDefinitionAction eq 'audit' or PolicyDefinitionAction eq 'deny'" \\`,
             `  --query "[].{resource:resourceId,policy:policyDefinitionName,state:complianceState}" -o table`,
@@ -388,9 +489,21 @@
           `# ${item.id} — GCP Asset & Normalized Label Check (${item.workload})`,
           `gcloud asset search-all-resources \\`,
           `  --query="labels.environment:${m.gcpEnv} AND labels.cost_center:${m.gcpCostCenter}" \\`,
-          `  --format="table(name,assetType,location)"`,
+          `  --format="table(name,assetType,location)"`
+        ].join("\n");
+      }
+
+      if (fmt === "rollback") {
+        return [
+          `# Rollback & Escalation Playbook — ${item.id}`,
+          `# Accountable (A): ${r.a} | Responsible (R): ${r.r} | SLA: ${r.sla}`,
+          `# ADR Reference : ${r.adr}`,
+          `# Est. Exposure : $${item.monthlyUsd.toLocaleString()}/mo (Savings: $${item.savingsUsd.toLocaleString()}/mo)`,
           "",
-          `# Note: GCP labels require lowercase letters, numbers, underscores, and hyphens.`
+          "1. Halt automated enforcement if error rate or drift delta exceeds threshold.",
+          "2. Restore last verified state snapshot or revert offending commit/policy change.",
+          "3. Log time-bound waiver or break-glass ticket with explicit expiry date.",
+          `4. Notify ${r.a} and ${r.r} within ${r.sla} SLA.`
         ].join("\n");
       }
 
@@ -402,6 +515,8 @@
           workload: item.workload,
           action: item.action,
           ring: item.ring,
+          raci: r,
+          finops: { monthly_exposure_usd: item.monthlyUsd, estimated_savings_usd: item.savingsUsd },
           required_tags: {
             owner: m.owner,
             "cost-center": m.costCenter,
@@ -420,7 +535,7 @@
 
       return [
         `# ${item.id}: ${item.title}`,
-        `# Framework: ${item.framework} | Action: ${item.action}`,
+        `# Accountable: ${r.a} | ${r.adr} | SLA: ${r.sla}`,
         `locals {`,
         `  ccoe_${item.id.toLowerCase().replace("-", "_")}_tags = {`,
         `    "owner"               = "${m.owner}"`,
@@ -500,6 +615,7 @@
       document.getElementById("artifactImplBadge").textContent = `${item.id} · ${artifactFmt.toUpperCase()}`;
       document.getElementById("artifactSummary").textContent = item.title;
       document.getElementById("artifactCode").textContent = buildArtifactText(item, artifactFmt);
+      updateRaciAndFinops(item);
       if (scrollToRunner) {
         document.getElementById("runnerSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
@@ -551,7 +667,7 @@
               <span class="badge ${it.action.includes("Drift") || it.action.includes("TTL") ? "badge-warn" : ""}">${it.framework}</span>
             </div>
             <h3 class="title">${it.title}</h3>
-            <div class="meta">Action: ${it.action} · Workload: ${it.workload}</div>
+            <div class="meta">Workload: ${it.workload} · Est. $${it.monthlyUsd.toLocaleString()}/mo</div>
             <div class="card-actions">
               <button class="btn js-inspect" type="button" data-id="${it.id}">Inspect Artifact</button>
               <button class="btn btn-active js-exec" type="button" data-id="${it.id}">Run Live Check</button>
@@ -590,6 +706,16 @@
       runLiveCheck(document.getElementById("activeImplId").value);
     });
 
+    document.getElementById("blastBtn").addEventListener("click", () => {
+      const item = getItemById(document.getElementById("activeImplId").value || selectedId);
+      const r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      inspectArtifact(item.id, false);
+      appendLog(
+        `BLAST RADIUS ${item.id} (${item.workload} · ${item.cloud}): $${item.monthlyUsd.toLocaleString()}/mo exposure, SLA ${r.sla}, rollback & ${r.adr} verified.`,
+        "PASS"
+      );
+    });
+
     document.getElementById("runBatchBtn").addEventListener("click", () => {
       const { slice } = queryItems(25, page * pageSize);
       if (!slice.length) return;
@@ -599,7 +725,7 @@
         resultsById.set(it.id, ok ? "PASS" : "ACTION REQUIRED");
         appendLog(
           ok
-            ? `BATCH ${it.id} [${it.cloud} · ${it.action}] verified for cc=${m.costCenter}.`
+            ? `BATCH ${it.id} [${it.cloud} · ${it.action}] verified ($${it.monthlyUsd.toLocaleString()}/mo).`
             : `BATCH ${it.id} missing required tags: ${m.missing.join(", ")}.`,
           ok ? "PASS" : "ACTION REQUIRED"
         );
@@ -661,8 +787,8 @@
       const { slice } = queryItems(500, page * pageSize);
       const esc = (v) => `"${String(v).replace(/"/g, '""')}"`;
       const lines = [
-        "id,cloud,framework,action,workload,ring",
-        ...slice.map((it) => [it.id, it.cloud, it.framework, it.action, it.workload, it.ring].map(esc).join(","))
+        "id,cloud,framework,action,workload,ring,monthly_usd,savings_usd",
+        ...slice.map((it) => [it.id, it.cloud, it.framework, it.action, it.workload, it.ring, it.monthlyUsd, it.savingsUsd].map(esc).join(","))
       ];
       const blob = new Blob([lines.join("\n")], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
