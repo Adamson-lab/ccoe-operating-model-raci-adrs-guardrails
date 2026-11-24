@@ -15,6 +15,10 @@ on:
         description: "Hands-on action name"
         required: true
         default: "Enforce Tag & Label Parity"
+      scenario:
+        description: "Operating scenario (steady-state, ma-onboarding, divestiture-carveout)"
+        required: true
+        default: "steady-state"
       owner:
         description: "Resource owner"
         required: true
@@ -45,6 +49,7 @@ jobs:
           echo "Implementation ID : ${{ inputs.implementation_id }}"
           echo "Cloud Target      : ${{ inputs.cloud }}"
           echo "Action            : ${{ inputs.action_name }}"
+          echo "Scenario          : ${{ inputs.scenario }}"
           echo "Owner             : ${{ inputs.owner }}"
           echo "Cost Center       : ${{ inputs.cost_center }}"
           echo "Environment       : ${{ inputs.environment }}"
@@ -55,15 +60,16 @@ jobs:
             exit 1
           fi
 
-      - name: Evaluate policy and generate run artifact
+      - name: Evaluate policy and generate audit evidence artifact
         run: |
           set -euo pipefail
           mkdir -p artifacts
-          cat > "artifacts/${{ inputs.implementation_id }}-report.json" <<EOF
+          cat > "artifacts/${{ inputs.implementation_id }}-evidence.json" <<EOF
           {
             "implementation_id": "${{ inputs.implementation_id }}",
             "cloud": "${{ inputs.cloud }}",
             "action": "${{ inputs.action_name }}",
+            "operating_scenario": "${{ inputs.scenario }}",
             "owner": "${{ inputs.owner }}",
             "cost_center": "${{ inputs.cost_center }}",
             "environment": "${{ inputs.environment }}",
@@ -72,11 +78,11 @@ jobs:
             "timestamp_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           }
           EOF
-          cat "artifacts/${{ inputs.implementation_id }}-report.json"
+          cat "artifacts/${{ inputs.implementation_id }}-evidence.json"
 
-      - name: Upload implementation report artifact
+      - name: Upload implementation evidence artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ccoe-run-${{ inputs.implementation_id }}
-          path: artifacts/${{ inputs.implementation_id }}-report.json
+          name: ccoe-evidence-${{ inputs.implementation_id }}
+          path: artifacts/${{ inputs.implementation_id }}-evidence.json
           if-no-files-found: error

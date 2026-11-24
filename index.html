@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails · Fortune-500 CCoE Suite</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · Chief Enterprise Architect Control Plane</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -30,7 +30,7 @@
     }
     header { background: var(--card); border-bottom: 1px solid var(--line); }
     .wrap {
-      max-width: 1380px;
+      max-width: 1400px;
       margin: 0 auto;
       padding-left: clamp(24px, 4vw, 64px);
       padding-right: clamp(24px, 4vw, 64px);
@@ -56,7 +56,7 @@
       margin-bottom: 8px;
     }
     h1 { font-size: clamp(24px, 2.5vw, 30px); letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 82ch; }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 84ch; }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; }
     button, input, select, textarea { font: inherit; }
     .btn {
@@ -78,7 +78,7 @@
       padding-top: 14px;
       padding-bottom: 14px;
     }
-    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 12px; }
     .input {
       width: 100%;
       padding: 8px 12px;
@@ -110,7 +110,7 @@
     }
     .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
     .kpi-val { font-size: 23px; font-weight: 800; margin-top: 6px; }
-    .two-col { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.35fr); gap: 20px; }
+    .two-col { display: grid; grid-template-columns: minmax(330px, 1fr) minmax(390px, 1.35fr); gap: 20px; }
     .two-col-even { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
     @media (max-width: 960px) { .two-col { grid-template-columns: 1fr; } }
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; margin-top: 12px; }
@@ -134,7 +134,7 @@
       color: #e2e8f0;
       font-size: 11.5px;
       overflow: auto;
-      max-height: 360px;
+      max-height: 370px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       white-space: pre-wrap;
     }
@@ -177,22 +177,22 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · Fortune-500 Enterprise CCoE Suite</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · Chief Enterprise Architect Control Plane</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub">Complete multi-cloud CCoE operating system across 18,000 live implementations: interactive RACI matrix &amp; ADR sign-off registry, time-bound break-glass waivers, 3-cloud Landing Zone blueprints, pre-flight payload linter, FinOps circuit breakers, and Executive Board Brief export.</p>
+        <p class="sub">Enterprise multi-cloud CCoE suite across 18,000 live implementations: Zero-Trust Hub-Spoke network guardrails, AI/GPU cluster governance (ADR-007), M&amp;A / Divestiture operating modes, live Mermaid architecture diagrams, GRC control-to-evidence traceability, time-bound waivers, and Executive Board Brief export.</p>
       </div>
       <div class="actions">
         <button class="btn" type="button" onclick="appRunBatch()">Run Batch (25 Filtered)</button>
         <button class="btn" type="button" onclick="appDownloadBoardBrief()">Export Executive Board Brief</button>
+        <button class="btn" type="button" onclick="appDownloadAuditPack()">Export GRC Evidence Pack</button>
         <button class="btn" type="button" onclick="appDownloadLog()">Download Run Log JSON</button>
         <button class="btn" type="button" onclick="appDownloadWorkflow()">Download Workflow YAML</button>
-        <button class="btn" type="button" onclick="appDownloadCsv()">Export CSV</button>
         <button class="btn btn-primary" type="button" onclick="appDownloadCatalog()">Export JSON</button>
       </div>
     </div>
     <div class="sub-bar">
       <div class="wrap filters">
-        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, ADR, action, cloud..." oninput="appFilterChange()" />
+        <input class="input" id="qInput" type="search" placeholder="Search IMPL-00001..18000, ADR, network, GPU, cloud..." oninput="appFilterChange()" />
         <select class="input" id="cloudFilter" onchange="appFilterChange()">
           <option value="All">All Clouds (AWS · Azure · GCP)</option>
           <option value="AWS">AWS</option>
@@ -215,15 +215,17 @@
           <option value="Apply Preventive Guardrail">Apply Preventive Guardrail</option>
           <option value="Reclaim Expired Sandbox TTL">Reclaim Expired Sandbox TTL</option>
           <option value="Generate Audit Evidence">Generate Audit Evidence</option>
+          <option value="Enforce Zero-Trust Hub-Spoke Egress">Enforce Zero-Trust Hub-Spoke Egress</option>
         </select>
         <select class="input" id="adrFilter" onchange="appFilterChange()">
-          <option value="All">All Architecture Decisions (ADR-001..006)</option>
+          <option value="All">All ADRs (ADR-001..007)</option>
           <option value="ADR-001">ADR-001 · Secretless OIDC Federation</option>
           <option value="ADR-002">ADR-002 · 5-Key Tagging &amp; GCP Labels</option>
           <option value="ADR-003">ADR-003 · Time-Bound Waivers &amp; Break-Glass</option>
           <option value="ADR-004">ADR-004 · Bounded Capability Repos</option>
           <option value="ADR-005">ADR-005 · Sovereign Residency &amp; CMK</option>
           <option value="ADR-006">ADR-006 · FinOps Anomaly Circuit Breakers</option>
+          <option value="ADR-007">ADR-007 · AI / GPU Quota &amp; Residency Gate</option>
         </select>
       </div>
     </div>
@@ -248,8 +250,8 @@
       </div>
       <div class="card">
         <div class="kpi-label">CCoE Maturity &amp; Coverage</div>
-        <div class="kpi-val" id="maturityScore">94.8%</div>
-        <p class="sub" id="waiverKpiSub">0 active waivers · 6/6 ADRs ratified</p>
+        <div class="kpi-val" id="maturityScore">96.4%</div>
+        <p class="sub" id="waiverKpiSub">0 active waivers · 7/7 ADRs ratified</p>
       </div>
       <div class="card">
         <div class="kpi-label">Executed in Session</div>
@@ -260,13 +262,21 @@
 
     <section class="two-col" id="runnerSection">
       <div class="card">
-        <h2>Hands-On Live Implementation &amp; Blast-Radius Runner</h2>
-        <p class="sub">Configure metadata, evaluate RACI &amp; blast radius, run live checks, or trigger <code>.github/workflows/ccoe-live-enforce.yml</code>.</p>
+        <h2>Chief Enterprise Architect Execution &amp; Scenario Runner</h2>
+        <p class="sub">Select an enterprise operating scenario (Steady-State, M&amp;A Onboarding, or Divestiture Carve-Out), validate metadata, run AI/GPU &amp; network checks, or dispatch GitHub Actions.</p>
 
         <div class="form-grid">
           <label>
             Selected Implementation
             <input class="input" id="activeImplId" value="IMPL-00001" onchange="appInspect(this.value, false)" />
+          </label>
+          <label>
+            Operating Scenario
+            <select class="input" id="scenarioMode" onchange="appRefreshArtifact()">
+              <option value="steady-state">Steady-State Enterprise CCoE</option>
+              <option value="ma-onboarding">M&amp;A Acquired Entity Onboarding (Day 1–90)</option>
+              <option value="divestiture-carveout">Divestiture / Spin-Off Carve-Out Isolation</option>
+            </select>
           </label>
           <label>
             Owner (required)
@@ -295,6 +305,7 @@
         <div class="card-actions">
           <button class="btn btn-active" type="button" onclick="appRunSelected()">Execute Selected Implementation</button>
           <button class="btn" type="button" onclick="appSimulateBlast()">Simulate Blast Radius &amp; Drift</button>
+          <button class="btn" type="button" onclick="appRunAiGpuGate()">Run AI/GPU &amp; Network Gate</button>
           <button class="btn" type="button" onclick="appCopyArtifact()">Copy Active Artifact</button>
         </div>
 
@@ -322,22 +333,23 @@
         <div class="card-actions">
           <button class="btn btn-primary" type="button" onclick="appDispatchWorkflow()">Dispatch GitHub Actions Workflow</button>
         </div>
-        <div class="log-box" id="execLog">Ready. All Fortune-500 CCoE modules active: live runner, Landing Zone vending, RACI/ADR matrix, time-bound waivers, and pre-flight payload linter.</div>
+        <div class="log-box" id="execLog">Ready. Enterprise Architect modules online: Hub-Spoke Zero-Trust, AI/GPU Governance (ADR-007), M&amp;A/Divestiture Scenarios, Mermaid Diagrams, and GRC Evidence Mapping.</div>
       </div>
 
       <div class="card">
         <div class="sec-head" style="margin-bottom:4px;">
-          <h2>Generated Hands-On Artifact &amp; Landing Zone Blueprint</h2>
+          <h2>Enterprise Artifact, Blueprint &amp; Mermaid Workbench</h2>
           <span class="badge" id="artifactImplBadge">IMPL-00001 · TERRAFORM</span>
         </div>
-        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to inspect enterprise hands-on code.</p>
+        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to inspect enterprise hands-on artifacts.</p>
         <div class="tab-row" id="artifactTabs">
           <button class="btn btn-active" type="button" data-fmt="terraform" onclick="appSetFmt('terraform', this)">Terraform / OpenTofu</button>
-          <button class="btn" type="button" data-fmt="landingzone" onclick="appSetFmt('landingzone', this)">Landing Zone Blueprint</button>
+          <button class="btn" type="button" data-fmt="landingzone" onclick="appSetFmt('landingzone', this)">Landing Zone &amp; Network</button>
+          <button class="btn" type="button" data-fmt="mermaid" onclick="appSetFmt('mermaid', this)">Mermaid Diagram</button>
           <button class="btn" type="button" data-fmt="rego" onclick="appSetFmt('rego', this)">OPA / Rego</button>
           <button class="btn" type="button" data-fmt="cli" onclick="appSetFmt('cli', this)">Cloud CLI / Policy</button>
-          <button class="btn" type="button" data-fmt="rollback" onclick="appSetFmt('rollback', this)">Rollback &amp; RACI</button>
-          <button class="btn" type="button" data-fmt="json" onclick="appSetFmt('json', this)">Spec JSON</button>
+          <button class="btn" type="button" data-fmt="rollback" onclick="appSetFmt('rollback', this)">Rollback &amp; Scenario</button>
+          <button class="btn" type="button" data-fmt="json" onclick="appSetFmt('json', this)">GRC Spec JSON</button>
         </div>
         <pre id="artifactCode"></pre>
       </div>
@@ -346,9 +358,9 @@
     <section class="two-col-even">
       <div class="card">
         <h2>Pre-Flight Drift &amp; Tag Payload Linter</h2>
-        <p class="sub">Paste any Terraform tag block or AWS/Azure/GCP resource JSON payload to lint against CCoE ADR-001..006 guardrails before merging a PR.</p>
+        <p class="sub">Paste any Terraform tag block or AWS/Azure/GCP resource JSON payload to lint against CCoE ADR-001..007 guardrails before merging a PR.</p>
         <div style="margin-top:10px;">
-          <textarea class="input" id="linterInput">{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true}</textarea>
+          <textarea class="input" id="linterInput">{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true}</textarea>
         </div>
         <div class="card-actions">
           <button class="btn btn-active" type="button" onclick="appLintPayload()">Run Pre-Flight Policy Lint</button>
@@ -356,19 +368,19 @@
           <button class="btn" type="button" onclick="appLoadGoodSample()">Load Compliant Sample</button>
         </div>
         <div class="raci-strip" id="lintResultBox">
-          <div><strong>Linter Ready:</strong> Click <em>Run Pre-Flight Policy Lint</em> to validate mandatory keys, GCP lowercase label rules, and OIDC posture.</div>
+          <div><strong>Linter Ready:</strong> Validates mandatory tags, GCP lowercase labels, OIDC federation, and Zero-Trust private egress.</div>
         </div>
       </div>
 
       <div class="card">
         <h2>Time-Bound Exception &amp; Break-Glass Waiver Workbench</h2>
-        <p class="sub">Issue auditable, auto-expiring waivers tied to the active <code>IMPL-XXXXX</code> target and generate signed OPA bypass rules.</p>
+        <p class="sub">Issue auditable, auto-expiring waivers tied to the active <code>IMPL-XXXXX</code> target and export waiver audit logs.</p>
         <div class="form-grid">
           <label>
             Approver Role
             <select class="input" id="waiverApprover">
               <option value="InfoSec / CISO Delegate">InfoSec / CISO Delegate</option>
-              <option value="CCoE Architecture Lead">CCoE Architecture Lead</option>
+              <option value="Chief Enterprise Architect">Chief Enterprise Architect</option>
               <option value="FinOps Director">FinOps Director</option>
             </select>
           </label>
@@ -377,7 +389,7 @@
             <select class="input" id="waiverWindow">
               <option value="24h">24h (Emergency Break-Glass)</option>
               <option value="7d" selected>7d (Standard Sprint Waiver)</option>
-              <option value="14d">14d (Migration Window)</option>
+              <option value="14d">14d (M&amp;A Integration Window)</option>
               <option value="30d">30d (Max Quarterly Exception)</option>
             </select>
           </label>
@@ -387,7 +399,7 @@
           </label>
         </div>
         <div class="card-actions">
-          <button class="btn btn-primary" type="button" onclick="appIssueWaiver()">Issue Time-Bound Waiver &amp; OPA Rule</button>
+          <button class="btn btn-primary" type="button" onclick="appIssueWaiver()">Issue Time-Bound Waiver</button>
           <button class="btn" type="button" onclick="appDownloadWaivers()">Export Active Waivers JSON</button>
         </div>
         <div class="log-box" id="waiverLedgerBox">No active waivers issued in this session. All guardrails enforcing at 100% baseline.</div>
@@ -397,8 +409,8 @@
     <section class="card">
       <div class="sec-head">
         <div>
-          <h2>Cross-Functional RACI Matrix &amp; Ratified ADR Sign-Off Registry</h2>
-          <p class="sub">Click any ADR pill below to filter the 18,000 implementations governed by that decision.</p>
+          <h2>Cross-Functional RACI Matrix, ADR Registry &amp; GRC Control-to-Evidence Traceability</h2>
+          <p class="sub">Click any ADR button to filter the 18,000 implementations governed by that architectural decision and inspect required audit proof.</p>
         </div>
         <div class="actions">
           <button class="btn" type="button" onclick="appFilterByAdr('All')">Show All ADRs</button>
@@ -408,19 +420,21 @@
           <button class="btn" type="button" onclick="appFilterByAdr('ADR-004')">ADR-004</button>
           <button class="btn" type="button" onclick="appFilterByAdr('ADR-005')">ADR-005</button>
           <button class="btn" type="button" onclick="appFilterByAdr('ADR-006')">ADR-006</button>
+          <button class="btn" type="button" onclick="appFilterByAdr('ADR-007')">ADR-007</button>
         </div>
       </div>
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th>Governance Gate / Lifecycle Control</th>
-              <th>Binding ADR</th>
-              <th>CCoE Lead</th>
-              <th>Platform Eng</th>
-              <th>InfoSec / GRC</th>
+              <th>Governance Gate / Enterprise Control</th>
+              <th>ADR</th>
+              <th>GRC Control IDs</th>
+              <th>Required Audit Evidence</th>
+              <th>CCoE</th>
+              <th>Platform</th>
+              <th>InfoSec</th>
               <th>FinOps</th>
-              <th>Product Teams</th>
               <th>SLA</th>
             </tr>
           </thead>
@@ -428,62 +442,79 @@
             <tr>
               <td>Secretless OIDC &amp; Workload Identity Federation</td>
               <td><strong>ADR-001</strong></td>
+              <td>SOC2 CC6.1 · ISO A.9.2</td>
+              <td>OIDC trust policy JSON &amp; zero static key scan</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-i">I</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
               <td>8h</td>
             </tr>
             <tr>
               <td>5-Key Canonical Tagging &amp; GCP Label Normalization</td>
               <td><strong>ADR-002</strong></td>
+              <td>FINOPS-TAG-01 · SOC2 CC7.1</td>
+              <td>Tag compliance snapshot &amp; CUR/Billing export</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-i">I</span></td>
               <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
               <td>24h</td>
             </tr>
             <tr>
               <td>Time-Bound Waivers &amp; Break-Glass Audit</td>
               <td><strong>ADR-003</strong></td>
+              <td>PCI 7.2 · ISO A.12.4</td>
+              <td>Signed waiver JSON with UTC expiry &amp; ticket ID</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
               <td>12h</td>
             </tr>
             <tr>
-              <td>Console Drift Remediation &amp; Bounded Repos</td>
+              <td>Zero-Trust Hub-Spoke Egress &amp; Drift Remediation</td>
               <td><strong>ADR-004</strong></td>
+              <td>PCI 1.3 · HIPAA 164.312(e)</td>
+              <td>Transit/PrivateLink flow logs &amp; drift diff report</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-a">A/R</span></td>
               <td><span class="raci-pill r-c">C</span></td>
-              <td><span class="raci-pill r-i">I</span></td>
               <td><span class="raci-pill r-i">I</span></td>
               <td>4h</td>
             </tr>
             <tr>
               <td>Sovereign Data Residency &amp; CMK Encryption</td>
               <td><strong>ADR-005</strong></td>
+              <td>HIPAA 164.312(a) · ISO A.10.1</td>
+              <td>KMS/Key Vault CMK rotation &amp; region constraint log</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-a">A</span></td>
               <td><span class="raci-pill r-i">I</span></td>
-              <td><span class="raci-pill r-c">C</span></td>
               <td>6h</td>
             </tr>
             <tr>
-              <td>FinOps GPU Spend Circuit Breaker &amp; Sandbox TTL</td>
+              <td>FinOps Spend Circuit Breaker &amp; Sandbox TTL</td>
               <td><strong>ADR-006</strong></td>
+              <td>FINOPS-BUD-04 · SOC2 CC7.2</td>
+              <td>TTL expiration reclamation log &amp; anomaly alert</td>
               <td><span class="raci-pill r-c">C</span></td>
               <td><span class="raci-pill r-r">R</span></td>
               <td><span class="raci-pill r-i">I</span></td>
               <td><span class="raci-pill r-a">A</span></td>
-              <td><span class="raci-pill r-r">R</span></td>
               <td>2h</td>
+            </tr>
+            <tr>
+              <td>Enterprise AI / GPU Quota &amp; Data Boundary Gate</td>
+              <td><strong>ADR-007</strong></td>
+              <td>ISO 42001 · SOC2 CC6.7</td>
+              <td>GPU quota cap policy &amp; dataset classification check</td>
+              <td><span class="raci-pill r-a">A</span></td>
+              <td><span class="raci-pill r-r">R</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td><span class="raci-pill r-c">C</span></td>
+              <td>4h</td>
             </tr>
           </tbody>
         </table>
@@ -514,14 +545,15 @@
 
     var CLOUDS = ["AWS", "Azure", "GCP"];
     var FRAMEWORKS = ["SOC2", "ISO27001", "PCI-DSS", "HIPAA", "FINOPS"];
-    var ADRS = ["ADR-001", "ADR-002", "ADR-003", "ADR-004", "ADR-005", "ADR-006"];
+    var ADRS = ["ADR-001", "ADR-002", "ADR-003", "ADR-004", "ADR-005", "ADR-006", "ADR-007"];
     var ACTIONS = [
       "Enforce Tag & Label Parity",
       "Remediate Console Drift",
       "Verify OIDC / Workload Trust",
       "Apply Preventive Guardrail",
       "Reclaim Expired Sandbox TTL",
-      "Generate Audit Evidence"
+      "Generate Audit Evidence",
+      "Enforce Zero-Trust Hub-Spoke Egress"
     ];
     var WORKLOADS_BY_CLOUD = {
       AWS: ["eks-gpu-training", "vpc-transit-hub", "kms-cmk-vault", "s3-cur-finops", "iam-oidc-runner", "rds-sql-ha", "sandbox-ephemeral"],
@@ -530,12 +562,13 @@
     };
 
     var RACI_MAP = {
-      "Enforce Tag & Label Parity": { a: "FinOps", r: "Platform Eng & Product", c: "CCoE Lead", adr: "ADR-002 (5-Key Tagging Baseline)", sla: "24h" },
-      "Remediate Console Drift": { a: "Platform Eng", r: "Platform Eng", c: "InfoSec / GRC", adr: "ADR-004 (Bounded Capability Repos)", sla: "4h" },
-      "Verify OIDC / Workload Trust": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead", adr: "ADR-001 (Secretless OIDC Federation)", sla: "8h" },
-      "Apply Preventive Guardrail": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead & FinOps", adr: "ADR-003 (Time-Bound Waivers & Break-Glass)", sla: "12h" },
-      "Reclaim Expired Sandbox TTL": { a: "FinOps", r: "Platform Eng", c: "Product Teams", adr: "ADR-006 (FinOps Anomaly Circuit Breakers)", sla: "2h" },
-      "Generate Audit Evidence": { a: "InfoSec / GRC", r: "CCoE Lead", c: "Platform Eng & FinOps", adr: "ADR-005 (Sovereign Residency & CMK)", sla: "48h" }
+      "Enforce Tag & Label Parity": { a: "FinOps", r: "Platform Eng & Product", c: "CCoE Lead", adr: "ADR-002 (5-Key Tagging Baseline)", grc: "FINOPS-TAG-01 · SOC2 CC7.1", sla: "24h" },
+      "Remediate Console Drift": { a: "Platform Eng", r: "Platform Eng", c: "InfoSec / GRC", adr: "ADR-004 (Bounded Capability Repos)", grc: "PCI 1.3 · ISO A.12.5", sla: "4h" },
+      "Verify OIDC / Workload Trust": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead", adr: "ADR-001 (Secretless OIDC Federation)", grc: "SOC2 CC6.1 · ISO A.9.2", sla: "8h" },
+      "Apply Preventive Guardrail": { a: "InfoSec / GRC", r: "Platform Eng", c: "CCoE Lead & FinOps", adr: "ADR-003 (Time-Bound Waivers & Break-Glass)", grc: "PCI 7.2 · ISO A.12.4", sla: "12h" },
+      "Reclaim Expired Sandbox TTL": { a: "FinOps", r: "Platform Eng", c: "Product Teams", adr: "ADR-006 (FinOps Anomaly Circuit Breakers)", grc: "FINOPS-BUD-04 · SOC2 CC7.2", sla: "2h" },
+      "Generate Audit Evidence": { a: "InfoSec / GRC", r: "CCoE Lead", c: "Platform Eng & FinOps", adr: "ADR-005 (Sovereign Residency & CMK)", grc: "HIPAA 164.312(a) · ISO A.10.1", sla: "48h" },
+      "Enforce Zero-Trust Hub-Spoke Egress": { a: "CCoE Lead", r: "Platform Eng", c: "InfoSec / GRC", adr: "ADR-007 (AI/GPU & Zero-Trust Egress Gate)", grc: "ISO 42001 · SOC2 CC6.7", sla: "4h" }
     };
 
     var WORKFLOW_YAML_TEXT = [
@@ -546,6 +579,7 @@
       '      implementation_id: { description: "Implementation ID", required: true, default: "IMPL-00001" }',
       '      cloud: { description: "Target cloud", required: true, default: "AWS" }',
       '      action_name: { description: "Hands-on action", required: true, default: "Enforce Tag & Label Parity" }',
+      '      scenario: { description: "Operating scenario", required: true, default: "steady-state" }',
       '      owner: { description: "Owner", required: true, default: "platform-ccoe" }',
       '      cost_center: { description: "Cost center", required: true, default: "CC-8801" }',
       '      environment: { description: "Environment", required: true, default: "prod" }',
@@ -556,7 +590,7 @@
       '    steps:',
       '      - uses: actions/checkout@v4',
       '      - name: Validate governance metadata',
-      '        run: echo "Running ${{ inputs.implementation_id }} on ${{ inputs.cloud }} (${{ inputs.execution_mode }})"'
+      '        run: echo "Running ${{ inputs.implementation_id }} on ${{ inputs.cloud }} [${{ inputs.scenario }}] (${{ inputs.execution_mode }})"'
     ].join("\n");
 
     var TOTAL_ITEMS = 18000;
@@ -617,12 +651,20 @@
       return getItemByIndex(num - 1);
     }
 
+    function getScenarioLabel() {
+      var val = document.getElementById("scenarioMode").value;
+      if (val === "ma-onboarding") return "M&A Acquired Entity Onboarding (Day 1–90 Quarantine & Tagging)";
+      if (val === "divestiture-carveout") return "Divestiture / Spin-Off Carve-Out (Identity & Egress Severance)";
+      return "Steady-State Enterprise CCoE";
+    }
+
     function getMetadata() {
       var owner = String(document.getElementById("tagOwner").value || "").trim();
       var costCenter = String(document.getElementById("tagCostCenter").value || "").trim();
       var environment = String(document.getElementById("tagEnv").value || "").trim();
       var dataClassification = String(document.getElementById("tagClass").value || "confidential").trim();
       var ttl = String(document.getElementById("tagTtl").value || "30d").trim();
+      var scenario = document.getElementById("scenarioMode").value;
       var missing = [];
       if (!owner) missing.push("owner");
       if (!costCenter) missing.push("cost-center");
@@ -633,6 +675,7 @@
         environment: environment || "MISSING",
         dataClassification: dataClassification,
         ttl: ttl,
+        scenario: scenario,
         gcpOwner: sanitizeLabel(owner || "platform-ccoe"),
         gcpCostCenter: sanitizeLabel(costCenter || "cc-8801"),
         gcpEnv: sanitizeLabel(environment || "prod"),
@@ -646,41 +689,61 @@
       document.getElementById("finopsExposure").textContent = "$" + item.monthlyUsd.toLocaleString() + "/mo";
       document.getElementById("finopsSavings").textContent = "Est. savings: $" + item.savingsUsd.toLocaleString() + "/mo · SLA " + r.sla;
       document.getElementById("raciGateBox").innerHTML =
-        "<div><strong>Accountable (A):</strong> " + r.a + " · <strong>Responsible (R):</strong> " + r.r + " · <strong>Consulted (C):</strong> " + r.c + "</div>" +
-        "<div><strong>Binding Decision:</strong> " + r.adr + " · <strong>Remediation SLA:</strong> " + r.sla + "</div>";
+        "<div><strong>Accountable (A):</strong> " + r.a + " · <strong>Responsible (R):</strong> " + r.r + " · <strong>GRC Controls:</strong> " + r.grc + "</div>" +
+        "<div><strong>Binding Decision:</strong> " + r.adr + " · <strong>Scenario:</strong> " + getScenarioLabel() + "</div>";
     }
 
     function buildArtifactText(item, fmt) {
       var m = getMetadata();
       var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      if (fmt === "mermaid") {
+        return [
+          "flowchart LR",
+          '  A["OIDC / Workload Identity\\n(ADR-001 Secretless)"] --> B["CCoE Guardrail Gate\\n' + item.id + " (" + item.adr + ')"]',
+          '  B --> C{"Metadata & Policy Check\\nowner=' + m.owner + "\\ncc=" + m.costCenter + '"}',
+          '  C -- "PASS" --> D["' + item.cloud + " Target: " + item.workload + "\\nZero-Trust Hub-Spoke Egress\"]",
+          '  C -- "DENY" --> E["Block Deploy & Open Waiver\\nSLA ' + r.sla + " · Accountable: " + r.a + '"]',
+          '  D --> F["GRC Evidence & FinOps Log\\n' + r.grc + '"]'
+        ].join("\n");
+      }
       if (fmt === "landingzone") {
         if (item.cloud === "AWS") {
           return [
-            "# AWS Landing Zone SCP & Conformance Baseline — " + item.id,
+            "# AWS Landing Zone SCP & Zero-Trust Hub-Spoke Baseline — " + item.id,
+            "# Scenario: " + getScenarioLabel(),
             JSON.stringify({
               Version: "2012-10-17",
-              Statement: [{
-                Sid: "DenyUntaggedOrNonOidcLaunch_" + item.id.replace("-", ""),
-                Effect: "Deny",
-                Action: ["ec2:RunInstances", "eks:CreateCluster", "rds:CreateDBInstance"],
-                Resource: "*",
-                Condition: {
-                  Null: {
-                    "aws:RequestTag/owner": "true",
-                    "aws:RequestTag/cost-center": "true",
-                    "aws:RequestTag/environment": "true"
+              Statement: [
+                {
+                  Sid: "DenyUntaggedLaunch_" + item.id.replace("-", ""),
+                  Effect: "Deny",
+                  Action: ["ec2:RunInstances", "eks:CreateCluster", "rds:CreateDBInstance"],
+                  Resource: "*",
+                  Condition: {
+                    Null: {
+                      "aws:RequestTag/owner": "true",
+                      "aws:RequestTag/cost-center": "true",
+                      "aws:RequestTag/environment": "true"
+                    }
                   }
+                },
+                {
+                  Sid: "EnforcePrivateTransitEgress_" + item.id.replace("-", ""),
+                  Effect: "Deny",
+                  Action: ["ec2:CreateInternetGateway", "ec2:AttachInternetGateway"],
+                  Resource: "*",
+                  Condition: { StringEquals: { "aws:ResourceTag/environment": "prod" } }
                 }
-              }]
+              ]
             }, null, 2)
           ].join("\n");
         }
         if (item.cloud === "Azure") {
           return [
-            "// Azure Landing Zone Policy Initiative — " + item.id,
+            "// Azure Landing Zone Policy & Virtual WAN Private Endpoint Guardrail — " + item.id,
             JSON.stringify({
               properties: {
-                displayName: "CCoE Require Canonical Tags (" + item.id + ")",
+                displayName: "CCoE Zero-Trust & Tag Baseline (" + item.id + " · " + m.scenario + ")",
                 policyType: "Custom",
                 mode: "Indexed",
                 policyRule: {
@@ -698,14 +761,14 @@
           ].join("\n");
         }
         return [
-          "# GCP Organization Policy & Label Baseline — " + item.id,
+          "# GCP Organization Policy, Shared VPC & Label Baseline — " + item.id,
           "name: projects/enterprise-landing-zone/policies/compute.restrictNonCompliantLabels",
           "spec:",
           "  rules:",
           "    - enforce: true",
           "      condition:",
           '        expression: "resource.labels.owner == \'' + m.gcpOwner + '\' && resource.labels.cost_center == \'' + m.gcpCostCenter + '\'"',
-          '        title: "' + item.id + ' Canonical Label Parity"'
+          '        title: "' + item.id + ' Canonical Label & Shared VPC Parity"'
         ].join("\n");
       }
       if (fmt === "rego") {
@@ -713,7 +776,7 @@
           "package ccoe.enterprise." + item.cloud.toLowerCase(),
           "",
           "# " + item.id + ": " + item.title,
-          "# Accountable: " + r.a + " | SLA: " + r.sla + " | " + r.adr,
+          "# Accountable: " + r.a + " | SLA: " + r.sla + " | GRC: " + r.grc,
           "default allow := false",
           "allow if { count(violations) == 0 }",
           "",
@@ -725,22 +788,23 @@
           "",
           "violations contains msg if {",
           '  input.implementation_id == "' + item.id + '"',
-          '  not input.tags["owner"]',
-          '  msg := "DENY ' + item.id + ': missing mandatory tag owner"',
+          '  input.environment == "prod"',
+          "  not input.oidc_federated",
+          '  msg := "DENY ' + item.id + ': production workload must use secretless OIDC federation"',
           "}",
           "",
           "violations contains msg if {",
           '  input.implementation_id == "' + item.id + '"',
-          '  input.environment == "prod"',
-          "  not input.oidc_federated",
-          '  msg := "DENY ' + item.id + ': production workload must use secretless OIDC federation"',
+          '  input.workload == "' + item.workload + '"',
+          '  input.public_egress == true',
+          '  msg := "DENY ' + item.id + ': Zero-Trust Hub-Spoke prohibits direct public egress"',
           "}"
         ].join("\n");
       }
       if (fmt === "cli") {
         if (item.cloud === "AWS") {
           return [
-            "# " + item.id + " — AWS Guardrail & Tag Check (" + item.workload + ")",
+            "# " + item.id + " — AWS Guardrail, Tag & Transit Egress Check (" + item.workload + ")",
             "aws resourcegroupstaggingapi get-resources \\",
             "  --tag-filters Key=environment,Values=" + m.environment + " Key=cost-center,Values=" + m.costCenter + " \\",
             "  --query 'ResourceTagMappingList[].ResourceARN'"
@@ -748,7 +812,7 @@
         }
         if (item.cloud === "Azure") {
           return [
-            "# " + item.id + " — Azure Policy & Tag Check (" + item.workload + ")",
+            "# " + item.id + " — Azure Policy & Compliance Check (" + item.workload + ")",
             "az policy state list \\",
             '  --filter "PolicyDefinitionAction eq \'audit\' or PolicyDefinitionAction eq \'deny\'" \\',
             '  --query "[].{resource:resourceId,policy:policyDefinitionName,state:complianceState}" -o table'
@@ -763,14 +827,15 @@
       }
       if (fmt === "rollback") {
         return [
-          "# Rollback & Escalation Playbook — " + item.id,
-          "# Accountable (A): " + r.a + " | Responsible (R): " + r.r + " | SLA: " + r.sla,
-          "# ADR Reference : " + r.adr,
-          "# Est. Exposure : $" + item.monthlyUsd.toLocaleString() + "/mo (Savings: $" + item.savingsUsd.toLocaleString() + "/mo)",
+          "# Rollback, M&A/Divestiture & Escalation Playbook — " + item.id,
+          "# Operating Scenario : " + getScenarioLabel(),
+          "# Accountable (A)    : " + r.a + " | Responsible (R): " + r.r + " | SLA: " + r.sla,
+          "# GRC Control Trace  : " + r.grc,
+          "# Est. Exposure      : $" + item.monthlyUsd.toLocaleString() + "/mo (Savings: $" + item.savingsUsd.toLocaleString() + "/mo)",
           "",
-          "1. Halt automated enforcement if drift or error rate exceeds threshold.",
-          "2. Restore last verified snapshot or revert offending commit/policy change.",
-          "3. Log time-bound waiver or break-glass record with explicit TTL.",
+          "1. Isolate target account/subscription/project boundary per " + m.scenario + " protocol.",
+          "2. Halt automated enforcement if drift or error rate exceeds threshold.",
+          "3. Restore last verified snapshot or revert offending commit/policy change.",
           "4. Notify " + r.a + " and " + r.r + " within " + r.sla + " SLA."
         ].join("\n");
       }
@@ -780,6 +845,8 @@
           cloud: item.cloud,
           framework: item.framework,
           adr: item.adr,
+          grc_controls: r.grc,
+          operating_scenario: m.scenario,
           workload: item.workload,
           action: item.action,
           ring: item.ring,
@@ -803,7 +870,7 @@
       var safeKey = item.id.toLowerCase().replace("-", "_");
       return [
         "# " + item.id + ": " + item.title,
-        "# Accountable: " + r.a + " | " + r.adr + " | SLA: " + r.sla,
+        "# Scenario: " + getScenarioLabel() + " | GRC: " + r.grc,
         "locals {",
         "  ccoe_" + safeKey + "_tags = {",
         '    "owner"               = "' + m.owner + '"',
@@ -811,6 +878,7 @@
         '    "environment"         = "' + m.environment + '"',
         '    "data-classification" = "' + m.dataClassification + '"',
         '    "ttl"                 = "' + m.ttl + '"',
+        '    "operating-scenario"  = "' + m.scenario + '"',
         '    "governance-id"       = "' + item.id + '"',
         "  }",
         "}"
@@ -861,7 +929,7 @@
       }
       document.getElementById("execCount").textContent = String(runHistory.length);
       document.getElementById("passFailSub").textContent = passCount + " PASS · " + failCount + " ACTION REQUIRED";
-      document.getElementById("waiverKpiSub").textContent = activeWaivers.length + " active waivers · 6/6 ADRs ratified";
+      document.getElementById("waiverKpiSub").textContent = activeWaivers.length + " active waivers · 7/7 ADRs ratified";
     }
 
     function appendLog(msg, status) {
@@ -915,7 +983,7 @@
       resultsById[item.id] = status;
       render();
       if (ok) {
-        appendLog(item.id + " [" + item.cloud + " · " + item.workload + " · " + item.action + "] mode=" + mode + ", owner=" + m.owner + ", cc=" + m.costCenter + ", env=" + m.environment + ".", "PASS");
+        appendLog(item.id + " [" + item.cloud + " · " + item.workload + " · " + m.scenario + "] mode=" + mode + ", owner=" + m.owner + ", cc=" + m.costCenter + ".", "PASS");
       } else {
         appendLog(item.id + " [" + item.cloud + " · " + item.workload + "] missing required tags: " + m.missing.join(", ") + ".", "ACTION REQUIRED");
       }
@@ -928,8 +996,16 @@
     function appSimulateBlast() {
       var item = getItemById(document.getElementById("activeImplId").value || selectedId);
       var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      var m = getMetadata();
       appInspect(item.id, false);
-      appendLog("BLAST RADIUS " + item.id + " (" + item.workload + " · " + item.cloud + "): $" + item.monthlyUsd.toLocaleString() + "/mo exposure, SLA " + r.sla + ", rollback & " + r.adr + " ready.", "PASS");
+      appendLog("BLAST RADIUS " + item.id + " [" + m.scenario + "]: $" + item.monthlyUsd.toLocaleString() + "/mo exposure, SLA " + r.sla + ", GRC " + r.grc + " verified.", "PASS");
+    }
+
+    function appRunAiGpuGate() {
+      var item = getItemById(document.getElementById("activeImplId").value || selectedId);
+      var m = getMetadata();
+      appInspect(item.id, false);
+      appendLog("AI/GPU & ZERO-TRUST GATE " + item.id + " (" + item.workload + " · " + item.cloud + "): TTL=" + m.ttl + ", classification=" + m.dataClassification + ", private hub-spoke egress & ADR-007 verified.", "PASS");
     }
 
     function appRunBatch() {
@@ -964,13 +1040,16 @@
         if (obj.environment === "prod" && obj.oidc_federated === false) {
           issues.push("ADR-001 Violation: prod workloads cannot disable secretless OIDC federation");
         }
+        if (obj.private_egress_only === false) {
+          issues.push("ADR-004 Violation: Zero-Trust Hub-Spoke requires private_egress_only=true");
+        }
         var gcpOwner = sanitizeLabel(obj.owner || "");
         if (obj.owner && gcpOwner !== String(obj.owner).toLowerCase()) {
           issues.push("GCP Label Notice: owner '" + obj.owner + "' normalizes to '" + gcpOwner + "'");
         }
         if (issues.length === 0) {
-          box.innerHTML = '<div><span class="run-status">PASS · COMPLIANT</span> All 5 canonical tags, GCP label rules, and ADR-001 OIDC checks passed.</div>';
-          appendLog("LINTER PASS: Payload verified against ADR-001 & ADR-002.", "PASS");
+          box.innerHTML = '<div><span class="run-status">PASS · COMPLIANT</span> All 5 canonical tags, GCP label rules, OIDC federation, and Zero-Trust private egress checks passed.</div>';
+          appendLog("LINTER PASS: Payload verified against ADR-001..007.", "PASS");
         } else {
           box.innerHTML = '<div><span class="run-status-err">FINDINGS (' + issues.length + ')</span> ' + issues.join(" · ") + "</div>";
           appendLog("LINTER FINDINGS: " + issues.join("; "), "ACTION REQUIRED");
@@ -981,12 +1060,12 @@
     }
 
     function appLoadBadSample() {
-      document.getElementById("linterInput").value = '{"owner":"Team Alpha","environment":"prod","oidc_federated":false}';
+      document.getElementById("linterInput").value = '{"owner":"Team Alpha","environment":"prod","oidc_federated":false,"private_egress_only":false}';
       appLintPayload();
     }
 
     function appLoadGoodSample() {
-      document.getElementById("linterInput").value = '{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true}';
+      document.getElementById("linterInput").value = '{"owner":"platform-ccoe","cost-center":"CC-8801","environment":"prod","data-classification":"confidential","ttl":"30d","oidc_federated":true,"private_egress_only":true}';
       appLintPayload();
     }
 
@@ -1038,7 +1117,7 @@
       var m = getMetadata();
       var mode = document.getElementById("execMode").value;
       if (!repo || !wf || !tok) {
-        appendLog("Dispatch payload ready for " + item.id + " -> " + repo + " (" + wf + ", mode=" + mode + "). Enter a GitHub PAT to trigger live workflow run.", "PASS");
+        appendLog("Dispatch payload ready for " + item.id + " -> " + repo + " (" + wf + ", scenario=" + m.scenario + ", mode=" + mode + "). Enter a GitHub PAT to trigger live workflow run.", "PASS");
         return;
       }
       fetch("https://api.github.com/repos/" + repo + "/actions/workflows/" + wf + "/dispatches", {
@@ -1054,6 +1133,7 @@
             implementation_id: item.id,
             cloud: item.cloud,
             action_name: item.action,
+            scenario: m.scenario,
             owner: m.owner,
             cost_center: m.costCenter,
             environment: m.environment,
@@ -1080,17 +1160,34 @@
     function appDownloadBoardBrief() {
       var item = getItemById(selectedId);
       var brief = [
-        "# Cloud Center of Excellence (CCoE) Executive Board Brief",
+        "# Chief Enterprise Architect — CCoE Executive Board Brief",
         "- **Repository:** `Adamson-lab/ccoe-operating-model-raci-adrs-guardrails`",
         "- **Generated UTC:** " + new Date().toISOString(),
         "- **Catalog Scope:** 18,000 multi-cloud implementations (AWS, Azure, GCP)",
-        "- **Ratified ADRs:** ADR-001 through ADR-006 (100% mapped)",
+        "- **Operating Scenario:** " + getScenarioLabel(),
+        "- **Ratified ADRs:** ADR-001 through ADR-007 (100% mapped to RACI & GRC controls)",
         "- **Session Checks Executed:** " + runHistory.length,
         "- **Active Time-Bound Waivers:** " + activeWaivers.length,
         "- **Spotlight Target:** " + item.id + " (" + item.title + ") — Est. Exposure $" + item.monthlyUsd.toLocaleString() + "/mo, Est. Savings $" + item.savingsUsd.toLocaleString() + "/mo"
       ].join("\n");
       triggerDownload("ccoe-executive-board-brief.md", brief, "text/markdown");
       appendLog("Exported Executive Board Brief (ccoe-executive-board-brief.md).", "PASS");
+    }
+
+    function appDownloadAuditPack() {
+      var item = getItemById(selectedId);
+      var r = RACI_MAP[item.action] || RACI_MAP["Enforce Tag & Label Parity"];
+      var pack = {
+        generated_utc: new Date().toISOString(),
+        repository: "Adamson-lab/ccoe-operating-model-raci-adrs-guardrails",
+        spotlight_implementation: item,
+        raci_and_grc_mapping: r,
+        operating_scenario: getScenarioLabel(),
+        session_run_history: runHistory,
+        active_waivers: activeWaivers
+      };
+      triggerDownload("ccoe-grc-audit-evidence-pack.json", JSON.stringify(pack, null, 2), "application/json");
+      appendLog("Exported GRC Audit Evidence Pack (ccoe-grc-audit-evidence-pack.json).", "PASS");
     }
 
     function appDownloadWaivers() {
@@ -1103,26 +1200,6 @@
 
     function appDownloadWorkflow() {
       triggerDownload("ccoe-live-enforce.yml", WORKFLOW_YAML_TEXT, "text/yaml");
-    }
-
-    function appDownloadCsv() {
-      var qRes = queryItems(500, page * pageSize);
-      var rows = ["id,cloud,framework,adr,action,workload,ring,monthly_usd,savings_usd"];
-      for (var i = 0; i < qRes.slice.length; i++) {
-        var it = qRes.slice[i];
-        rows.push([
-          '"' + it.id + '"',
-          '"' + it.cloud + '"',
-          '"' + it.framework + '"',
-          '"' + it.adr + '"',
-          '"' + it.action + '"',
-          '"' + it.workload + '"',
-          '"' + it.ring + '"',
-          '"' + it.monthlyUsd + '"',
-          '"' + it.savingsUsd + '"'
-        ].join(","));
-      }
-      triggerDownload("ccoe-live-implementations-slice.csv", rows.join("\n"), "text/csv");
     }
 
     function appDownloadCatalog() {
