@@ -1,0 +1,6 @@
+{
+  "aws_role_arn": "arn:aws:iam::123456789012:role/ccoe-readonly",
+  "azure_tenant_client": "",
+  "gcp_wif_provider": "",
+  "github_app_installation_id": "58492011"
+}
