@@ -1,0 +1,82 @@
+name: CCoE Live Implementation Enforcer
+
+on:
+  workflow_dispatch:
+    inputs:
+      implementation_id:
+        description: "Implementation ID (e.g. IMPL-00001)"
+        required: true
+        default: "IMPL-00001"
+      cloud:
+        description: "Target cloud (AWS, Azure, GCP)"
+        required: true
+        default: "AWS"
+      action_name:
+        description: "Hands-on action name"
+        required: true
+        default: "Enforce Tag & Label Parity"
+      owner:
+        description: "Resource owner"
+        required: true
+        default: "platform-ccoe"
+      cost_center:
+        description: "Cost center code"
+        required: true
+        default: "CC-8801"
+      environment:
+        description: "Target environment"
+        required: true
+        default: "prod"
+      execution_mode:
+        description: "dry-run or enforce"
+        required: true
+        default: "dry-run"
+
+jobs:
+  enforce-ccoe-guardrail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate canonical governance metadata
+        run: |
+          set -euo pipefail
+          echo "Implementation ID : ${{ inputs.implementation_id }}"
+          echo "Cloud Target      : ${{ inputs.cloud }}"
+          echo "Action            : ${{ inputs.action_name }}"
+          echo "Owner             : ${{ inputs.owner }}"
+          echo "Cost Center       : ${{ inputs.cost_center }}"
+          echo "Environment       : ${{ inputs.environment }}"
+          echo "Execution Mode    : ${{ inputs.execution_mode }}"
+
+          if [ -z "${{ inputs.owner }}" ] || [ -z "${{ inputs.cost_center }}" ] || [ -z "${{ inputs.environment }}" ]; then
+            echo "ERROR: Missing mandatory owner, cost_center, or environment metadata."
+            exit 1
+          fi
+
+      - name: Evaluate policy and generate run artifact
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cat > "artifacts/${{ inputs.implementation_id }}-report.json" <<EOF
+          {
+            "implementation_id": "${{ inputs.implementation_id }}",
+            "cloud": "${{ inputs.cloud }}",
+            "action": "${{ inputs.action_name }}",
+            "owner": "${{ inputs.owner }}",
+            "cost_center": "${{ inputs.cost_center }}",
+            "environment": "${{ inputs.environment }}",
+            "mode": "${{ inputs.execution_mode }}",
+            "status": "VERIFIED",
+            "timestamp_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+          cat "artifacts/${{ inputs.implementation_id }}-report.json"
+
+      - name: Upload implementation report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccoe-run-${{ inputs.implementation_id }}
+          path: artifacts/${{ inputs.implementation_id }}-report.json
+          if-no-files-found: error

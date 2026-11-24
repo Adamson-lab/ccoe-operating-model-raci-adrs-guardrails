@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ccoe-operating-model-raci-adrs-guardrails · 18,000 Live Implementations</title>
+  <title>ccoe-operating-model-raci-adrs-guardrails · 18,000 Hands-On Live Implementations</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -18,6 +18,8 @@
       --ok-ink: #166534;
       --warn-bg: #fef3c7;
       --warn-ink: #78350f;
+      --err-bg: #fee2e2;
+      --err-ink: #991b1b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -27,7 +29,7 @@
       line-height: 1.45;
     }
     header { background: var(--card); border-bottom: 1px solid var(--line); }
-    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+    .wrap { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
     .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; padding: 20px 0; }
     .pill {
       display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent);
@@ -59,14 +61,15 @@
     }
     .kpi-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
     .kpi-val { font-size: 22px; font-weight: 800; margin-top: 4px; }
-    .two-col { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(360px, 1.3fr); gap: 18px; }
-    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 10px; }
+    .two-col { display: grid; grid-template-columns: minmax(310px, 1fr) minmax(380px, 1.35fr); gap: 18px; }
+    @media (max-width: 920px) { .two-col { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; margin-top: 10px; }
     label { font-size: 11px; font-weight: 600; color: var(--muted); display: grid; gap: 4px; }
+    .tab-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     pre {
       margin-top: 10px; padding: 12px; border-radius: 8px; background: #0f172a;
-      color: #e2e8f0; font-size: 11px; overflow: auto; max-height: 290px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #e2e8f0; font-size: 11px; overflow: auto; max-height: 310px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap;
     }
     .log-box {
       margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--paper);
@@ -81,10 +84,12 @@
     .id-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
     .badge { background: var(--ok-bg); color: var(--ok-ink); padding: 2px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; }
     .badge-warn { background: var(--warn-bg); color: var(--warn-ink); }
+    .badge-err { background: var(--err-bg); color: var(--err-ink); }
     .title { font-size: 13px; font-weight: 700; margin-top: 6px; }
     .meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
     .card-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
     .run-status { font-size: 11px; font-weight: 700; color: var(--ok-ink); }
+    .run-status-err { color: var(--err-ink); }
     .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
   </style>
 </head>
@@ -92,14 +97,15 @@
   <header>
     <div class="wrap top-bar">
       <div>
-        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 18,000 Live Implementations Engine</div>
+        <div class="pill">ccoe-operating-model-raci-adrs-guardrails · 18,000 Hands-On Live Implementations</div>
         <h1>Cloud Center of Excellence Operating Model</h1>
-        <p class="sub">Hands-on live implementation runner for RACI ownership, ADRs, guardrails, tagging, OIDC, FinOps, and drift remediation across AWS, Azure, and GCP.</p>
+        <p class="sub">Real-world hands-on CCoE execution engine: generates Terraform/OpenTofu, OPA/Rego, and AWS/Azure/GCP commands, validates metadata, logs runs, and triggers GitHub Actions.</p>
       </div>
       <div class="actions">
         <button class="btn" id="runBatchBtn" type="button">Run Batch (25 Filtered)</button>
         <button class="btn" id="dlRunLogBtn" type="button">Download Run Log JSON</button>
-        <button class="btn btn-primary" id="dlCatalogBtn" type="button">Export Filtered Implementations</button>
+        <button class="btn" id="dlCsvBtn" type="button">Export Filtered CSV</button>
+        <button class="btn btn-primary" id="dlCatalogBtn" type="button">Export Filtered JSON</button>
       </div>
     </div>
     <div class="sub-bar">
@@ -147,14 +153,14 @@
       <div class="card">
         <div class="kpi-label">Executed in Session</div>
         <div class="kpi-val" id="execCount">0</div>
-        <p class="sub">Simulated dry-run / artifact / CI dispatch runs</p>
+        <p class="sub" id="passFailSub">0 PASS · 0 ACTION REQUIRED</p>
       </div>
     </section>
 
     <section class="two-col" id="runnerSection">
       <div class="card">
         <h2>Hands-On Live Implementation Runner</h2>
-        <p class="sub">Configure target metadata, execute a single or batch implementation, and inspect generated IaC/policy/CLI artifacts.</p>
+        <p class="sub">Validate mandatory tags/labels, generate real Terraform/OPA/CLI code, run checks, or trigger <code>.github/workflows/ccoe-live-enforce.yml</code>.</p>
 
         <div class="form-grid">
           <label>
@@ -162,15 +168,15 @@
             <input class="input" id="activeImplId" value="IMPL-00001" />
           </label>
           <label>
-            Owner
+            Owner (required)
             <input class="input" id="tagOwner" value="platform-ccoe" />
           </label>
           <label>
-            Cost Center
+            Cost Center (required)
             <input class="input" id="tagCostCenter" value="CC-8801" />
           </label>
           <label>
-            Environment
+            Environment (required)
             <input class="input" id="tagEnv" value="prod" />
           </label>
           <label>
@@ -185,7 +191,7 @@
 
         <div class="card-actions">
           <button class="btn btn-active" id="runSingleBtn" type="button">Execute Selected Implementation</button>
-          <button class="btn" id="copyArtifactBtn" type="button">Copy Generated Artifact</button>
+          <button class="btn" id="copyArtifactBtn" type="button">Copy Active Artifact</button>
         </div>
 
         <div class="form-grid" style="margin-top:12px;">
@@ -198,22 +204,35 @@
             <input class="input" id="ghWorkflow" value="ccoe-live-enforce.yml" />
           </label>
           <label>
-            GitHub Token (workflow dispatch)
+            Execution Mode
+            <select class="input" id="execMode">
+              <option value="dry-run">dry-run (safe validation)</option>
+              <option value="enforce">enforce (apply / remediate)</option>
+            </select>
+          </label>
+          <label>
+            GitHub PAT (workflow dispatch)
             <input class="input" id="ghToken" type="password" placeholder="Optional PAT" />
           </label>
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" id="dispatchBtn" type="button">Dispatch GitHub Actions Workflow</button>
         </div>
-        <div class="log-box" id="execLog">Ready to execute hands-on implementations across AWS, Azure, and GCP. Click <strong>Run Live Check</strong> on any card below.</div>
+        <div class="log-box" id="execLog">Ready. Click <strong>Run Live Check</strong> or <strong>Inspect Artifact</strong> on any card below to validate tags/labels and generate real hands-on IaC, Rego, and CLI artifacts.</div>
       </div>
 
       <div class="card">
         <div class="sec-head" style="margin-bottom:4px;">
-          <h2>Generated Hands-On Artifact (Terraform / Policy / Rego)</h2>
+          <h2>Generated Hands-On Artifact</h2>
           <span class="badge" id="artifactImplBadge">IMPL-00001</span>
         </div>
-        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to generate its hands-on configuration.</p>
+        <p class="sub" id="artifactSummary">Select or execute any IMPL-XXXXX card to inspect real hands-on code.</p>
+        <div class="tab-row" id="artifactTabs">
+          <button class="btn btn-active" type="button" data-fmt="terraform">Terraform / OpenTofu</button>
+          <button class="btn" type="button" data-fmt="rego">OPA / Rego</button>
+          <button class="btn" type="button" data-fmt="cli">Cloud CLI / Policy</button>
+          <button class="btn" type="button" data-fmt="json">Spec JSON</button>
+        </div>
         <pre id="artifactCode"></pre>
       </div>
     </section>
@@ -253,8 +272,9 @@
 
     const TOTAL_ITEMS = 18000;
     const runHistory = [];
-    const passedIds = new Set();
+    const resultsById = new Map();
     let selectedId = "IMPL-00001";
+    let artifactFmt = "terraform";
     let page = 0;
     const pageSize = 48;
 
@@ -280,6 +300,144 @@
     function getItemById(idStr) {
       const num = Math.max(1, Math.min(TOTAL_ITEMS, parseInt(String(idStr || "1").replace(/\D/g, ""), 10) || 1));
       return getItemByIndex(num - 1);
+    }
+
+    function getMetadata() {
+      const owner = (document.getElementById("tagOwner").value || "").trim();
+      const costCenter = (document.getElementById("tagCostCenter").value || "").trim();
+      const environment = (document.getElementById("tagEnv").value || "").trim();
+      const dataClassification = (document.getElementById("tagClass").value || "confidential").trim();
+      const ttl = (document.getElementById("tagTtl").value || "30d").trim();
+      const gcpSafe = (v) => String(v || "unset").toLowerCase().replace(/[^a-z0-9_-]/g, "-");
+      const missing = [];
+      if (!owner) missing.push("owner");
+      if (!costCenter) missing.push("cost-center");
+      if (!environment) missing.push("environment");
+      return {
+        owner: owner || "MISSING",
+        costCenter: costCenter || "MISSING",
+        environment: environment || "MISSING",
+        dataClassification,
+        ttl,
+        gcpOwner: gcpSafe(owner || "platform-ccoe"),
+        gcpCostCenter: gcpSafe(costCenter || "cc-8801"),
+        gcpEnv: gcpSafe(environment || "prod"),
+        gcpClass: gcpSafe(dataClassification),
+        missing
+      };
+    }
+
+    function buildArtifactText(item, fmt) {
+      const m = getMetadata();
+      if (fmt === "rego") {
+        return [
+          `package ccoe.live.${item.cloud.toLowerCase()}`,
+          "",
+          `# ${item.id}: ${item.title}`,
+          `# Framework: ${item.framework} | Action: ${item.action}`,
+          "default allow := false",
+          "allow if { count(violations) == 0 }",
+          "",
+          "violations contains msg if {",
+          `  input.implementation_id == "${item.id}"`,
+          `  not input.tags["cost-center"]`,
+          `  msg := "DENY ${item.id}: missing mandatory tag 'cost-center'"`,
+          "}",
+          "",
+          "violations contains msg if {",
+          `  input.implementation_id == "${item.id}"`,
+          `  not input.tags["owner"]`,
+          `  msg := "DENY ${item.id}: missing mandatory tag 'owner'"`,
+          "}",
+          "",
+          "violations contains msg if {",
+          `  input.implementation_id == "${item.id}"`,
+          `  input.environment == "prod"`,
+          `  not input.oidc_federated`,
+          `  msg := "DENY ${item.id}: production workload must use secretless OIDC federation"`,
+          "}"
+        ].join("\n");
+      }
+
+      if (fmt === "cli") {
+        if (item.cloud === "AWS") {
+          return [
+            `# ${item.id} — AWS Guardrail & Tagging Command (${item.workload})`,
+            `aws resourcegroupstaggingapi get-resources \\`,
+            `  --tag-filters Key=environment,Values=${m.environment} Key=cost-center,Values=${m.costCenter} \\`,
+            `  --query 'ResourceTagMappingList[].ResourceARN'`,
+            "",
+            `# Enforce baseline tags on target ARN (replace <ARN> before running):`,
+            `# aws resourcegroupstaggingapi tag-resources --resource-arn-list <ARN> \\`,
+            `#   --tags owner=${m.owner},cost-center=${m.costCenter},environment=${m.environment},data-classification=${m.dataClassification},ttl=${m.ttl}`
+          ].join("\n");
+        }
+        if (item.cloud === "Azure") {
+          return [
+            `# ${item.id} — Azure Policy & Tag Compliance Check (${item.workload})`,
+            `az policy state list \\`,
+            `  --filter "PolicyDefinitionAction eq 'audit' or PolicyDefinitionAction eq 'deny'" \\`,
+            `  --query "[].{resource:resourceId,policy:policyDefinitionName,state:complianceState}" -o table`,
+            "",
+            `# Apply canonical tags to target resource ID (replace <RESOURCE_ID> before running):`,
+            `# az tag update --resource-id <RESOURCE_ID> --operation merge \\`,
+            `#   --tags owner=${m.owner} cost-center=${m.costCenter} environment=${m.environment} data-classification=${m.dataClassification} ttl=${m.ttl}`
+          ].join("\n");
+        }
+        return [
+          `# ${item.id} — GCP Asset & Normalized Label Check (${item.workload})`,
+          `gcloud asset search-all-resources \\`,
+          `  --query="labels.environment:${m.gcpEnv} AND labels.cost_center:${m.gcpCostCenter}" \\`,
+          `  --format="table(name,assetType,location)"`,
+          "",
+          `# Note: GCP labels require lowercase letters, numbers, underscores, and hyphens.`
+        ].join("\n");
+      }
+
+      if (fmt === "json") {
+        return JSON.stringify({
+          implementation_id: item.id,
+          cloud: item.cloud,
+          framework: item.framework,
+          workload: item.workload,
+          action: item.action,
+          ring: item.ring,
+          required_tags: {
+            owner: m.owner,
+            "cost-center": m.costCenter,
+            environment: m.environment,
+            "data-classification": m.dataClassification,
+            ttl: m.ttl
+          },
+          gcp_labels: {
+            owner: m.gcpOwner,
+            cost_center: m.gcpCostCenter,
+            environment: m.gcpEnv,
+            data_classification: m.gcpClass
+          }
+        }, null, 2);
+      }
+
+      return [
+        `# ${item.id}: ${item.title}`,
+        `# Framework: ${item.framework} | Action: ${item.action}`,
+        `locals {`,
+        `  ccoe_${item.id.toLowerCase().replace("-", "_")}_tags = {`,
+        `    "owner"               = "${m.owner}"`,
+        `    "cost-center"         = "${m.costCenter}"`,
+        `    "environment"         = "${m.environment}"`,
+        `    "data-classification" = "${m.dataClassification}"`,
+        `    "ttl"                 = "${m.ttl}"`,
+        `    "governance-id"       = "${item.id}"`,
+        `  }`,
+        `  ccoe_gcp_labels = {`,
+        `    "owner"               = "${m.gcpOwner}"`,
+        `    "cost_center"         = "${m.gcpCostCenter}"`,
+        `    "environment"         = "${m.gcpEnv}"`,
+        `    "data-classification" = "${m.gcpClass}"`,
+        `  }`,
+        `}`
+      ].join("\n");
     }
 
     function matchesFilter(item, q, cFilter, fFilter, aFilter) {
@@ -314,44 +472,24 @@
       return { total: matched.length, slice: matched.slice(offsetCount, offsetCount + limitCount) };
     }
 
-    function buildArtifact(item) {
-      const owner = (document.getElementById("tagOwner").value || "platform-ccoe").trim();
-      const cc = (document.getElementById("tagCostCenter").value || "CC-8801").trim();
-      const env = (document.getElementById("tagEnv").value || "prod").trim();
-      const cls = (document.getElementById("tagClass").value || "confidential").trim();
-      const ttl = (document.getElementById("tagTtl").value || "30d").trim();
-      const gcpSafe = (v) => v.toLowerCase().replace(/[^a-z0-9_-]/g, "-");
-
-      return JSON.stringify({
-        implementation_id: item.id,
-        cloud: item.cloud,
-        framework: item.framework,
-        workload: item.workload,
-        hands_on_action: item.action,
-        required_metadata: {
-          owner,
-          "cost-center": cc,
-          environment: env,
-          "data-classification": cls,
-          ttl
-        },
-        gcp_normalized_labels: {
-          owner: gcpSafe(owner),
-          cost_center: gcpSafe(cc),
-          environment: gcpSafe(env),
-          data_classification: gcpSafe(cls)
-        },
-        opa_rego_check: `package ccoe.guardrails\n\ndeny[msg] {\n  input.implementation_id == "${item.id}"\n  not input.tags["cost-center"]\n  msg := "Missing mandatory cost-center tag for ${item.id}"\n}`
-      }, null, 2);
+    function updateCounters() {
+      let passCount = 0;
+      let failCount = 0;
+      runHistory.forEach((r) => {
+        if (r.status === "PASS") passCount++;
+        else failCount++;
+      });
+      document.getElementById("execCount").textContent = String(runHistory.length);
+      document.getElementById("passFailSub").textContent = `${passCount} PASS · ${failCount} ACTION REQUIRED`;
     }
 
-    function appendLog(msg) {
+    function appendLog(msg, status = "PASS") {
       const ts = new Date().toISOString().slice(11, 19);
-      runHistory.unshift({ ts, msg });
-      document.getElementById("execCount").textContent = String(runHistory.length);
+      runHistory.unshift({ ts, status, msg });
+      updateCounters();
       document.getElementById("execLog").innerHTML = runHistory
         .slice(0, 40)
-        .map((r) => `<div class="log-entry"><strong>[${r.ts}]</strong> ${r.msg}</div>`)
+        .map((r) => `<div class="log-entry"><strong>[${r.ts}]</strong> <span class="${r.status === "PASS" ? "run-status" : "run-status-err"}">${r.status}</span> ${r.msg}</div>`)
         .join("");
     }
 
@@ -359,9 +497,9 @@
       const item = getItemById(id);
       selectedId = item.id;
       document.getElementById("activeImplId").value = item.id;
-      document.getElementById("artifactImplBadge").textContent = item.id;
+      document.getElementById("artifactImplBadge").textContent = `${item.id} · ${artifactFmt.toUpperCase()}`;
       document.getElementById("artifactSummary").textContent = item.title;
-      document.getElementById("artifactCode").textContent = buildArtifact(item);
+      document.getElementById("artifactCode").textContent = buildArtifactText(item, artifactFmt);
       if (scrollToRunner) {
         document.getElementById("runnerSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
@@ -370,15 +508,25 @@
     function runLiveCheck(id, cardEl = null) {
       const item = getItemById(id);
       inspectArtifact(item.id, false);
-      passedIds.add(item.id);
-      const env = (document.getElementById("tagEnv").value || "prod").trim();
-      const cc = (document.getElementById("tagCostCenter").value || "CC-8801").trim();
-      const owner = (document.getElementById("tagOwner").value || "platform-ccoe").trim();
+      const m = getMetadata();
+      const mode = document.getElementById("execMode").value;
+      const ok = m.missing.length === 0;
+      const status = ok ? "PASS" : "ACTION REQUIRED";
+      resultsById.set(item.id, status);
+
       if (cardEl) {
         const statusEl = cardEl.querySelector(".run-status");
-        if (statusEl) statusEl.textContent = "PASS (Verified)";
+        if (statusEl) {
+          statusEl.textContent = ok ? `PASS (${mode})` : `MISSING: ${m.missing.join(", ")}`;
+          statusEl.className = ok ? "run-status" : "run-status run-status-err";
+        }
       }
-      appendLog(`PASS ${item.id} [${item.cloud} · ${item.workload} · ${item.action}] owner=${owner}, cc=${cc}, env=${env}.`);
+
+      if (ok) {
+        appendLog(`${item.id} [${item.cloud} · ${item.workload} · ${item.action}] mode=${mode}, owner=${m.owner}, cc=${m.costCenter}, env=${m.environment}.`, "PASS");
+      } else {
+        appendLog(`${item.id} [${item.cloud} · ${item.workload}] missing required tags: ${m.missing.join(", ")}.`, "ACTION REQUIRED");
+      }
     }
 
     function render() {
@@ -393,35 +541,45 @@
       document.getElementById("filterSummary").textContent =
         `${document.getElementById("cloudFilter").value} · ${document.getElementById("frameworkFilter").value} · ${document.getElementById("actionFilter").value}`;
 
-      document.getElementById("implGrid").innerHTML = slice.map((it) => `
-        <article class="card" data-card-id="${it.id}">
-          <div class="top-row">
-            <span class="id-code">${it.id} · ${it.cloud}</span>
-            <span class="badge ${it.action.includes("Drift") || it.action.includes("TTL") ? "badge-warn" : ""}">${it.framework}</span>
-          </div>
-          <h3 class="title">${it.title}</h3>
-          <div class="meta">Action: ${it.action} · Workload: ${it.workload}</div>
-          <div class="card-actions">
-            <button class="btn js-inspect" type="button" data-id="${it.id}">Inspect Artifact</button>
-            <button class="btn btn-active js-exec" type="button" data-id="${it.id}">Run Live Check</button>
-            <span class="run-status">${passedIds.has(it.id) ? "PASS (Verified)" : ""}</span>
-          </div>
-        </article>
-      `).join("");
+      document.getElementById("implGrid").innerHTML = slice.map((it) => {
+        const st = resultsById.get(it.id) || "";
+        const stClass = st === "PASS" ? "run-status" : "run-status run-status-err";
+        return `
+          <article class="card" data-card-id="${it.id}">
+            <div class="top-row">
+              <span class="id-code">${it.id} · ${it.cloud}</span>
+              <span class="badge ${it.action.includes("Drift") || it.action.includes("TTL") ? "badge-warn" : ""}">${it.framework}</span>
+            </div>
+            <h3 class="title">${it.title}</h3>
+            <div class="meta">Action: ${it.action} · Workload: ${it.workload}</div>
+            <div class="card-actions">
+              <button class="btn js-inspect" type="button" data-id="${it.id}">Inspect Artifact</button>
+              <button class="btn btn-active js-exec" type="button" data-id="${it.id}">Run Live Check</button>
+              <span class="${stClass}">${st}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
 
       document.getElementById("prevBtn").disabled = page <= 0;
       document.getElementById("nextBtn").disabled = page >= totalPages - 1;
     }
 
-    // Delegated click handler on #implGrid
+    document.getElementById("artifactTabs").addEventListener("click", (e) => {
+      const btn = e.target.closest ? e.target.closest("button[data-fmt]") : null;
+      if (!btn) return;
+      artifactFmt = btn.getAttribute("data-fmt");
+      document.querySelectorAll("#artifactTabs button").forEach((b) => b.classList.toggle("btn-active", b === btn));
+      inspectArtifact(selectedId, false);
+    });
+
     document.getElementById("implGrid").addEventListener("click", (e) => {
-      const target = e.target;
-      const inspectBtn = target.closest ? target.closest(".js-inspect") : null;
+      const inspectBtn = e.target.closest ? e.target.closest(".js-inspect") : null;
       if (inspectBtn) {
         inspectArtifact(inspectBtn.getAttribute("data-id"), true);
         return;
       }
-      const execBtn = target.closest ? target.closest(".js-exec") : null;
+      const execBtn = e.target.closest ? e.target.closest(".js-exec") : null;
       if (execBtn) {
         const cardEl = execBtn.closest ? execBtn.closest("[data-card-id]") : null;
         runLiveCheck(execBtn.getAttribute("data-id"), cardEl);
@@ -435,9 +593,16 @@
     document.getElementById("runBatchBtn").addEventListener("click", () => {
       const { slice } = queryItems(25, page * pageSize);
       if (!slice.length) return;
+      const m = getMetadata();
+      const ok = m.missing.length === 0;
       slice.forEach((it) => {
-        passedIds.add(it.id);
-        appendLog(`BATCH PASS ${it.id} [${it.cloud} · ${it.action}] -> Verified.`);
+        resultsById.set(it.id, ok ? "PASS" : "ACTION REQUIRED");
+        appendLog(
+          ok
+            ? `BATCH ${it.id} [${it.cloud} · ${it.action}] verified for cc=${m.costCenter}.`
+            : `BATCH ${it.id} missing required tags: ${m.missing.join(", ")}.`,
+          ok ? "PASS" : "ACTION REQUIRED"
+        );
       });
       inspectArtifact(slice[0].id, false);
       render();
@@ -445,15 +610,18 @@
 
     document.getElementById("copyArtifactBtn").addEventListener("click", async () => {
       await navigator.clipboard.writeText(document.getElementById("artifactCode").textContent);
-      appendLog(`Copied artifact JSON for ${selectedId} to clipboard.`);
+      appendLog(`Copied ${artifactFmt.toUpperCase()} artifact for ${selectedId} to clipboard.`, "PASS");
     });
 
     document.getElementById("dispatchBtn").addEventListener("click", async () => {
+      const item = getItemById(document.getElementById("activeImplId").value || selectedId);
       const repo = document.getElementById("ghRepo").value.trim();
       const wf = document.getElementById("ghWorkflow").value.trim();
       const tok = document.getElementById("ghToken").value.trim();
+      const m = getMetadata();
+      const mode = document.getElementById("execMode").value;
       if (!repo || !wf || !tok) {
-        appendLog(`Prepared local dispatch payload for ${selectedId} on ${repo} (${wf}). Add a GitHub PAT to send live API dispatch.`);
+        appendLog(`Dispatch payload ready for ${item.id} -> ${repo} (${wf}, mode=${mode}). Add a GitHub PAT with Actions write access to trigger live workflow run.`, "PASS");
         return;
       }
       const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${wf}/dispatches`, {
@@ -466,14 +634,17 @@
         body: JSON.stringify({
           ref: "main",
           inputs: {
-            implementation_id: selectedId,
-            owner: document.getElementById("tagOwner").value,
-            cost_center: document.getElementById("tagCostCenter").value,
-            environment: document.getElementById("tagEnv").value
+            implementation_id: item.id,
+            cloud: item.cloud,
+            action_name: item.action,
+            owner: m.owner,
+            cost_center: m.costCenter,
+            environment: m.environment,
+            execution_mode: mode
           }
         })
       });
-      appendLog(`GitHub workflow dispatch for ${selectedId} returned HTTP ${res.status}.`);
+      appendLog(`GitHub Actions workflow_dispatch for ${item.id} returned HTTP ${res.status}.`, res.ok ? "PASS" : "ACTION REQUIRED");
     });
 
     document.getElementById("dlRunLogBtn").addEventListener("click", () => {
@@ -482,6 +653,22 @@
       const a = document.createElement("a");
       a.href = url;
       a.download = "ccoe-live-implementation-run-log.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("dlCsvBtn").addEventListener("click", () => {
+      const { slice } = queryItems(500, page * pageSize);
+      const esc = (v) => `"${String(v).replace(/"/g, '""')}"`;
+      const lines = [
+        "id,cloud,framework,action,workload,ring",
+        ...slice.map((it) => [it.id, it.cloud, it.framework, it.action, it.workload, it.ring].map(esc).join(","))
+      ];
+      const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ccoe-live-implementations-slice.csv";
       a.click();
       URL.revokeObjectURL(url);
     });
